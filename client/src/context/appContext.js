@@ -212,7 +212,7 @@ const AppProvider = ({ children }) => {
       if (error.response.status === 429){
         dispatch({
           type: CREATE_JOB_ERROR,
-          payload: { msg: 'Too many requests from this ip. Try again in 5 minutes.' ,warning:false},
+          payload: { msg: 'Try again later. You can only post a story once every 5 minutes.' ,warning:false},
         });
       } 
     }
