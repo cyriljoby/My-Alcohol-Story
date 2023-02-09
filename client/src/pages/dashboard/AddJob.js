@@ -20,7 +20,7 @@ const AddJob = () => {
   } = useAppContext();
   const [popupState, setPopupState] = useState(false);
   const [closeState, setCloseState] = useState(false);
-  let triggers = ["murder", "kill", "shoot"];
+  let triggers = ["murder", "kill", "shoot", "suicide"];
   const directCreateJob = (e) => {
     e.preventDefault();
     setCloseState(true);
