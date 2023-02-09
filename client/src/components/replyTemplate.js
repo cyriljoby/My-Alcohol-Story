@@ -28,10 +28,12 @@ const ReplyTemplate = ({
   del,
   sub,
   subdel,
+  showReply,
 }) => {
   const { deleteReply, createSubReply, getSubReplies, subreplies } =
     useAppContext();
   let counts = [];
+  console.log(showReply);
   function RenderSubReplyBox() {
     const [openState, setOpenState] = useState(false);
 
@@ -196,51 +198,55 @@ const ReplyTemplate = ({
         </div>
       );
     } else {
-      return (
-        <div
-          className={multiple ? "num-comments" : "num-alt"}
-          style={{
-            marginTop: "-1.5rem",
-            display: "grid",
-            maxWidth: "maxContent",
-            justifyContent: "start",
-            paddingLeft: "0rem",
-            paddingBottom: "1rem",
-            alignItems: "center",
-          }}
-        >
+      if (count > 0) {
+        return (
           <div
+            className={multiple ? "num-comments" : "num-alt"}
             style={{
+              marginTop: "-1.5rem",
               display: "grid",
-              gridTemplateColumns: "52px 1fr",
+              maxWidth: "maxContent",
+              justifyContent: "start",
+              paddingLeft: "0rem",
+              paddingBottom: "1rem",
               alignItems: "center",
-              columnGap: "0.5rem",
             }}
           >
             <div
-              className="line"
               style={{
-                width: "2.5rem",
-                height: "0.1rem",
-                backgroundColor: "#000000",
-              }}
-            ></div>
-            <button
-              onClick={showsub}
-              className="btn show-replies show-subreplies"
-              style={{
-                borderColor: "transparent",
-                color: "#000000",
-                fontSize: "0.875rem",
-                transform: "translateY(-0.25rem)",
-                textTransform: "none",
+                display: "grid",
+                gridTemplateColumns: "52px 1fr",
+                alignItems: "center",
+                columnGap: "0.5rem",
               }}
             >
-              Show {count} reply
-            </button>
+              <div
+                className="line"
+                style={{
+                  width: "2.5rem",
+                  height: "0.1rem",
+                  backgroundColor: "#000000",
+                }}
+              ></div>
+              <button
+                onClick={showsub}
+                className="btn show-replies show-subreplies"
+                style={{
+                  borderColor: "transparent",
+                  color: "#000000",
+                  fontSize: "0.875rem",
+                  transform: "translateY(-0.25rem)",
+                  textTransform: "none",
+                }}
+              >
+                Show {count} reply
+              </button>
+            </div>
           </div>
-        </div>
-      );
+        );
+      } else {
+        return null;
+      }
     }
   }
   // console.log(del,reply)
