@@ -48,12 +48,12 @@ const Profile = () => {
           <h3>profile</h3>
           {showAlert && <Alert />}
           <div className="form-center">
-            <FormRow
+            {/* <FormRow
               type="text"
               name="name"
               value={name}
               handleChange={(e) => setName(e.target.value)}
-            />
+            /> */}
             <FormRow
               type="text"
               labelText="Alias"
