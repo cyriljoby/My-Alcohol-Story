@@ -29,8 +29,13 @@ const MyStory = () => {
     numOfPages,
     users,
   } = useAppContext();
+  let userId=localStorage
+  .getItem("user")
+  .split(",")[0]
+  .replace('{"_id":', "")
+  .replace(/['"]+/g, "");
   useEffect(() => {
-    getJobs();
+    getJobs(userId);
     getUsers();
     // eslint-disable-next-line
   }, [page, search, searchStatus, searchType, sort]);
@@ -97,8 +102,10 @@ const MyStory = () => {
       
     }
     else{
+
       return null
     }
+  
 
   });
 };

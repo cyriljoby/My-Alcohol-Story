@@ -2,6 +2,7 @@ import { FormRow, Alert } from "../../components";
 import { useAppContext } from "../../context/appContext";
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Popup from "reactjs-popup";
 
 const AddJob = () => {
@@ -20,6 +21,7 @@ const AddJob = () => {
   } = useAppContext();
   const [popupState, setPopupState] = useState(false);
   const [closeState, setCloseState] = useState(false);
+  const navigate = useNavigate()
   let triggers = ["murder", "kill", "shoot", "suicide"];
   const directCreateJob = (e) => {
     e.preventDefault();
@@ -99,7 +101,7 @@ const AddJob = () => {
                   <li>post any personal identification information</li>
                 </ul>
                 If you are feeling the urge to harm yourself, please visit our{" "}
-                <a className="resources-page" href="/resources">
+                <a className="resources-page" onClick={()=>navigate("/resources")}>
                   resources
                 </a>{" "}
                 page.

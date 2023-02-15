@@ -271,7 +271,8 @@ const AppProvider = ({ children }) => {
     }
   };
 
-  const getJobs = async () => {
+  const getJobs = async (userId) => {
+    console.log(userId)
     const { page, search, searchStatus, searchType, sort } = state;
 
     let url = `/jobs?page=${page}&status=${searchStatus}&jobType=${searchType}&sort=${sort}`;
@@ -281,7 +282,7 @@ const AppProvider = ({ children }) => {
     }
     dispatch({ type: GET_JOBS_BEGIN });
     try {
-      const { data } = await authFetch(url);
+      const { data } = await authFetch(url,{userId});
 
       const { jobs } = data;
 
@@ -341,10 +342,10 @@ const AppProvider = ({ children }) => {
     // clearAlert();
   };
 
-  const getUsers = async () => {
+  const getUsers = async (userId) => {
     const { page, search, searchStatus, searchType, sort } = state;
 
-    let url = `/jobs?page=${page}&status=${searchStatus}&jobType=${searchType}&sort=${sort}`;
+    let url = `/jobs?page=${page}&status=${searchStatus}&jobType=${searchType}&sort=${sort}&id=${userId}`;
     // console.log(state)
     if (search) {
       url = url + `&search=${search}`;

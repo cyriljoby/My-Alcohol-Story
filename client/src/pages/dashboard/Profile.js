@@ -2,15 +2,8 @@ import { useState } from "react";
 import { FormRow, Alert, FormRowSelect } from "../../components";
 import { useAppContext } from "../../context/appContext";
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
-import {
-  GiElephant,
-  GiDeer,
-  GiButterfly,
-  GiDolphin,
-  GiTortoise,
-} from "react-icons/gi";
+
 import MyStory from "../../components/MyStory";
-import { RiUserFill } from "react-icons/ri";
 
 const Profile = () => {
   const { user, showAlert, displayAlert, updateUser, isLoading } =
@@ -48,12 +41,6 @@ const Profile = () => {
           <h3>profile</h3>
           {showAlert && <Alert />}
           <div className="form-center">
-            {/* <FormRow
-              type="text"
-              name="name"
-              value={name}
-              handleChange={(e) => setName(e.target.value)}
-            /> */}
             <FormRow
               type="text"
               labelText="Alias"
@@ -78,8 +65,6 @@ const Profile = () => {
                 className="form-select"
               >
                 {options.map((itemValue, index) => {
-                  // console.log(itemValue);
-                  // const alias=itemValue.toString()
                   return (
                     <option key={index} value={itemValue.value}>
                       {itemValue.label}

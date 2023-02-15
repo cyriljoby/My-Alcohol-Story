@@ -76,6 +76,8 @@ const createSubReply = async (req, res) => {
 const getAllJobs = async (req, res) => {
   // console.log(req.query)
   const {sort, search } = req.query
+  const {userId}=req.params
+  console.log(userId)
 
   const queryObject = {
 
