@@ -193,6 +193,11 @@ const AppProvider = ({ children }) => {
   const createJob = async () => {
     const alias = localStorage.getItem("alias").slice(1, -1);
     const image = localStorage.getItem("image").slice(1, -1);
+    const createdBy = localStorage
+      .getItem("user")
+      .split(",")[0]
+      .replace('{"_id":', "")
+      .replace(/['"]+/g, "");
     dispatch({ type: CREATE_JOB_BEGIN });
     
     try {
@@ -200,6 +205,8 @@ const AppProvider = ({ children }) => {
       await authFetch.post("/jobs", {
         title,
         story,
+        createdBy
+
       });
       dispatch({ type: CREATE_JOB_SUCCESS });
       dispatch({ type: CLEAR_VALUES });

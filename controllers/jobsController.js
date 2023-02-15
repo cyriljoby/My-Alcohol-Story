@@ -13,7 +13,27 @@ import Reply from '../models/Reply.js'
 import SubReply from '../models/SubReply.js'
 const createJob = async (req, res) => {
   
-  const { title, story } = req.body
+  const { title, story,createdBy } = req.body
+  const queryObject = {
+    createdBy:createdBy
+
+  }
+  let result = Job.find(queryObject)
+  const jobs = await result
+  let createdAt=jobs.slice(-1)[0]["createdAt"] 
+  let now=(new moment.utc)
+  let diff=now.diff(createdAt);
+  const diffDuration = moment.duration(diff);
+  let word='minutes'
+  console.log(diffDuration.seconds())
+  if (diffDuration.minutes()==1){
+    word='minute'
+  }
+  if (diffDuration.minutes()<5){
+    throw new BadRequestError(`Please wait 5 minutes before you post another story.It has been ${diffDuration.minutes()} ${word} since your last story.`)
+  }
+  console.log(diffDuration.seconds())
+
   if (!title || !story) {
     throw new BadRequestError('Please provide all values')
   }
@@ -99,7 +119,6 @@ const getAllJobs = async (req, res) => {
   const replies= await Replyresult
 
   const subreplies= await SubReplyResult
-  // console.log(replies)
 
   res.status(StatusCodes.OK).json({ users,jobs,replies,subreplies})
 }
@@ -135,6 +154,17 @@ const deleteJob = async (req, res) => {
 
   const job = await Job.findOne({ _id: jobId })
 
+  const replies=await Reply.find({storyId:jobId})
+  for (let i=0;i<replies.length;i++){
+    let reply=(replies[i])
+    let replyId=reply["_id"]
+    const subreplies=await SubReply.find({replyId:replyId})
+    await reply.remove()
+    for (let i=0;i<subreplies.length;i++){
+      let sub=(subreplies[i])
+      await sub.remove()
+    }
+  }
   if (!job) {
     throw new NotFoundError(`No job with id :${jobId}`)
   }
@@ -143,10 +173,17 @@ const deleteJob = async (req, res) => {
 
   await job.remove()
 
+  // await replies.remove()
+
   res.status(StatusCodes.OK).json({ msg: 'Success! Job removed' })
 }
 const deleteReply = async (req, res) => {
   const { id: replyId } = req.params
+  const subreplies=await SubReply.find({replyId:replyId})
+  for (let i=0;i<subreplies.length;i++){
+    let sub=(subreplies[i])
+    await sub.remove()
+  }
 
   const reply = await Reply.findOne({ _id: replyId })
 
