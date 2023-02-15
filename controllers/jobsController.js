@@ -14,25 +14,25 @@ import SubReply from '../models/SubReply.js'
 const createJob = async (req, res) => {
   
   const { title, story,createdBy } = req.body
-  // const queryObject = {
-  //   createdBy:createdBy
+  const queryObject = {
+    createdBy:createdBy
 
-  // }
-  // let result = Job.find(queryObject)
-  // const jobs = await result
-  // let createdAt=jobs.slice(-1)[0]["createdAt"] 
-  // let now=(new moment.utc)
-  // let diff=now.diff(createdAt);
-  // const diffDuration = moment.duration(diff);
-  // let word='minutes'
-  // console.log(diffDuration.seconds())
-  // if (diffDuration.minutes()==1){
-  //   word='minute'
-  // }
-  // if (diffDuration.minutes()<5){
-  //   throw new BadRequestError(`Please wait 5 minutes before you post another story.It has been ${diffDuration.minutes()} ${word} since your last story.`)
-  // }
-  // console.log(diffDuration.seconds())
+  }
+  let result = Job.find(queryObject)
+  const jobs = await result
+  let createdAt=jobs.slice(-1)[0]["createdAt"] 
+  let now=(new moment.utc)
+  let diff=now.diff(createdAt);
+  const diffDuration = moment.duration(diff);
+  let word='minutes'
+  console.log(diffDuration.seconds())
+  if (diffDuration.minutes()==1){
+    word='minute'
+  }
+  if (diffDuration.minutes()<5){
+    throw new BadRequestError(`Please wait 5 minutes before you post another story.It has been ${diffDuration.minutes()} ${word} since your last story.`)
+  }
+  console.log(diffDuration.seconds())
 
   if (!title || !story) {
     throw new BadRequestError('Please provide all values')

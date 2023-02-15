@@ -1,5 +1,6 @@
 import express from 'express'
 const router = express.Router()
+// app.set('trust proxy', 1);
 import rateLimiter from 'express-rate-limit'
 const apiLimiter = rateLimiter({
   windowMs: 5 * 60 * 1000, //5 minutes
