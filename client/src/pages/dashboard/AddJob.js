@@ -3,7 +3,6 @@ import { useAppContext } from "../../context/appContext";
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
 import { useState } from "react";
 import Popup from "reactjs-popup";
-import { useDetectClickOutside } from 'react-detect-click-outside';
 
 const AddJob = () => {
   const {
@@ -61,7 +60,6 @@ const AddJob = () => {
 
   function RenderPopup() {
     setCloseState(false);
-    const ref = useDetectClickOutside({ onTriggered: closePop });
 
     if (popupState) {
       return (
