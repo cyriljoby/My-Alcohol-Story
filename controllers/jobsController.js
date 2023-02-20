@@ -18,24 +18,26 @@ const createJob = async (req, res) => {
     createdBy:createdBy
 
   }
-  console.log(req.body)
+  console.log(createdBy)
   let result = Job.find(queryObject)
   const jobs = await result
-  console.log(jobs)
-  let createdAt=jobs.slice(-1)[0]["createdAt"] 
-  console.log(createdAt)
-  let now=(new moment.utc)
-  let diff=now.diff(createdAt);
-  const diffDuration = moment.duration(diff);
-  let word='minutes'
-  console.log(diffDuration.seconds())
-  if (diffDuration.minutes()==1){
-    word='minute'
+  // console.log(jobs.length)
+  if (jobs.length!=0){
+    console.log('hi')
+    let createdAt=jobs.slice(-1)[0]["createdAt"] 
+    let now=(new moment.utc)
+    let diff=now.diff(createdAt);
+    const diffDuration = moment.duration(diff);
+    let word='minutes'
+    console.log(diffDuration.seconds())
+    if (diffDuration.minutes()==1){
+      word='minute'
+    }
+    if (diffDuration.minutes()<5){
+      throw new BadRequestError(`Please wait 5 minutes before you post another story.It has been ${diffDuration.minutes()} ${word} since your last story.`)
+    }
   }
-  if (diffDuration.minutes()<5){
-    throw new BadRequestError(`Please wait 5 minutes before you post another story.It has been ${diffDuration.minutes()} ${word} since your last story.`)
-  }
-  console.log(diffDuration.seconds())
+  
 
   if (!title || !story) {
     throw new BadRequestError('Please provide all values')
