@@ -26,22 +26,20 @@ const MyStory = () => {
     searchType,
     sort,
     user,
-    numOfPages,
     users,
   } = useAppContext();
-  let userId=localStorage
-  .getItem("user")
-  .split(",")[0]
-  .replace('{"_id":', "")
-  .replace(/['"]+/g, "");
   useEffect(() => {
-    getJobs(userId);
     getUsers();
+    getJobs();
+
+    
+
     // eslint-disable-next-line
-  }, [page, search, searchStatus, searchType, sort]);
+  }, []);
   if (isLoading) {
     return <Loading center />;
   }
+  console.log(jobs)
   let user_info = [];
   let thisUser_id = "";
   for (let i = 0; i < users?.length; i++) {
@@ -102,13 +100,10 @@ const MyStory = () => {
       
     }
     else{
-
       return null
     }
-  
 
   });
 };
 
 export default MyStory;
-
