@@ -2,8 +2,8 @@ import { FormRow, Alert } from "../../components";
 import { useAppContext } from "../../context/appContext";
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Popup from "reactjs-popup";
+import { useDetectClickOutside } from 'react-detect-click-outside';
 
 const AddJob = () => {
   const {
@@ -21,7 +21,6 @@ const AddJob = () => {
   } = useAppContext();
   const [popupState, setPopupState] = useState(false);
   const [closeState, setCloseState] = useState(false);
-  const navigate = useNavigate()
   let triggers = ["murder", "kill", "shoot", "suicide"];
   const directCreateJob = (e) => {
     e.preventDefault();
@@ -55,15 +54,19 @@ const AddJob = () => {
   };
 
   const closePop = () => {
+    console.log('hi')
     setPopupState(false);
     setCloseState(false);
   };
 
   function RenderPopup() {
     setCloseState(false);
+    const ref = useDetectClickOutside({ onTriggered: closePop });
+
     if (popupState) {
       return (
-        <Popup open={true} modal nested>
+        <Popup  disableBackdropClick backdrop="static" open={true} modal nested >
+          
           {(close) => (
             <div
               className="modal"
@@ -101,7 +104,7 @@ const AddJob = () => {
                   <li>post any personal identification information</li>
                 </ul>
                 If you are feeling the urge to harm yourself, please visit our{" "}
-                <a className="resources-page" onClick={()=>navigate("/resources")}>
+                <a className="resources-page" href="/resources">
                   resources
                 </a>{" "}
                 page.
@@ -167,6 +170,8 @@ const AddJob = () => {
     }
   };
   const handleJobInput = (e) => {
+    setPopupState(false);
+    setCloseState(false);
     const name = e.target.name;
     const value = e.target.value;
     handleChange({ name, value });
