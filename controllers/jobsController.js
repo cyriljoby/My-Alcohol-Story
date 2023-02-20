@@ -18,6 +18,7 @@ const createJob = async (req, res) => {
     createdBy:createdBy
 
   }
+  console.log(req.body)
   let result = Job.find(queryObject)
   const jobs = await result
   console.log(jobs)
