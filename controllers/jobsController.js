@@ -20,7 +20,9 @@ const createJob = async (req, res) => {
   }
   let result = Job.find(queryObject)
   const jobs = await result
+  console.log(jobs)
   let createdAt=jobs.slice(-1)[0]["createdAt"] 
+  console.log(createdAt)
   let now=(new moment.utc)
   let diff=now.diff(createdAt);
   const diffDuration = moment.duration(diff);
@@ -76,8 +78,6 @@ const createSubReply = async (req, res) => {
 const getAllJobs = async (req, res) => {
   // console.log(req.query)
   const {sort, search } = req.query
-  const {userId}=req.params
-  console.log(userId)
 
   const queryObject = {
 
