@@ -36,7 +36,7 @@ const MyStory = () => {
 
     // eslint-disable-next-line
   }, []);
-  if (isLoading) {
+  if (isLoading || jobs===undefined) {
     return <Loading center />;
   }
   console.log(jobs)
