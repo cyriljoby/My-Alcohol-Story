@@ -32,7 +32,7 @@ const Featured = () => {
         </span>
         <span class="stat_box_own3">
           <a
-            href="https://thestemistryproject.carrd.co/"
+            href="https://open.spotify.com/episode/1W1TjhGpgoYAmabLUWjZjZ"
             className="special-a"
             target="_blank"
           >
