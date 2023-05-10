@@ -1,7 +1,7 @@
 import { useAppContext } from "../context/appContext";
 import { useEffect, useReducer } from "react";
 import Loading from "./Loading";
-import Wrapper from "../assets/wrappers/JobsContainer";
+import Wrapper from "../assets/wrappers/StoryContainer";
 import {
   GiElephant,
   GiDeer,
@@ -10,7 +10,7 @@ import {
   GiTortoise,
 } from "react-icons/gi";
 import { RiUserFill } from "react-icons/ri";
-import JobsContainerEdit from "./JobsContainerEdit";
+import StoryContainerEdit from "./StoryContainerEdit";
 
 import moment from "moment";
 const MyStory = () => {
@@ -93,7 +93,7 @@ const MyStory = () => {
       return (
         <Wrapper>
           <div key={job._id}>
-            <JobsContainerEdit key={job._id} {...job} />
+            <StoryContainerEdit key={job._id} {...job} />
           </div>
         </Wrapper>
       );

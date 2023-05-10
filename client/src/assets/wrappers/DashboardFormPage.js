@@ -49,20 +49,20 @@ const Wrapper = styled.section`
   }
 
   @media (min-width: 992px) {
-    .form-center:not(.addJobForm) {
+    .form-center:not(.addStoryForm) {
       grid-template-columns: 1fr 1fr;
       align-items: center;
       column-gap: 1rem;
     }
-    .btn-container:not(.addJobForm) {
+    .btn-container:not(.addStoryForm) {
       margin-top: 0;
     }
   }
   @media (min-width: 1120px) {
-    .form-center:not(.addJobForm) {
+    .form-center:not(.addStoryForm) {
       grid-template-columns: 1fr 1fr 1fr;
     }
-    .form-center button:not(.addJobForm) {
+    .form-center button:not(.addStoryForm) {
       margin-top: 0;
     }
   }

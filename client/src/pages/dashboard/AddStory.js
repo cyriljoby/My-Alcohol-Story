@@ -5,7 +5,7 @@ import { useState } from "react";
 import Popup from "reactjs-popup";
 // import { useDetectClickOutside } from 'react-detect-click-outside';
 
-const AddJob = () => {
+const AddStory = () => {
   const {
     isLoading,
     isEditing,
@@ -177,7 +177,7 @@ const AddJob = () => {
       <form className="form">
         <h3>{"add story"}</h3>
         {showAlert && <Alert />}
-        <div className="form-center addJobForm">
+        <div className="form-center addStoryForm">
           {/* title */}
           {/* <input type="text" name="title" value={title} handleChange={handleJobInput} style="width: 200px;"></input> */}
           <label>Title</label>
@@ -226,4 +226,4 @@ const AddJob = () => {
   );
 };
 
-export default AddJob;
+export default AddStory;

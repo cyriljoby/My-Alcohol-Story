@@ -42,7 +42,7 @@ const EditJob = () => {
       <form className="form">
         <h3>{"edit story"}</h3>
         {showAlert && <Alert />}
-        <div className="form-center addJobForm">
+        <div className="form-center addStoryForm">
           {/* title */}
           {/* <input type="text" name="title" value={title} handleChange={handleJobInput} style="width: 200px;"></input> */}
           <FormRow

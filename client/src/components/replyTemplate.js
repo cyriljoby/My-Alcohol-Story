@@ -2,7 +2,7 @@ import moment from "moment";
 import { FaCalendarAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useAppContext } from "../context/appContext";
-import Wrapper from "../assets/wrappers/JobsContainerEdit";
+import Wrapper from "../assets/wrappers/StoryContainerEdit";
 import {
   GiElephant,
   GiDeer,

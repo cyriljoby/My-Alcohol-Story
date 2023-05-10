@@ -19,7 +19,7 @@ import connectDB from "./db/connect.js";
 
 // routers
 import authRouter from "./routes/authRoutes.js";
-import jobsRouter from "./routes/jobsRoutes.js";
+import storyRouter from "./routes/storyRoutes.js";
 import replyRouter from "./routes/replyRoutes.js";
 
 // middleware
@@ -42,7 +42,7 @@ app.use(xss());
 app.use(mongoSanitize());
 
 app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/jobs", authenticateUser, jobsRouter);
+app.use("/api/v1/jobs", authenticateUser, storyRouter);
 app.use("/api/v1/reply", replyRouter);
 
 // only when ready to deploy

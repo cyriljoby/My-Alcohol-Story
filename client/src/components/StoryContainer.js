@@ -1,7 +1,7 @@
 import { useAppContext } from "../context/appContext";
 import { useEffect } from "react";
 import Loading from "./Loading";
-import Wrapper from "../assets/wrappers/JobsContainer";
+import Wrapper from "../assets/wrappers/StoryContainer";
 import {
   GiElephant,
   GiDeer,
@@ -25,7 +25,7 @@ let openIds = [];
 
 // import {BiReply} from "react-icons/bi";
 
-const JobsContainer = () => {
+const StoryContainer = () => {
   // const [replyState, setreplyState] = useState(false);
 
   const {
@@ -449,4 +449,4 @@ const JobsContainer = () => {
   );
 };
 
-export default JobsContainer;
+export default StoryContainer;

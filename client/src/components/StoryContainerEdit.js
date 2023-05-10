@@ -2,7 +2,7 @@ import moment from "moment";
 import { FaCalendarAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useAppContext } from "../context/appContext";
-import Wrapper from "../assets/wrappers/JobsContainerEdit";
+import Wrapper from "../assets/wrappers/StoryContainerEdit";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import {
@@ -14,7 +14,7 @@ import {
 } from "react-icons/gi";
 import { FaUser } from "react-icons/fa";
 
-const JobsContainerEdit = ({
+const StoryContainerEdit = ({
   _id,
   title,
   story,
@@ -61,7 +61,7 @@ const JobsContainerEdit = ({
     </Wrapper>
   );
 };
-export default JobsContainerEdit;
+export default StoryContainerEdit;
 //   return (
 //     <Wrapper>
 //       <header>

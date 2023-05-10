@@ -1,13 +1,13 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Register, Landing, Error, ProtectedRoute, Team } from "./pages";
 import {
-  AllJobs,
+  AllStories,
   Profile,
   SharedLayout,
-  AddJob,
+  AddStory,
   Resources,
 } from "./pages/dashboard";
-import EditJob from "./pages/dashboard/EditStory";
+import EditStory from "./pages/dashboard/EditStory";
 
 function App() {
   return (
@@ -21,9 +21,9 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route path="/" element={<AllJobs />} />
-          <Route path="add-story" element={<AddJob />} />
-          <Route path="edit-story" element={<EditJob />} />
+          <Route path="/" element={<AllStories />} />
+          <Route path="add-story" element={<AddStory />} />
+          <Route path="edit-story" element={<EditStory />} />
           <Route path="profile" element={<Profile />} />
           <Route path="resources" element={<Resources />} />
         </Route>
