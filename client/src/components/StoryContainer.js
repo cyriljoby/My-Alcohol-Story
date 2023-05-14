@@ -29,8 +29,8 @@ const StoryContainer = () => {
   // const [replyState, setreplyState] = useState(false);
 
   const {
-    getJobs,
-    jobs,
+    getStories,
+    stories,
     isLoading,
     page,
     search,
@@ -50,7 +50,7 @@ const StoryContainer = () => {
   } = useAppContext();
   useEffect(() => {
     getUsers();
-    getJobs();
+    getStories();
     getReplies();
     getSubReplies();
     
@@ -58,7 +58,7 @@ const StoryContainer = () => {
     // eslint-disable-next-line
   }, []);
   let user_info = [];
-
+  // console.log(stories)
   let user_id = localStorage.getItem("_id");
   let replyValue = "";
   let arrow = <BsChevronDown />;
@@ -70,7 +70,7 @@ const StoryContainer = () => {
     });
   }
 
-  if (jobs?.length === 0) {
+  if (stories?.length === 0) {
     return (
       <Wrapper>
         <h2>No stories to display...</h2>
@@ -423,7 +423,7 @@ const StoryContainer = () => {
   return (
     <Wrapper>
       <div>
-        {jobs?.map((job) => {
+        {stories?.map((job) => {
           //       count+=1
           let date = new moment.utc(job.createdAt)
             .local()

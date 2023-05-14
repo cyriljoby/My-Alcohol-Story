@@ -12,23 +12,25 @@ import {
   UPDATE_USER_ERROR,
   HANDLE_CHANGE,
   CLEAR_VALUES,
-  CREATE_JOB_BEGIN,
-  CREATE_JOB_SUCCESS,
-  CREATE_JOB_ERROR,
-  GET_JOBS_BEGIN,
-  GET_JOBS_SUCCESS,
-  SET_EDIT_JOB,
-  DELETE_JOB_BEGIN,
-  EDIT_JOB_BEGIN,
-  EDIT_JOB_SUCCESS,
-  EDIT_JOB_ERROR,
+  CREATE_STORY_BEGIN,
+  CREATE_STORY_SUCCESS,
+  CREATE_STORY_ERROR,
+  GET_STORIES_BEGIN,
+  GET_STORIES_SUCCESS,
+  SET_EDIT_STORY,
+  DELETE_STORY_BEGIN,
+  EDIT_STORY_BEGIN,
+  EDIT_STORY_SUCCESS,
+  EDIT_STORY_ERROR,
   SHOW_STATS_BEGIN,
   SHOW_STATS_SUCCESS,
   CLEAR_FILTERS,
   CHANGE_PAGE,
   GET_USERS_SUCCESS,
   GET_REPLIES_SUCCESS,
-  GET_SUBREPLIES_SUCCESS
+  GET_SUBREPLIES_SUCCESS,
+  CREATE_LOG_SUCCESS,
+  GET_LOGS_SUCCESS
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -119,6 +121,7 @@ const reducer = (state, action) => {
     };
   }
   if (action.type === HANDLE_CHANGE) {
+    console.log([action.payload.name], action.payload.value,)
     return {
       ...state,
       page: 1,
@@ -128,9 +131,12 @@ const reducer = (state, action) => {
   if (action.type === CLEAR_VALUES) {
     const initialState = {
       isEditing: false,
-      editJobId: "",
+      editStoryId: "",
       title: "",
       story: "",
+      log:"",
+      month:"",
+      day:""
     };
 
     return {
@@ -138,11 +144,11 @@ const reducer = (state, action) => {
       ...initialState,
     };
   }
-  if (action.type === CREATE_JOB_BEGIN) {
+  if (action.type === CREATE_STORY_BEGIN) {
     return { ...state, isLoading: true };
   }
 
-  if (action.type === CREATE_JOB_SUCCESS) {
+  if (action.type === CREATE_STORY_SUCCESS) {
     return {
       ...state,
       isLoading: false,
@@ -151,7 +157,18 @@ const reducer = (state, action) => {
       alertText: "New Story Created!",
     };
   }
-  if (action.type === CREATE_JOB_ERROR) {
+
+  if (action.type === CREATE_LOG_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: "success",
+      alertText: "New Daily Log Created!",
+    };
+  }
+
+  if (action.type === CREATE_STORY_ERROR) {
     return {
       ...state,
       isLoading: false,
@@ -160,16 +177,25 @@ const reducer = (state, action) => {
       alertText: action.payload.msg,
     };
   }
-  if (action.type === GET_JOBS_BEGIN) {
+  if (action.type === GET_STORIES_BEGIN) {
     return { ...state, isLoading: true, showAlert: false };
   }
-  if (action.type === GET_JOBS_SUCCESS) {
+  if (action.type === GET_STORIES_SUCCESS) {
+    console.log(action.payload.stories)
     return {
       ...state,
       isLoading: false,
-      jobs: action.payload.jobs,
-      totalJobs: action.payload.totalJobs,
+      stories: action.payload.stories,
+      totalStories: action.payload.totalStories,
       numOfPages: action.payload.numOfPages,
+    };
+  }
+
+  if (action.type === GET_LOGS_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      logs: action.payload.logs
     };
   }
   if (action.type === GET_USERS_SUCCESS) {
@@ -177,7 +203,7 @@ const reducer = (state, action) => {
       ...state,
       isLoading: false,
       users: action.payload.users,
-      totalJobs: action.payload.totalJobs,
+      totalStories: action.payload.totalStories,
       numOfPages: action.payload.numOfPages,
     };
   }
@@ -195,27 +221,27 @@ const reducer = (state, action) => {
       subreplies: action.payload.subreplies,
     };
   }
-  if (action.type === SET_EDIT_JOB) {
-    const job = state.jobs.find((job) => job._id === action.payload.id);
-    const { title, story, _id } = job;
+  if (action.type === SET_EDIT_STORY) {
+    const story_info = state.stories.find((job) => job._id === action.payload.id);
+    const { title, story, _id } = story_info;
     return {
       ...state,
       isEditing: true,
-      editJobId: _id,
+      editStoryId: _id,
       title,
       story,
     };
   }
-  if (action.type === DELETE_JOB_BEGIN) {
+  if (action.type === DELETE_STORY_BEGIN) {
     return { ...state, isLoading: true };
   }
-  if (action.type === EDIT_JOB_BEGIN) {
+  if (action.type === EDIT_STORY_BEGIN) {
     return {
       ...state,
       isLoading: true,
     };
   }
-  if (action.type === EDIT_JOB_SUCCESS) {
+  if (action.type === EDIT_STORY_SUCCESS) {
     return {
       ...state,
       isLoading: false,
@@ -225,7 +251,7 @@ const reducer = (state, action) => {
       msg: "/",
     };
   }
-  if (action.type === EDIT_JOB_ERROR) {
+  if (action.type === EDIT_STORY_ERROR) {
     return {
       ...state,
       isLoading: false,

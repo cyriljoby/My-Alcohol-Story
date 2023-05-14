@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-const JobSchema = new mongoose.Schema(
+const StorySchema = new mongoose.Schema(
   {
     title: {
       type: String,
@@ -20,4 +20,4 @@ const JobSchema = new mongoose.Schema(
   { timestamps: true }
 )
 
-export default mongoose.model('Job', JobSchema)
+export default mongoose.model('Story', StorySchema)

@@ -3,7 +3,7 @@ const replyRouter = express.Router()
 
 import {
   createReply, deleteReply,createSubReply,deleteSubReply
-} from '../controllers/jobsController.js'
+} from '../controllers/storyController.js'
 
 import rateLimiter from 'express-rate-limit'
 const apiLimiter = rateLimiter({

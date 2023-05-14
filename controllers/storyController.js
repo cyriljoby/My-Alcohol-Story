@@ -1,5 +1,7 @@
-import Job from '../models/Job.js'
+import Story from '../models/Story.js'
 import User from '../models/User.js'
+import DailyLog from '../models/DailyLog.js'
+
 import { StatusCodes } from 'http-status-codes'
 import {
   BadRequestError,
@@ -11,7 +13,7 @@ import mongoose from 'mongoose'
 import moment from 'moment'
 import Reply from '../models/Reply.js'
 import SubReply from '../models/SubReply.js'
-const createJob = async (req, res) => {
+const createStory = async (req, res) => {
   
   const { title, story,createdBy } = req.body
   const queryObject = {
@@ -21,11 +23,11 @@ const createJob = async (req, res) => {
   const user = await verifyUser
 
   if (verifyUser){
-  let result = Job.find(queryObject)
-  const jobs = await result
+  let result = Story.find(queryObject)
+  const stories = await result
   // console.log(jobs.length)
-  if (jobs.length!=0){
-    let createdAt=jobs.slice(-1)[0]["createdAt"] 
+  if (stories.length!=0){
+    let createdAt=stories.slice(-1)[0]["createdAt"] 
     let now=(new moment.utc)
     let diff=now.diff(createdAt);
     const diffDuration = moment.duration(diff);
@@ -44,7 +46,7 @@ const createJob = async (req, res) => {
   }
   req.body.createdBy = req.user.userId
   // console.log(req.body)
-  const job = await Job.create(req.body)
+  const job = await Story.create(req.body)
   // console.log(job)
   
   res.status(StatusCodes.CREATED).json( req.body )}
@@ -57,6 +59,18 @@ const createReply = async (req, res) => {
   try {
     const { reply, storyId,createdBy } = req.body
     const replyOut = await Reply.create(req.body)
+  
+    res.status(StatusCodes.CREATED).json( req.body )
+    
+  } catch (error) {
+  }
+
+}
+
+const createLog = async (req, res) => {
+  try {
+    const { month, day,log,createdBy } = req.body
+    const logOutput = await DailyLog.create(req.body)
   
     res.status(StatusCodes.CREATED).json( req.body )
     
@@ -92,7 +106,7 @@ const getAllJobs = async (req, res) => {
   }
   // NO AWAIT
 
-  let result = Job.find(queryObject)
+  let result = Story.find(queryObject)
 
   // chain sort conditions
 
@@ -106,9 +120,9 @@ const getAllJobs = async (req, res) => {
   const skip = (page - 1) * limit
 
 
-  const jobs = await result
-  const totalJobs = await Job.countDocuments(queryObject)
-  const numOfPages = Math.ceil(totalJobs / limit)
+  const stories = await result
+  const totalStories = await Story.countDocuments(queryObject)
+  const numOfPages = Math.ceil(totalStories / limit)
 
 
   let Userresult = User.find()
@@ -117,6 +131,12 @@ const getAllJobs = async (req, res) => {
 
   let SubReplyResult=SubReply.find()
 
+  let LogsResult=DailyLog.find()
+
+
+  if (sort === 'latest') {
+    LogsResult = LogsResult.sort('-createdAt')
+  }
  
 
 
@@ -126,7 +146,9 @@ const getAllJobs = async (req, res) => {
 
   const subreplies= await SubReplyResult
 
-  res.status(StatusCodes.OK).json({ users,jobs,replies,subreplies})
+  const logs= await LogsResult
+
+  res.status(StatusCodes.OK).json({ users,stories,replies,subreplies,logs})
 }
 
 
@@ -139,7 +161,7 @@ const updateJob = async (req, res) => {
   if (!title || !story) {
     throw new BadRequestError('Please provide all values')
   }
-  const job = await Job.findOne({ _id: jobId })
+  const job = await Story.findOne({ _id: jobId })
 
   if (!job) {
     throw new NotFoundError(`No job with id :${jobId}`)
@@ -148,7 +170,7 @@ const updateJob = async (req, res) => {
 
   checkPermissions(req.user, job.createdBy)
 
-  const updatedJob = await Job.findOneAndUpdate({ _id: jobId }, req.body, {
+  const updatedJob = await Story.findOneAndUpdate({ _id: jobId }, req.body, {
     new: true,
     runValidators: true,
   })
@@ -158,7 +180,7 @@ const updateJob = async (req, res) => {
 const deleteJob = async (req, res) => {
   const { id: jobId } = req.params
 
-  const job = await Job.findOne({ _id: jobId })
+  const job = await Story.findOne({ _id: jobId })
 
   const replies=await Reply.find({storyId:jobId})
   for (let i=0;i<replies.length;i++){
@@ -235,7 +257,7 @@ const deleteReplybyStory = async (req, res) => {
 }
 
 const showStats = async (req, res) => {
-  let stats = await Job.aggregate([
+  let stats = await Story.aggregate([
     { $match: { createdBy: mongoose.Types.ObjectId(req.user.userId) } },
     { $group: { _id: '$status', count: { $sum: 1 } } },
   ])
@@ -251,7 +273,7 @@ const showStats = async (req, res) => {
     declined: stats.declined || 0,
   }
 
-  let monthlyApplications = await Job.aggregate([
+  let monthlyApplications = await Story.aggregate([
     { $match: { createdBy: mongoose.Types.ObjectId(req.user.userId) } },
     {
       $group: {
@@ -279,4 +301,4 @@ const showStats = async (req, res) => {
   res.status(StatusCodes.OK).json({ defaultStats, monthlyApplications })
 }
 
-export { deleteSubReply,createJob, deleteJob, getAllJobs, updateJob, showStats,createReply, deleteReply, deleteReplybyStory,createSubReply }
+export { createLog, deleteSubReply,createStory, deleteJob, getAllJobs, updateJob, showStats,createReply, deleteReply, deleteReplybyStory,createSubReply }

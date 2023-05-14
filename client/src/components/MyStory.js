@@ -15,12 +15,12 @@ import StoryContainerEdit from "./StoryContainerEdit";
 import moment from "moment";
 const MyStory = () => {
   const {
-    getJobs,
+    getStories,
     getUsers,
-    jobs,
+    stories,
     isLoading,
     page,
-    totalJobs,
+    totalStories,
     search,
     searchStatus,
     searchType,
@@ -30,16 +30,15 @@ const MyStory = () => {
   } = useAppContext();
   useEffect(() => {
     getUsers();
-    getJobs();
+    getStories();
 
     
 
     // eslint-disable-next-line
   }, []);
-  if (isLoading || jobs===undefined) {
+  if (isLoading || stories===undefined) {
     return <Loading center />;
   }
-  console.log(jobs)
   let user_info = [];
   let thisUser_id = "";
   for (let i = 0; i < users?.length; i++) {
@@ -52,48 +51,47 @@ const MyStory = () => {
       thisUser_id = users[i]._id;
     }
   }
-
-  return jobs?.map((job) => {
-    let date = new moment.utc(job.createdAt)
+  return stories?.map((story) => {
+    let date = new moment.utc(story.createdAt)
       .local()
       .startOf("seconds")
       .fromNow();
 
     let icon = "";
     for (let i = 0; i < user_info.length; i++) {
-      if (job.createdBy === user_info[i].id) {
-        job.alias = user_info[i].alias;
+      if (story.createdBy === user_info[i].id) {
+        story.alias = user_info[i].alias;
         icon = user_info[i].icon;
       }
     }
-    if (job.createdBy == user._id || job.createdBy == thisUser_id) {
+    if (story.createdBy == user._id || story.createdBy == thisUser_id) {
       if (icon === "GiTortoise") {
-        job.image = <GiTortoise />;
+        story.image = <GiTortoise />;
       }
 
       if (icon === "GiDeer") {
-        job.image = <GiDeer />;
+        story.image = <GiDeer />;
       }
 
       if (icon === "RiUserFill") {
-        job.image = <RiUserFill />;
+        story.image = <RiUserFill />;
       }
 
       if (icon === "GiButterfly") {
-        job.image = <GiButterfly />;
+        story.image = <GiButterfly />;
       }
 
       if (icon === "GiDolphin") {
-        job.image = <GiDolphin />;
+        story.image = <GiDolphin />;
       }
 
       if (icon === "GiElephant") {
-        job.image = <GiElephant />;
+        story.image = <GiElephant />;
       }
       return (
         <Wrapper>
-          <div key={job._id}>
-            <StoryContainerEdit key={job._id} {...job} />
+          <div key={story._id}>
+            <StoryContainerEdit key={story._id} {...story} />
           </div>
         </Wrapper>
       );

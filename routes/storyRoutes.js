@@ -9,17 +9,18 @@ const apiLimiter = rateLimiter({
 })
 
 import {
-  createJob,
+  createStory,
   deleteJob,
   getAllJobs,
   updateJob,
   showStats,
-  createReply
-} from '../controllers/jobsController.js'
+  createReply,
+  createLog
+} from '../controllers/storyController.js'
 
-router.route('/').post(createJob).get(getAllJobs)
+router.route('/').post(createStory).get(getAllJobs)
 // router.route('/reply').post(createReply)
-
+router.route('/log').post(createLog)
 // remember about :id
 router.route('/stats').get(showStats)
 router.route('/:id').delete(deleteJob).patch(updateJob)

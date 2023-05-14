@@ -17,22 +17,24 @@ import {
   UPDATE_USER_ERROR,
   HANDLE_CHANGE,
   CLEAR_VALUES,
-  CREATE_JOB_BEGIN,
-  CREATE_JOB_SUCCESS,
-  CREATE_JOB_ERROR,
-  GET_JOBS_BEGIN,
-  GET_JOBS_SUCCESS,
-  SET_EDIT_JOB,
-  DELETE_JOB_BEGIN,
-  EDIT_JOB_BEGIN,
-  EDIT_JOB_SUCCESS,
-  EDIT_JOB_ERROR,
+  CREATE_STORY_BEGIN,
+  CREATE_STORY_SUCCESS,
+  CREATE_STORY_ERROR,
+  GET_STORIES_BEGIN,
+  GET_STORIES_SUCCESS,
+  GET_LOGS_SUCCESS,
+  SET_EDIT_STORY,
+  DELETE_STORY_BEGIN,
+  EDIT_STORY_BEGIN,
+  EDIT_STORY_SUCCESS,
+  EDIT_STORY_ERROR,
   SHOW_STATS_BEGIN,
   SHOW_STATS_SUCCESS,
   CLEAR_FILTERS,
   CHANGE_PAGE,
   GET_REPLIES_SUCCESS,
   GET_SUBREPLIES_SUCCESS,
+  CREATE_LOG_SUCCESS
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -47,12 +49,11 @@ const initialState = {
   token: token,
   showSidebar: false,
   isEditing: false,
-  editJobId: "",
+  editStoryId: "",
   title: "",
   story: "",
   status: "pending",
-  // jobs: [],
-  totalJobs: 0,
+  totalStories: 0,
   numOfPages: 1,
   page: 1,
   stats: {},
@@ -64,6 +65,9 @@ const initialState = {
   sortOptions: ["latest", "oldest", "a-z", "z-a"],
   reply: "",
   storyId: "",
+  month:"",
+  day:"",
+  log:"",
 };
 
 const AppContext = React.createContext();
@@ -194,7 +198,7 @@ const AppProvider = ({ children }) => {
   const clearValues = () => {
     dispatch({ type: CLEAR_VALUES });
   };
-  const createJob = async () => {
+  const createStory = async () => {
     const alias = localStorage.getItem("alias").slice(1, -1);
     const image = localStorage.getItem("image").slice(1, -1);
     const createdBy = localStorage
@@ -202,27 +206,27 @@ const AppProvider = ({ children }) => {
       .split(",")[0]
       .replace('{"_id":', "")
       .replace(/['"]+/g, "");
-    dispatch({ type: CREATE_JOB_BEGIN });
+    
     
     try {
       const { title, story } = state;
-      await authFetch.post("/jobs", {
+      await authFetch.post("/stories", {
         title,
         story,
         createdBy
 
       });
-      dispatch({ type: CREATE_JOB_SUCCESS });
+      dispatch({ type: CREATE_STORY_SUCCESS });
       dispatch({ type: CLEAR_VALUES });
     } catch (error) {
       if (error.response.status === 401) return;
       dispatch({
-        type: CREATE_JOB_ERROR,
+        type: CREATE_STORY_ERROR,
         payload: { msg: error.response.data.msg },
       });
       if (error.response.status === 429){
         dispatch({
-          type: CREATE_JOB_ERROR,
+          type: CREATE_STORY_ERROR,
           payload: { msg: 'Try again later. You can only post a story once every 5 minutes.' ,warning:false},
         });
       } 
@@ -231,27 +235,47 @@ const AppProvider = ({ children }) => {
     clearAlert();
   };
 
+  const createLog = async () => {
+    const {month,
+      day,
+      log } = state;
+    const createdBy = localStorage
+      .getItem("user")
+      .split(",")[0]
+      .replace('{"_id":', "")
+      .replace(/['"]+/g, "");
+    dispatch({ type: CREATE_STORY_BEGIN });
+    
+    try {
+      await authFetch.post("/stories/log", {
+        month,
+        day,
+        log,
+        createdBy
+      });
+      dispatch({ type: CREATE_LOG_SUCCESS });
+      dispatch({ type: CLEAR_VALUES });
+    } catch (error) {
+      if (error.response.status === 401) return;
+    }
+  };
+
   const createReply = async (storyId, reply) => {
     const createdBy = localStorage
       .getItem("user")
       .split(",")[0]
       .replace('{"_id":', "")
       .replace(/['"]+/g, "");
-    dispatch({ type: CREATE_JOB_BEGIN });
+    dispatch({ type: CREATE_STORY_BEGIN });
     try {
       await authFetch.post("/reply", {
         reply,
         storyId,
         createdBy,
       });
-      // dispatch({ type: CREATE_JOB_SUCCESS });
-      // dispatch({ type: CLEAR_VALUES });
+  
     } catch (error) {
       if (error.response.status === 401) return;
-      // dispatch({
-      //   type: CREATE_JOB_ERROR,
-      //   payload: { msg: error.response.data.msg },
-      // });
     }
   };
 
@@ -261,7 +285,7 @@ const AppProvider = ({ children }) => {
       .split(",")[0]
       .replace('{"_id":', "")
       .replace(/['"]+/g, "");
-    dispatch({ type: CREATE_JOB_BEGIN });
+    dispatch({ type: CREATE_STORY_BEGIN });
     try {
       await authFetch.post("/reply/sub", {
         subreply,
@@ -269,31 +293,52 @@ const AppProvider = ({ children }) => {
         createdByReplyId,
         createdBy,
       });
-      // dispatch({ type: CREATE_JOB_SUCCESS });
       // dispatch({ type: CLEAR_VALUES });
     } catch (error) {
       if (error.response.status === 401) return;
     }
   };
 
-  const getJobs = async (userId) => {
+  const getStories = async (userId) => {
     const { page, search, searchStatus, searchType, sort } = state;
 
-    let url = `/jobs?page=${page}&status=${searchStatus}&jobType=${searchType}&sort=${sort}`;
+    let url = `/stories?page=${page}&status=${searchStatus}&jobType=${searchType}&sort=${sort}`;
     // console.log(state)
     if (search) {
       url = url + `&search=${search}`;
     }
-    dispatch({ type: GET_JOBS_BEGIN });
+    dispatch({ type: GET_STORIES_BEGIN });
     try {
       const { data } = await authFetch(url,{userId});
-
-      const { jobs } = data;
-
+      const { stories } = data;
+      console.log(stories)
       dispatch({
-        type: GET_JOBS_SUCCESS,
+        type: GET_STORIES_SUCCESS,
         payload: {
-          jobs,
+          stories,
+        },
+      });
+    } catch (error) {
+      logoutUser();
+    }
+  };
+
+  const getLogs = async (userId) => {
+    const { page, search, searchStatus, searchType, sort } = state;
+
+    let url = `/stories?page=${page}&status=${searchStatus}&jobType=${searchType}&sort=${sort}`;
+    // console.log(state)
+ 
+    dispatch({ type: GET_STORIES_BEGIN });
+    try {
+      const { data } = await authFetch(url,{userId});
+      console.log(data)
+      const { logs } = data;
+      console.log(logs)
+      dispatch({
+        type: GET_LOGS_SUCCESS,
+        payload: {
+          logs,
         },
       });
     } catch (error) {
@@ -302,14 +347,15 @@ const AppProvider = ({ children }) => {
   };
 
   const getReplies = async () => {
-    let url = `/jobs`;
+    let url = `/stories`;
     // console.log(state)
 
-    dispatch({ type: GET_JOBS_BEGIN });
+    dispatch({ type: GET_STORIES_BEGIN });
     try {
       const { data } = await authFetch(url);
-
+      console.log(data)
       const { replies } = data;
+      
       dispatch({
         type: GET_REPLIES_SUCCESS,
         payload: {
@@ -323,10 +369,10 @@ const AppProvider = ({ children }) => {
   };
 
   const getSubReplies = async () => {
-    let url = `/jobs`;
+    let url = `/stories`;
     // console.log(state)
 
-    dispatch({ type: GET_JOBS_BEGIN });
+    dispatch({ type: GET_STORIES_BEGIN });
     try {
       const { data } = await authFetch(url);
 
@@ -346,12 +392,12 @@ const AppProvider = ({ children }) => {
   const getUsers = async (userId) => {
     const { page, search, searchStatus, searchType, sort } = state;
 
-    let url = `/jobs?page=${page}&status=${searchStatus}&jobType=${searchType}&sort=${sort}&id=${userId}`;
+    let url = `/stories?page=${page}&status=${searchStatus}&jobType=${searchType}&sort=${sort}&id=${userId}`;
     // console.log(state)
     if (search) {
       url = url + `&search=${search}`;
     }
-    dispatch({ type: GET_JOBS_BEGIN });
+    dispatch({ type: GET_STORIES_BEGIN });
     try {
       const { data } = await authFetch(url);
 
@@ -368,40 +414,40 @@ const AppProvider = ({ children }) => {
     }
   };
   const setEditJob = (id) => {
-    dispatch({ type: SET_EDIT_JOB, payload: { id } });
+    dispatch({ type: SET_EDIT_STORY, payload: { id } });
   };
   const editJob = async () => {
-    dispatch({ type: EDIT_JOB_BEGIN });
+    dispatch({ type: EDIT_STORY_BEGIN });
 
     try {
       const { title, story } = state;
-      await authFetch.patch(`/jobs/${state.editJobId}`, {
+      await authFetch.patch(`/stories/${state.editStoryId}`, {
         story,
         title,
       });
-      dispatch({ type: EDIT_JOB_SUCCESS });
+      dispatch({ type: EDIT_STORY_SUCCESS });
       dispatch({ type: CLEAR_VALUES });
     } catch (error) {
       if (error.response.status === 401) return;
       dispatch({
-        type: EDIT_JOB_ERROR,
+        type: EDIT_STORY_ERROR,
         payload: { msg: error.response.data.msg },
       });
     }
     clearAlert();
   };
   const deleteJob = async (jobId) => {
-    dispatch({ type: DELETE_JOB_BEGIN });
+    dispatch({ type: DELETE_STORY_BEGIN });
     try {
-      await authFetch.delete(`/jobs/${jobId}`);
+      await authFetch.delete(`/stories/${jobId}`);
       // deleteReplybyStory(jobId)
-      getJobs();
+      getStories();
     } catch (error) {
       logoutUser();
     }
   };
   const deleteReply = async (replyId) => {
-    dispatch({ type: DELETE_JOB_BEGIN });
+    dispatch({ type: DELETE_STORY_BEGIN });
     try {
       await authFetch.delete(`/reply/${replyId}`);
       getReplies();
@@ -409,14 +455,14 @@ const AppProvider = ({ children }) => {
   };
 
   const deleteSubReply = async (replyId) => {
-    dispatch({ type: DELETE_JOB_BEGIN });
+    dispatch({ type: DELETE_STORY_BEGIN });
     try {
       await authFetch.delete(`/reply/sub/${replyId}`);
       getSubReplies();
     } catch (error) {}
   };
   const deleteReplybyStory = async (storyId) => {
-    dispatch({ type: DELETE_JOB_BEGIN });
+    dispatch({ type: DELETE_STORY_BEGIN });
     try {
       await authFetch.delete(`/reply/${storyId}`);
     } catch (error) {
@@ -425,7 +471,7 @@ const AppProvider = ({ children }) => {
   const showStats = async () => {
     dispatch({ type: SHOW_STATS_BEGIN });
     try {
-      const { data } = await authFetch("/jobs/stats");
+      const { data } = await authFetch("/stories/stats");
       dispatch({
         type: SHOW_STATS_SUCCESS,
         payload: {
@@ -455,8 +501,8 @@ const AppProvider = ({ children }) => {
         updateUser,
         handleChange,
         clearValues,
-        createJob,
-        getJobs,
+        createStory,
+        getStories,
         setEditJob,
         deleteJob,
         editJob,
@@ -472,6 +518,8 @@ const AppProvider = ({ children }) => {
         createSubReply,
         getSubReplies,
         deleteSubReply,
+        createLog,
+        getLogs
       }}
     >
       {children}

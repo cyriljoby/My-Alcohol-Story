@@ -6,6 +6,7 @@ import {
   SharedLayout,
   AddStory,
   Resources,
+  DailyLog
 } from "./pages/dashboard";
 import EditStory from "./pages/dashboard/EditStory";
 
@@ -22,6 +23,7 @@ function App() {
           }
         >
           <Route path="/" element={<AllStories />} />
+          <Route path="daily-logs" element={<DailyLog />} />
           <Route path="add-story" element={<AddStory />} />
           <Route path="edit-story" element={<EditStory />} />
           <Route path="profile" element={<Profile />} />

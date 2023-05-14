@@ -3,7 +3,7 @@ import { useAppContext } from "../../context/appContext";
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
 import { Link } from "react-router-dom";
 
-const EditJob = () => {
+const EditStory = () => {
   const {
     isLoading,
     isEditing,
@@ -13,7 +13,7 @@ const EditJob = () => {
     story,
     handleChange,
     clearValues,
-    createJob,
+    createStory,
     editJob,
   } = useAppContext();
 
@@ -28,7 +28,6 @@ const EditJob = () => {
       editJob();
       return;
     }
-    // createJob();
   };
   const handleJobInput = (e) => {
     const name = e.target.name;
@@ -88,5 +87,5 @@ const EditJob = () => {
   );
 };
 
-export default EditJob;
+export default EditStory;
 

@@ -42,7 +42,7 @@ app.use(xss());
 app.use(mongoSanitize());
 
 app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/jobs", authenticateUser, storyRouter);
+app.use("/api/v1/stories", authenticateUser, storyRouter);
 app.use("/api/v1/reply", replyRouter);
 
 // only when ready to deploy
