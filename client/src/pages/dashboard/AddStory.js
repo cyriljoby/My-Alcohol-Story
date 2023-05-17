@@ -232,6 +232,7 @@ const AddStory = () => {
         <Wrapper>
           <div className="form-center addStoryForm">
           <form className="form">
+          <h3>add story</h3>
           <label>{"Title" }</label>
               <textarea
                 value={title }
@@ -282,6 +283,7 @@ const AddStory = () => {
         <Wrapper>
         <div className="form-center addStoryForm">
         <form className="form">
+        <h3>add daily log</h3>
         <label>Day</label>
         <textarea
                 value={day}
@@ -292,8 +294,8 @@ const AddStory = () => {
                 cols="33"
                 className="form-input"
               />
-        <label>{ "Log"}</label>
-              <textarea
+        <label>Log</label>
+        <textarea
                 value={ log}
                 id={"log"}
                 name={ "log"}
