@@ -135,8 +135,7 @@ const reducer = (state, action) => {
       title: "",
       story: "",
       log:"",
-      month:"",
-      day:""
+      day:"",
     };
 
     return {

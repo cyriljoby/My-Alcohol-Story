@@ -3,6 +3,8 @@ import { useAppContext } from "../../context/appContext";
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
 import { useState } from "react";
 import Popup from "reactjs-popup";
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import 'react-tabs/style/react-tabs.css';
 // import { useDetectClickOutside } from 'react-detect-click-outside';
 
 const AddStory = () => {
@@ -213,32 +215,24 @@ const AddStory = () => {
     handleChange({ name, value });
   };
 
-  const handleAdd = (e) => {
-    console.log(e.target.name)
-    if (e.target.name==="story"){
-      setStoryState(true)
-    }
-    if (e.target.name==="log"){
-      setStoryState(false)
-    }
-  };
+
 
   return (
     
-    <Wrapper>
-     <div class="tab">
-     <button name ="story" class="tablinks" onClick={handleAdd}>Add Story</button>
-     <button name ="log" class="tablinks" onClick={handleAdd}>Add Daily Log</button>
-    </div>
-    <form className="form">
-            <h3>{storyState ? "add story" : "add daily log"}</h3>
-            {showAlert && <Alert />}
-            <div className="form-center addStoryForm">
-              {/* Month */}
-              {/* <input type="text" name="title" value={title} handleChange={handleJobInput} style="width: 200px;"></input> */}
-              {storyState?
-              <div>
-              <label>{"Title" }</label>
+    
+        <Tabs>
+        <TabList>
+          <Tab name ="story" onClick={()=>setStoryState(true)}>Add Story</Tab>
+          <Tab name ="log" onClick={()=>setStoryState(false)}>Add Daily Log</Tab>
+        </TabList>
+
+        <TabPanel>
+          
+        {showAlert && <Alert />}
+        <Wrapper>
+          <div className="form-center addStoryForm">
+          <form className="form">
+          <label>{"Title" }</label>
               <textarea
                 value={title }
                 name="title"
@@ -248,12 +242,48 @@ const AddStory = () => {
                 cols="33"
                 className="form-input"
               />
-              </div>:null}
-              {storyState ? null:
-
-              <div>
-              <label>Day</label>
+              <label>Story</label>
               <textarea
+                value={story}
+                id="story"
+                name="story" 
+                onChange={handleJobInput}
+                rows="10"
+                cols="33"
+                className="form-textarea"
+              />
+
+            <div className="btn-container">
+                <button
+                  type="submit"
+                  className="btn btn-block submit-btn"
+                  onClick={handleSubmit}
+                  disabled={isLoading}
+                >
+                  submit
+                </button>
+                <RenderPopup />
+                <button
+                  className="btn btn-block clear-btn"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    clearValues();
+                  }}
+                >
+                  clear
+                </button>
+              </div>
+              </form>
+          </div>
+          </Wrapper>
+        </TabPanel>
+        <TabPanel>
+        {showAlert && <Alert />}
+        <Wrapper>
+        <div className="form-center addStoryForm">
+        <form className="form">
+        <label>Day</label>
+        <textarea
                 value={day}
                 id="day"
                 name="day"
@@ -261,14 +291,12 @@ const AddStory = () => {
                 rows="10"
                 cols="33"
                 className="form-input"
-              /></div>}
-
-              {/* story */}
-              <label>{storyState ? "Story" : "Log"}</label>
+              />
+        <label>{ "Log"}</label>
               <textarea
-                value={storyState ? story : log}
-                id={storyState ? "story" : "log"}
-                name={storyState ? "story" : "log"}
+                value={ log}
+                id={"log"}
+                name={ "log"}
                 onChange={handleJobInput}
                 rows="10"
                 cols="33"
@@ -294,10 +322,12 @@ const AddStory = () => {
                 >
                   clear
                 </button>
-              </div>
             </div>
-          </form>
-    </Wrapper>
+            </form>
+            </div>
+            </Wrapper>
+        </TabPanel>
+      </Tabs>
   );
 };
 

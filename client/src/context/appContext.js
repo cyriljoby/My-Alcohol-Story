@@ -65,7 +65,6 @@ const initialState = {
   sortOptions: ["latest", "oldest", "a-z", "z-a"],
   reply: "",
   storyId: "",
-  month:"",
   day:"",
   log:"",
 };
@@ -236,7 +235,7 @@ const AppProvider = ({ children }) => {
   };
 
   const createLog = async () => {
-    const {month,
+    const {
       day,
       log } = state;
     const createdBy = localStorage
@@ -248,7 +247,6 @@ const AppProvider = ({ children }) => {
     
     try {
       await authFetch.post("/stories/log", {
-        month,
         day,
         log,
         createdBy
@@ -258,6 +256,7 @@ const AppProvider = ({ children }) => {
     } catch (error) {
       if (error.response.status === 401) return;
     }
+    clearAlert();
   };
 
   const createReply = async (storyId, reply) => {
