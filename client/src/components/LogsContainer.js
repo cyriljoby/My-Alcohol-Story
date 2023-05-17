@@ -116,9 +116,9 @@ const LogsContainer = () => {
                     </button>
                 </div>
               
-            <h1 className="story-title">Month:{log.month}</h1>
+            <h1 className="story-title">Day:{log.day}</h1>
             </div>
-            <p>Day:{log.day}</p>
+            {/* <p>Day:{log.day}</p> */}
             <p>{log.log}</p>
           
         {replyState?<div className="reply-container">
@@ -275,8 +275,6 @@ const LogsContainer = () => {
       );
  
   } 
-
-    
     else {
       let multiple = count > 0;
       return (
@@ -295,7 +293,6 @@ const LogsContainer = () => {
       );
     }
   }
-
   return( 
   logs?.map((log)=>{
     return (

@@ -19,7 +19,6 @@ const AddStory = () => {
     editJob,
     maxAlert,
     log,
-    month,
     day,
     createLog
   } = useAppContext();
@@ -172,9 +171,8 @@ const AddStory = () => {
     else{
 
       const logarea=document.getElementById("log");
-      const montharea=document.getElementById("month");
       const dayarea=document.getElementById("day");
-      if (!log || !month ||!day) {
+      if (!log || !day) {
         console.log('log')
         displayAlert();
         return;
@@ -195,12 +193,10 @@ const AddStory = () => {
         
         createLog();
         logarea.value = "";
-        montharea.value = "";
         dayarea.value="";
       }
       if (closeState) {
         logarea.value = "";
-        montharea.value = "";
         dayarea.value="";
       }
     
@@ -240,16 +236,19 @@ const AddStory = () => {
             <div className="form-center addStoryForm">
               {/* Month */}
               {/* <input type="text" name="title" value={title} handleChange={handleJobInput} style="width: 200px;"></input> */}
-              <label>{storyState ? "Title" : "Month"}</label>
+              {storyState?
+              <div>
+              <label>{"Title" }</label>
               <textarea
-                value={storyState ? title : month}
-                name={storyState ? "title" : "month"}
-                id={storyState ? "title" : "month"}
+                value={title }
+                name="title"
+                id="title" 
                 onChange={handleJobInput}
                 rows="10"
                 cols="33"
                 className="form-input"
               />
+              </div>:null}
               {storyState ? null:
 
               <div>

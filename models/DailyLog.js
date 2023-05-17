@@ -2,11 +2,6 @@ import mongoose from 'mongoose'
 
 const DailyLogSchema = new mongoose.Schema(
   {
-    month: {
-      type: String,
-      required: [true, 'Please provide month'],
-      maxlength: 50,
-    },
     day: {
         type: String,
         required: [true, 'Please provide day'],
