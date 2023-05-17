@@ -81,18 +81,7 @@ const StoryContainer = () => {
   const handleReplyInput = (e) => {
     replyValue = e.target.value;
   };
-
-  function RenderReply({ show, props, story_id }) {
-    if (show) {
-      return (
-        <div>
-          <ReplyTemplate {...props} />
-        </div>
-      );
-    } else {
-      return null;
-    }
-  }
+  
 
   function RenderReplyBox(job) {
     let alias = "";
@@ -118,35 +107,34 @@ const StoryContainer = () => {
         continue;
       }
     }
+    if (icon === "GiTortoise") {
+      icon = <GiTortoise />;
+    }
 
-    if (replyState) {
-      if (icon === "GiTortoise") {
-        icon = <GiTortoise />;
-      }
+    if (icon === "GiDeer") {
+      icon = <GiDeer />;
+    }
 
-      if (icon === "GiDeer") {
-        icon = <GiDeer />;
-      }
+    if (icon === "RiUserFill") {
+      icon = <RiUserFill />;
+    }
 
-      if (icon === "RiUserFill") {
-        icon = <RiUserFill />;
-      }
+    if (icon === "GiButterfly") {
+      icon = <GiButterfly />;
+    }
 
-      if (icon === "GiButterfly") {
-        icon = <GiButterfly />;
-      }
+    if (icon === "GiDolphin") {
+      icon = <GiDolphin />;
+    }
 
-      if (icon === "GiDolphin") {
-        icon = <GiDolphin />;
-      }
+    if (icon === "GiElephant") {
+      icon = <GiElephant />;
+    }
 
-      if (icon === "GiElephant") {
-        icon = <GiElephant />;
-      }
-
-      if (icon === "AiOutlineUser") {
-        icon = <RiUserFill />;
-      }
+    if (icon === "AiOutlineUser") {
+      icon = <RiUserFill />;
+    }
+      
       return (
         <div>
           <div className="story-header">
@@ -167,7 +155,7 @@ const StoryContainer = () => {
           <h1 className="story-title">{job["job"].title}</h1>
           <p>{job["job"].story}</p>
 
-          <div className="reply-container">
+          {replyState?<div className="reply-container">
             <textarea
               id="reply"
               name="reply"
@@ -184,59 +172,9 @@ const StoryContainer = () => {
             >
               Reply
             </button>
-          </div>
+          </div>:null}
         </div>
       );
-    } else {
-      if (icon === "GiTortoise") {
-        icon = <GiTortoise />;
-      }
-
-      if (icon === "GiDeer") {
-        icon = <GiDeer />;
-      }
-
-      if (icon === "RiUserFill") {
-        icon = <RiUserFill />;
-      }
-
-      if (icon === "GiButterfly") {
-        icon = <GiButterfly />;
-      }
-
-      if (icon === "GiDolphin") {
-        icon = <GiDolphin />;
-      }
-
-      if (icon === "GiElephant") {
-        icon = <GiElephant />;
-      }
-
-      if (icon === "AiOutlineUser") {
-        icon = <RiUserFill />;
-      }
-
-      return (
-        <div>
-          <div className="story-header">
-            <div className="user-info">
-              <div className="story-icon">
-                <span className="icon">{icon}</span>
-              </div>
-
-              <h4>{alias}</h4>
-            </div>
-            <div className="edit-btns">
-              <button className="btn open-reply" onClick={replyFunc}>
-                <BiReply />
-              </button>
-            </div>
-          </div>
-          <h1 className="story-title">{job["job"].title}</h1>
-          <p>{job["job"].story}</p>
-        </div>
-      );
-    }
   }
 
   let counts = [];
@@ -350,7 +288,6 @@ const StoryContainer = () => {
         }
       }
       let multiple = count > 0;
-      if (multiple){
       return (
         <div>
           <div>
@@ -366,40 +303,16 @@ const StoryContainer = () => {
             </button>
           </div>
           <div>
-            
-            {props_list.map((props) => {
+            {multiple?props_list.map((props) => {
  
-              return <ReplyTemplate {...props} />;
+                return <ReplyTemplate {...props} />;
 
-              
-            })}
-          </div>
-        </div>
-      );
-    }
-    else{
-      return (
-        <div>
-          <div>
-            <button
-              id={"show" + job._id}
-              onClick={showReplies}
-              className="btn show-replies"
-            >
-              <span className={multiple ? "num-comments" : "num-alt"}>
-                {count}
-              </span>
-              <BsChevronUp />
-            </button>
-          </div>
-          <div>
+                
+                }):<h1 style={{ paddingBottom: "2rem" }}>no comments</h1>}
             
-             <h1 style={{ paddingBottom: "2rem" }}>no comments</h1>
           </div>
         </div>
-      );
-    }
-  } 
+      );}
 
     
     else {
