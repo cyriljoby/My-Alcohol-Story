@@ -34,7 +34,9 @@ import {
   CHANGE_PAGE,
   GET_REPLIES_SUCCESS,
   GET_SUBREPLIES_SUCCESS,
-  CREATE_LOG_SUCCESS
+  CREATE_LOG_SUCCESS,
+  SET_EDIT_LOG,
+  EDIT_LOG_SUCCESS
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -50,6 +52,7 @@ const initialState = {
   showSidebar: false,
   isEditing: false,
   editStoryId: "",
+  editLogId:"",
   title: "",
   story: "",
   status: "pending",
@@ -415,9 +418,14 @@ const AppProvider = ({ children }) => {
   const setEditJob = (id) => {
     dispatch({ type: SET_EDIT_STORY, payload: { id } });
   };
+
+  const setEditLog = (id) => {
+  
+    dispatch({ type: SET_EDIT_LOG, payload: { id } });
+  };
   const editJob = async () => {
     dispatch({ type: EDIT_STORY_BEGIN });
-
+    
     try {
       const { title, story } = state;
       await authFetch.patch(`/stories/${state.editStoryId}`, {
@@ -425,6 +433,27 @@ const AppProvider = ({ children }) => {
         title,
       });
       dispatch({ type: EDIT_STORY_SUCCESS });
+      dispatch({ type: CLEAR_VALUES });
+    } catch (error) {
+      if (error.response.status === 401) return;
+      dispatch({
+        type: EDIT_STORY_ERROR,
+        payload: { msg: error.response.data.msg },
+      });
+    }
+    clearAlert();
+  };
+
+  const editLog = async () => {
+    dispatch({ type: EDIT_STORY_BEGIN });
+    console.log(state.editStoryId)
+    try {
+      const { day, log } = state;
+      await authFetch.patch(`/stories/log/${state.editLogId}`, {
+        day,
+        log,
+      });
+      dispatch({ type: EDIT_LOG_SUCCESS });
       dispatch({ type: CLEAR_VALUES });
     } catch (error) {
       if (error.response.status === 401) return;
@@ -518,7 +547,9 @@ const AppProvider = ({ children }) => {
         getSubReplies,
         deleteSubReply,
         createLog,
-        getLogs
+        getLogs,
+        editLog,
+        setEditLog
       }}
     >
       {children}

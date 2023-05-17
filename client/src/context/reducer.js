@@ -21,6 +21,7 @@ import {
   DELETE_STORY_BEGIN,
   EDIT_STORY_BEGIN,
   EDIT_STORY_SUCCESS,
+  EDIT_LOG_SUCCESS,
   EDIT_STORY_ERROR,
   SHOW_STATS_BEGIN,
   SHOW_STATS_SUCCESS,
@@ -30,7 +31,8 @@ import {
   GET_REPLIES_SUCCESS,
   GET_SUBREPLIES_SUCCESS,
   CREATE_LOG_SUCCESS,
-  GET_LOGS_SUCCESS
+  GET_LOGS_SUCCESS,
+  SET_EDIT_LOG
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -231,6 +233,18 @@ const reducer = (state, action) => {
       story,
     };
   }
+  if (action.type === SET_EDIT_LOG) {
+    const story_info = state.logs.find((log) => log._id === action.payload.id);
+    console.log(story_info)
+    const { day, log, _id } = story_info;
+    return {
+      ...state,
+      isEditing: true,
+      editLogId: _id,
+      day,
+      log,
+    };
+  }
   if (action.type === DELETE_STORY_BEGIN) {
     return { ...state, isLoading: true };
   }
@@ -247,6 +261,16 @@ const reducer = (state, action) => {
       showAlert: true,
       alertType: "success",
       alertText: "Story Updated!",
+      msg: "/",
+    };
+  }
+  if (action.type === EDIT_LOG_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: "success",
+      alertText: "Log Updated!",
       msg: "/",
     };
   }

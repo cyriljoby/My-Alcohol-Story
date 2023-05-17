@@ -69,7 +69,7 @@ const createReply = async (req, res) => {
 
 const createLog = async (req, res) => {
   try {
-    const { month, day,log,createdBy } = req.body
+    const {day,log,createdBy } = req.body
     const logOutput = await DailyLog.create(req.body)
   
     res.status(StatusCodes.CREATED).json( req.body )
@@ -177,6 +177,32 @@ const updateJob = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ updatedJob })
 }
+
+const updateLog= async (req, res) => {
+  console.log('here')
+  const { id: logId } = req.params
+  const { day, log } = req.body
+
+  if (!day || !log) {
+    throw new BadRequestError('Please provide all values')
+  }
+  const data = await DailyLog.findOne({ _id: logId })
+
+  if (!data) {
+    throw new NotFoundError(`No job with id :${jobId}`)
+  }
+  // check permissions
+
+  checkPermissions(req.user, data.createdBy)
+
+  const updatedLog = await DailyLog.findOneAndUpdate({ _id: logId }, req.body, {
+    new: true,
+    runValidators: true,
+  })
+
+  res.status(StatusCodes.OK).json({ updatedLog })
+}
+
 const deleteJob = async (req, res) => {
   const { id: jobId } = req.params
 
@@ -301,4 +327,4 @@ const showStats = async (req, res) => {
   res.status(StatusCodes.OK).json({ defaultStats, monthlyApplications })
 }
 
-export { createLog, deleteSubReply,createStory, deleteJob, getAllJobs, updateJob, showStats,createReply, deleteReply, deleteReplybyStory,createSubReply }
+export { updateLog,createLog, deleteSubReply,createStory, deleteJob, getAllJobs, updateJob, showStats,createReply, deleteReply, deleteReplybyStory,createSubReply }

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FormRow, Alert, FormRowSelect } from "../../components";
 import { useAppContext } from "../../context/appContext";
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
-
+import MyLog from "../../components/MyLog";
 import MyStory from "../../components/MyStory";
 
 const Profile = () => {
@@ -90,8 +90,10 @@ const Profile = () => {
           </div>
         </form>
       </Wrapper>
-
+      <h3>My Stories</h3>
       <MyStory />
+      <h3>My Logs</h3>
+      <MyLog/>
     </div>
   );
 };
