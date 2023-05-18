@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "setup-production": "npm run install-client && npm run build-client && npm install",
+    "setup-production": "npm run install-client && npm run build-client && npm install && npm install --save react-tabs ",
     "install-client": "cd client && npm install",
     "build-client": "cd client && npm run build",
     "server": "nodemon server --ignore client",
