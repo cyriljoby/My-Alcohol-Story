@@ -294,6 +294,8 @@ const LogsContainer = () => {
     }
   }
   return( 
+    <div>
+        {
   logs?.map((log)=>{
     return (
         <Wrapper>
@@ -307,7 +309,8 @@ const LogsContainer = () => {
         </div>
         </Wrapper>
       );
-  }) 
+  }) }
+  </div>
 )};
 
 export default LogsContainer;
