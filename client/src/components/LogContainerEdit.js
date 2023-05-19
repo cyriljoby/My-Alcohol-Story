@@ -57,7 +57,7 @@ const StoryContainerEdit = ({
             </button>
           </div>
         </div>
-        <h1 className="story-title">Day:{day}</h1>
+        <h1 className="story-title">Day {day}</h1>
         <p>{log}</p>
       </div>
     </Wrapper>
