@@ -12,6 +12,9 @@ import {
   GiDolphin,
   GiTortoise,
 } from "react-icons/gi";
+import styled from 'styled-components';
+
+
 
 const Profile = () => {
   let userId = localStorage
@@ -30,6 +33,27 @@ const Profile = () => {
     { value: "GiDolphin", label: "Dolphin" },
     { value: "GiTortoise", label: "Tortoise" },
   ];
+
+  const Tab = styled.button`
+    font-size: 20px;
+    padding: 10px 60px;
+    cursor: pointer;
+    opacity: 0.6;
+    background: white;
+    border: 0;
+    outline: 0;
+    ${({ active }) =>
+      active &&
+      `
+      border-bottom: 2px solid black;
+      opacity: 1;
+    `}
+  `;
+  const ButtonGroup = styled.div`
+    display: flex;
+  `;
+  const types = ['My Stories', 'My Daily Logs'];
+
   const [name, setName] = useState(user?.name);
   const [email, setEmail] = useState(user?.email);
   const [alias, setAlias] = useState(user?.alias);
@@ -76,7 +100,7 @@ const Profile = () => {
     if (icon === "AiOutlineUser") {
       icon = <RiUserFill />;
     }
-
+  const [storyState, setStoryState] = useState(types[0]);
   return (
     <div>
       <Wrapper>
@@ -133,10 +157,20 @@ const Profile = () => {
           </div>
         </form>
       </Wrapper>
-      <h3>My Stories</h3>
-      <MyStory />
-      <h3>My Logs</h3>
-      <MyLog />
+
+      <ButtonGroup>
+        {types.map(type => (
+          <Tab
+            key={type}
+            active={storyState === type}
+            onClick={() => setStoryState(type)}
+          >
+            {type}
+          </Tab>
+        ))}
+      </ButtonGroup>
+      
+      {storyState=="My Stories"?<MyStory/>:<MyLog/>}
     </div>
   );
 };

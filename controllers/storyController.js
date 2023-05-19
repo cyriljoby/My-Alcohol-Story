@@ -70,6 +70,7 @@ const createReply = async (req, res) => {
 const createLog = async (req, res) => {
   try {
     const {day,log,createdBy } = req.body
+    console.log(typeof(day))
     const logOutput = await DailyLog.create(req.body)
   
     res.status(StatusCodes.CREATED).json( req.body )

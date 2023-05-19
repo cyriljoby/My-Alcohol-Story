@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 const DailyLogSchema = new mongoose.Schema(
   {
     day: {
-        type: String,
+        type: Number,
         required: [true, 'Please provide day'],
         maxlength: 50,
       },
