@@ -15,9 +15,9 @@ const Landing = () => {
       <header className="landing-header">
         <nav className="front-nav">
           <Logo />
-          <Link to="/team" className="front-nav-link">
+          {/* <Link to="/team" className="front-nav-link">
             our team
-          </Link>
+          </Link> */}
         </nav>
         <div className="container page">
           {/* info */}
