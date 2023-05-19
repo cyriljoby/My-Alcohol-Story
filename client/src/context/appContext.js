@@ -247,7 +247,13 @@ const AppProvider = ({ children }) => {
       .replace('{"_id":', "")
       .replace(/['"]+/g, "");
     dispatch({ type: CREATE_STORY_BEGIN });
-    
+    if (isNaN(day)){
+      dispatch({
+        type: CREATE_STORY_ERROR,
+        payload: { msg: 'Day Must be an Integer.' ,warning:false},
+      });
+    }
+    else{
     try {
       await authFetch.post("/stories/log", {
         day,
@@ -259,6 +265,7 @@ const AppProvider = ({ children }) => {
     } catch (error) {
       if (error.response.status === 401) return;
     }
+  }
     clearAlert();
   };
 
@@ -473,7 +480,21 @@ const AppProvider = ({ children }) => {
     } catch (error) {
       logoutUser();
     }
+
+    
   };
+
+  const deleteLog = async (logId) => {
+    dispatch({ type: DELETE_STORY_BEGIN });
+    try {
+      await authFetch.delete(`/stories/log/${logId}`);
+      // deleteReplybyStory(jobId)
+      getLogs();
+    } catch (error) {
+      logoutUser();
+    }
+  };
+
   const deleteReply = async (replyId) => {
     dispatch({ type: DELETE_STORY_BEGIN });
     try {
@@ -549,7 +570,8 @@ const AppProvider = ({ children }) => {
         createLog,
         getLogs,
         editLog,
-        setEditLog
+        setEditLog,
+        deleteLog
       }}
     >
       {children}

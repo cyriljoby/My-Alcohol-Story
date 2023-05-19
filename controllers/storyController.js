@@ -70,9 +70,7 @@ const createReply = async (req, res) => {
 const createLog = async (req, res) => {
   try {
     const {day,log,createdBy } = req.body
-    console.log(typeof(day))
     const logOutput = await DailyLog.create(req.body)
-  
     res.status(StatusCodes.CREATED).json( req.body )
     
   } catch (error) {
@@ -232,6 +230,36 @@ const deleteJob = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ msg: 'Success! Job removed' })
 }
+
+const deleteLog = async (req, res) => {
+  const { id: logId } = req.params
+
+  const log = await DailyLog.findOne({ _id: logId })
+  
+  const replies=await Reply.find({storyId:logId})
+  console.log(replies)
+  for (let i=0;i<replies.length;i++){
+    let reply=(replies[i])
+    let replyId=reply["_id"]
+    const subreplies=await SubReply.find({replyId:replyId})
+    await reply.remove()
+    for (let i=0;i<subreplies.length;i++){
+      let sub=(subreplies[i])
+      await sub.remove()
+    }
+  }
+  if (!log) {
+    throw new NotFoundError(`No log with id :${logId}`)
+  }
+
+  checkPermissions(req.user, log.createdBy)
+
+  await log.remove()
+
+  // await replies.remove()
+
+  res.status(StatusCodes.OK).json({ msg: 'Success! Job removed' })
+}
 const deleteReply = async (req, res) => {
   const { id: replyId } = req.params
   const subreplies=await SubReply.find({replyId:replyId})
@@ -328,4 +356,4 @@ const showStats = async (req, res) => {
   res.status(StatusCodes.OK).json({ defaultStats, monthlyApplications })
 }
 
-export { updateLog,createLog, deleteSubReply,createStory, deleteJob, getAllJobs, updateJob, showStats,createReply, deleteReply, deleteReplybyStory,createSubReply }
+export { deleteLog, updateLog,createLog, deleteSubReply,createStory, deleteJob, getAllJobs, updateJob, showStats,createReply, deleteReply, deleteReplybyStory,createSubReply }

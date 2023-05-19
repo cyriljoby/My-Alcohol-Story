@@ -26,7 +26,7 @@ const StoryContainerEdit = ({
     _id
     
 }) => {
-  const { setEditJob, deleteJob,setEditLog } = useAppContext();
+  const {  deleteLog,setEditLog } = useAppContext();
 
 //   let date = new moment.utc(createdAt).local().startOf("seconds").fromNow();
   return (
@@ -51,7 +51,7 @@ const StoryContainerEdit = ({
             <button
               type="button"
               className="btn delete-btn"
-              onClick={() => deleteJob(_id)}
+              onClick={() => deleteLog(_id)}
             >
               <MdDelete />
             </button>
