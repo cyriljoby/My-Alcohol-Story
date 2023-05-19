@@ -705,3 +705,60 @@ Team
 .card-icons-alt {
   grid-template-columns: 1fr;
 }
+
+/* profile */
+
+.icon {
+  padding: 0;
+  margin: 0;
+}
+
+.story-icon {
+  display: grid;
+  place-items: center;
+  height: 2.5rem;
+  width: 2.5rem;
+  border: #24a47f solid 2.5px;
+  border-radius: 50%;
+}
+
+.icon-profile {
+  width: 16rem;
+  height: 16rem;
+}
+
+.profile-center {
+  display: grid;
+  grid-template-columns: 18rem 2fr;
+}
+
+.span-icon {
+  font-size: 10rem;
+}
+
+.profile-form-center {
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+}
+
+.profile-form-center button {
+  margin-top: 1rem;
+}
+
+@media screen and (max-width: 780px) {
+  .profile-center {
+    grid-template-columns: 1fr;
+  }
+
+  .icon-profile {
+    width: 12rem;
+    height: 12rem;
+    display: block;
+    margin: 0rem auto 1rem;
+    text-align: center;
+  }
+
+  .span-icon {
+    font-size: 8rem;
+  }
+}
