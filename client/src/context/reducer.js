@@ -32,7 +32,7 @@ import {
   GET_SUBREPLIES_SUCCESS,
   CREATE_LOG_SUCCESS,
   GET_LOGS_SUCCESS,
-  SET_EDIT_LOG
+  SET_EDIT_LOG,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -123,7 +123,7 @@ const reducer = (state, action) => {
     };
   }
   if (action.type === HANDLE_CHANGE) {
-    console.log([action.payload.name], action.payload.value,)
+    console.log([action.payload.name], action.payload.value);
     return {
       ...state,
       page: 1,
@@ -136,8 +136,8 @@ const reducer = (state, action) => {
       editStoryId: "",
       title: "",
       story: "",
-      log:"",
-      day:"",
+      log: "",
+      day: "",
     };
 
     return {
@@ -165,7 +165,7 @@ const reducer = (state, action) => {
       isLoading: false,
       showAlert: true,
       alertType: "success",
-      alertText: "New Daily Log Created!",
+      alertText: "New Dear Sobriety Created!",
     };
   }
 
@@ -182,7 +182,7 @@ const reducer = (state, action) => {
     return { ...state, isLoading: true, showAlert: false };
   }
   if (action.type === GET_STORIES_SUCCESS) {
-    console.log(action.payload.stories)
+    console.log(action.payload.stories);
     return {
       ...state,
       isLoading: false,
@@ -196,7 +196,7 @@ const reducer = (state, action) => {
     return {
       ...state,
       isLoading: false,
-      logs: action.payload.logs
+      logs: action.payload.logs,
     };
   }
   if (action.type === GET_USERS_SUCCESS) {
@@ -223,7 +223,9 @@ const reducer = (state, action) => {
     };
   }
   if (action.type === SET_EDIT_STORY) {
-    const story_info = state.stories.find((job) => job._id === action.payload.id);
+    const story_info = state.stories.find(
+      (job) => job._id === action.payload.id
+    );
     const { title, story, _id } = story_info;
     return {
       ...state,
@@ -235,7 +237,7 @@ const reducer = (state, action) => {
   }
   if (action.type === SET_EDIT_LOG) {
     const story_info = state.logs.find((log) => log._id === action.payload.id);
-    console.log(story_info)
+    console.log(story_info);
     const { day, log, _id } = story_info;
     return {
       ...state,
@@ -270,7 +272,7 @@ const reducer = (state, action) => {
       isLoading: false,
       showAlert: true,
       alertType: "success",
-      alertText: "Log Updated!",
+      alertText: "Dear Sobriety Updated!",
       msg: "/",
     };
   }
