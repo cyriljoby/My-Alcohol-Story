@@ -44,6 +44,7 @@ const MyStory = () => {
   }
   let user_info = [];
   let thisUser_id = "";
+  let myStories=[]
   for (let i = 0; i < users?.length; i++) {
     user_info.push({
       id: users[i]._id,
@@ -54,15 +55,15 @@ const MyStory = () => {
       thisUser_id = users[i]._id;
     }
   }
-
-  
+  stories.map((story)=>{
+    if (story.createdBy == user._id || story.createdBy == thisUser_id){
+      myStories.push(story)
+    }
+  })
+  console.log(myStories.length)
+  if (myStories.length>0){
   return(
     stories?.map((story) => {
-    let date = new moment.utc(story.createdAt)
-      .local()
-      .startOf("seconds")
-      .fromNow();
-
     let icon = "";
     for (let i = 0; i < user_info.length; i++) {
       if (story.createdBy === user_info[i].id) {
@@ -94,9 +95,11 @@ const MyStory = () => {
       if (icon === "GiElephant") {
         story.image = <GiElephant />;
       }
+      
       return (
         <Wrapper>
           <div key={story._id}>
+            
             <StoryContainerEdit key={story._id} {...story} />
           </div>
         </Wrapper>
@@ -109,7 +112,14 @@ const MyStory = () => {
     }
   
 
-  }));
+  }))}
+  else{
+
+    return(
+      <Wrapper>
+      <p style={{textAlign:"center"}}>You have no stories</p>
+      </Wrapper>)
+  };
 };
 
 export default MyStory;
