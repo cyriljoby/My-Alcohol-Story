@@ -51,6 +51,13 @@ const LogsContainer = () => {
       icon: users[i].image,
     });
   }
+  if (logs?.length === 0) {
+  return (
+    <Wrapper>
+      <h2>No Dear Sobrieties to display...</h2>
+    </Wrapper>
+  );
+}
   console.log(user_info);
   const handleReplyInput = (e) => {
     replyValue = e.target.value;
