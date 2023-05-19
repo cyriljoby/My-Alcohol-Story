@@ -12,9 +12,7 @@ import {
   GiDolphin,
   GiTortoise,
 } from "react-icons/gi";
-import styled from 'styled-components';
-
-
+import styled from "styled-components";
 
 const Profile = () => {
   let userId = localStorage
@@ -42,17 +40,18 @@ const Profile = () => {
     background: white;
     border: 0;
     outline: 0;
+
     ${({ active }) =>
       active &&
       `
-      border-bottom: 2px solid black;
+      border-bottom: 2px solid #24a47f;
       opacity: 1;
     `}
   `;
   const ButtonGroup = styled.div`
     display: flex;
   `;
-  const types = ['My Stories', 'My Dear Sobrieties'];
+  const types = ["My Stories", "My Daily Logs"];
 
   const [name, setName] = useState(user?.name);
   const [email, setEmail] = useState(user?.email);
@@ -73,33 +72,33 @@ const Profile = () => {
     // window.location.reload();
   };
   let icon = user.image;
-    if (icon === "GiTortoise") {
-      icon = <GiTortoise />;
-    }
+  if (icon === "GiTortoise") {
+    icon = <GiTortoise />;
+  }
 
-    if (icon === "GiDeer") {
-      icon = <GiDeer />;
-    }
+  if (icon === "GiDeer") {
+    icon = <GiDeer />;
+  }
 
-    if (icon === "RiUserFill") {
-      icon = <RiUserFill />;
-    }
+  if (icon === "RiUserFill") {
+    icon = <RiUserFill />;
+  }
 
-    if (icon === "GiButterfly") {
-      icon = <GiButterfly />;
-    }
+  if (icon === "GiButterfly") {
+    icon = <GiButterfly />;
+  }
 
-    if (icon === "GiDolphin") {
-      icon = <GiDolphin />;
-    }
+  if (icon === "GiDolphin") {
+    icon = <GiDolphin />;
+  }
 
-    if (icon === "GiElephant") {
-      icon = <GiElephant />;
-    }
+  if (icon === "GiElephant") {
+    icon = <GiElephant />;
+  }
 
-    if (icon === "AiOutlineUser") {
-      icon = <RiUserFill />;
-    }
+  if (icon === "AiOutlineUser") {
+    icon = <RiUserFill />;
+  }
   const [storyState, setStoryState] = useState(types[0]);
   return (
     <div>
@@ -109,9 +108,7 @@ const Profile = () => {
           {showAlert && <Alert />}
           <div className="profile-center">
             <div className="story-icon icon-profile">
-              <span className="icon span-icon">
-                {icon}
-              </span>
+              <span className="icon span-icon">{icon}</span>
             </div>
             <div className="profile-form-center">
               <FormRow
@@ -157,9 +154,14 @@ const Profile = () => {
           </div>
         </form>
       </Wrapper>
-
-      <ButtonGroup>
-        {types.map(type => (
+      <ButtonGroup
+        style={{
+          margin: "1rem auto",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        {types.map((type) => (
           <Tab
             key={type}
             active={storyState === type}
@@ -169,8 +171,8 @@ const Profile = () => {
           </Tab>
         ))}
       </ButtonGroup>
-      
-      {storyState=="My Stories"?<MyStory/>:<MyLog/>}
+
+      {storyState == "My Stories" ? <MyStory /> : <MyLog />}
     </div>
   );
 };
