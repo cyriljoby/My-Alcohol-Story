@@ -117,7 +117,7 @@ const MyStory = () => {
 
     return(
       <Wrapper>
-      <p style={{textAlign:"center"}}>You have no stories</p>
+      <p style={{textAlign: "center",margin:"0 auto"}}>You have no stories</p>
       </Wrapper>)
   };
 };
