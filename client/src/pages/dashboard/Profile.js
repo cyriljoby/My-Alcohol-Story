@@ -51,7 +51,7 @@ const Profile = () => {
   const ButtonGroup = styled.div`
     display: flex;
   `;
-  const types = ["My Stories", "My Daily Logs"];
+  const types = ["My Stories", "My Dear Sobrieties"];
 
   const [name, setName] = useState(user?.name);
   const [email, setEmail] = useState(user?.email);

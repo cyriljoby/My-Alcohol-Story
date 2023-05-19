@@ -48,7 +48,7 @@ const AddStory = () => {
       justify-content: "center";
     }
   `;
-  const types = ["Add Story", "Add Daily Log"];
+  const types = ["Add Story", "Add Dear Sobriety"];
 
   const [popupState, setPopupState] = useState(false);
   const [closeState, setCloseState] = useState(false);
