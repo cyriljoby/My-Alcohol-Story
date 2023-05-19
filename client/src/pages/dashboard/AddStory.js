@@ -4,6 +4,8 @@ import Wrapper from "../../assets/wrappers/DashboardFormPage";
 import { useState } from "react";
 import Popup from "reactjs-popup";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import styled from 'styled-components';
+
 import 'react-tabs/style/react-tabs.css';
 // import { useDetectClickOutside } from 'react-detect-click-outside';
 
@@ -24,9 +26,28 @@ const AddStory = () => {
     day,
     createLog
   } = useAppContext();
+    const Tab = styled.button`
+    font-size: 20px;
+    padding: 10px 60px;
+    cursor: pointer;
+    opacity: 0.6;
+    background: white;
+    border: 0;
+    outline: 0;
+    ${({ active }) =>
+      active &&
+      `
+      border-bottom: 2px solid black;
+      opacity: 1;
+    `}
+  `;
+  const ButtonGroup = styled.div`
+    display: flex;
+  `;
+  const types = ['Add Story', 'Add Daily Log'];
+
   const [popupState, setPopupState] = useState(false);
   const [closeState, setCloseState] = useState(false);
-  const [storyState, setStoryState] = useState(true);
   let triggers = ["murder", "kill", "shoot", "suicide"];
   const directcreateStory = (e) => {
     e.preventDefault();
@@ -138,7 +159,7 @@ const AddStory = () => {
   const handleSubmit = (e) => {
     let flag = false;
     e.preventDefault();
-    if (storyState){
+    if (storyState=="Add Story"){
       const titlearea = document.getElementById("title");
       const storyarea = document.getElementById("story");
       if (!title || !story) {
@@ -171,6 +192,7 @@ const AddStory = () => {
     }
 
     else{
+      console.log(log,day)
 
       const logarea=document.getElementById("log");
       const dayarea=document.getElementById("day");
@@ -217,37 +239,41 @@ const AddStory = () => {
 
 
 
+  const [storyState, setStoryState] = useState(types[0]);
   return (
-    
-    
-        <Tabs>
-        <TabList>
-          <Tab name ="story" onClick={()=>setStoryState(true)}>Add Story</Tab>
-          <Tab name ="log" onClick={()=>setStoryState(false)}>Add Daily Log</Tab>
-        </TabList>
-
-        <TabPanel>
-          
-        {showAlert && <Alert />}
+    <>
+      <ButtonGroup>
+        {types.map(type => (
+          <Tab
+            key={type}
+            active={storyState === type}
+            onClick={() => setStoryState(type)}
+          >
+            {type}
+          </Tab>
+        ))}
+      </ButtonGroup>
+      {showAlert && <Alert />}
         <Wrapper>
           <div className="form-center addStoryForm">
           <form className="form">
-          <h3>add story</h3>
-          <label>{"Title" }</label>
+          
+          <h3>{storyState=='Add Story'?"add story":"daily log"}</h3>
+          <label>{storyState=='Add Story'?"Title":"Day"}</label>
               <textarea
-                value={title }
-                name="title"
-                id="title" 
+                value={storyState=='Add Story'?title:day}
+                name={storyState=='Add Story'?"title":"day"}
+                id={storyState=='Add Story'?"title":"day"}
                 onChange={handleJobInput}
                 rows="10"
                 cols="33"
                 className="form-input"
               />
-              <label>Story</label>
+              <label>{storyState=='Add Story'?"Story":"Log"}</label>
               <textarea
-                value={story}
-                id="story"
-                name="story" 
+                value={storyState=='Add Story'?story:log}
+                id={storyState=='Add Story'?"story":"log"}
+                name={storyState=='Add Story'?"story":"log"}
                 onChange={handleJobInput}
                 rows="10"
                 cols="33"
@@ -277,60 +303,9 @@ const AddStory = () => {
               </form>
           </div>
           </Wrapper>
-        </TabPanel>
-        <TabPanel>
-        {showAlert && <Alert />}
-        <Wrapper>
-        <div className="form-center addStoryForm">
-        <form className="form">
-        <h3>add daily log</h3>
-        <label>Day</label>
-        <textarea
-                value={day}
-                id="day"
-                name="day"
-                onChange={handleJobInput}
-                rows="10"
-                cols="33"
-                className="form-input"
-              />
-        <label>Log</label>
-        <textarea
-                value={ log}
-                id={"log"}
-                name={ "log"}
-                onChange={handleJobInput}
-                rows="10"
-                cols="33"
-                className="form-textarea"
-              />
-              {/* btn container */}
-              <div className="btn-container">
-                <button
-                  type="submit"
-                  className="btn btn-block submit-btn"
-                  onClick={handleSubmit}
-                  disabled={isLoading}
-                >
-                  submit
-                </button>
-                <RenderPopup />
-                <button
-                  className="btn btn-block clear-btn"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    clearValues();
-                  }}
-                >
-                  clear
-                </button>
-            </div>
-            </form>
-            </div>
-            </Wrapper>
-        </TabPanel>
-      </Tabs>
+    </>
   );
+
 };
 
 export default AddStory;

@@ -5,6 +5,13 @@ import Wrapper from "../../assets/wrappers/DashboardFormPage";
 import MyLog from "../../components/MyLog";
 import MyStory from "../../components/MyStory";
 import { RiUserFill } from "react-icons/ri";
+import {
+  GiElephant,
+  GiDeer,
+  GiButterfly,
+  GiDolphin,
+  GiTortoise,
+} from "react-icons/gi";
 
 const Profile = () => {
   let userId = localStorage
@@ -41,6 +48,34 @@ const Profile = () => {
     updateUser({ email, alias, image, userId });
     // window.location.reload();
   };
+  let icon = user.image;
+    if (icon === "GiTortoise") {
+      icon = <GiTortoise />;
+    }
+
+    if (icon === "GiDeer") {
+      icon = <GiDeer />;
+    }
+
+    if (icon === "RiUserFill") {
+      icon = <RiUserFill />;
+    }
+
+    if (icon === "GiButterfly") {
+      icon = <GiButterfly />;
+    }
+
+    if (icon === "GiDolphin") {
+      icon = <GiDolphin />;
+    }
+
+    if (icon === "GiElephant") {
+      icon = <GiElephant />;
+    }
+
+    if (icon === "AiOutlineUser") {
+      icon = <RiUserFill />;
+    }
 
   return (
     <div>
@@ -51,7 +86,7 @@ const Profile = () => {
           <div className="profile-center">
             <div className="story-icon icon-profile">
               <span className="icon span-icon">
-                <RiUserFill />
+                {icon}
               </span>
             </div>
             <div className="profile-form-center">
