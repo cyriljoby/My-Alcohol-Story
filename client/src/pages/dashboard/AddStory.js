@@ -3,10 +3,8 @@ import { useAppContext } from "../../context/appContext";
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
 import { useState } from "react";
 import Popup from "reactjs-popup";
-import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import styled from "styled-components";
 
-import "react-tabs/style/react-tabs.css";
 // import { useDetectClickOutside } from 'react-detect-click-outside';
 
 const AddStory = () => {
