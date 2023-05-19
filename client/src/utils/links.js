@@ -6,7 +6,7 @@ import { TfiBook } from "react-icons/tfi";
 
 const links = [
   { id: 1, text: "feed", path: "/", icon: <IoHomeOutline /> },
-  { id: 2, text: "daily logs", path: "daily-logs", icon: <TfiBook /> },
+  { id: 2, text: "dear sobriety", path: "daily-logs", icon: <TfiBook /> },
   { id: 3, text: "post", path: "add-story", icon: <BsPlusSquare /> },
   { id: 4, text: "profile", path: "profile", icon: <RiUserFill /> },
   { id: 5, text: "resources", path: "resources", icon: <IoCallOutline /> },
