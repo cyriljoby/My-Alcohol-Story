@@ -99,12 +99,15 @@ const LogsContainer = () => {
     if (icon === "AiOutlineUser") {
       icon = <RiUserFill />;
     }
-    let datestring = (new moment.utc(log.createdAt).startOf("seconds")._d.toISOString().split( "T" ));
+    let datestring = new moment.utc(log.createdAt)
+      .startOf("seconds")
+      ._d.toISOString()
+      .split("T");
     // let date=new Date(datestr)
-    let day=(moment(datestring[ 0 ]).format('DD MMMM YYYY').split(' '));
-    let month = day[1]
-    let date = day[0]
-    let year=day[2]
+    let day = moment(datestring[0]).format("DD MMMM YYYY").split(" ");
+    let month = day[1];
+    let date = day[0];
+    let year = day[2];
     return (
       <div>
         <div className="story-header">
@@ -114,6 +117,10 @@ const LogsContainer = () => {
             </div>
 
             <h4>{alias}</h4>
+            <p>
+              {" "}
+              {month} {date}, {year}
+            </p>
           </div>
           <div className="edit-btns">
             <button className="btn open-reply" onClick={replyFunc}>
@@ -121,9 +128,17 @@ const LogsContainer = () => {
             </button>
           </div>
 
-          <h1 className="story-title">day {log.day}- {month} {date}, {year}</h1>
+          <h1
+            className="story-title"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              columnGap: "0.5rem",
+            }}
+          >
+            day {log.day}
+          </h1>
         </div>
-        {/* <p>Day:{log.day}</p> */}
         <p style={{ margin: "0rem", padding: "0rem", color: "#000000" }}>
           Dear Sobriety,
         </p>
