@@ -107,7 +107,8 @@ const MyLog = () => {
 
   }))}
   else{
-    return <p style={{textAlign:"center"}}>You have no logs</p>
+    return   <p style={{textAlign: "center",margin:"0 auto"}}>You have no Dear Sobrieties</p>
+
   };
 };
 
