@@ -33,6 +33,7 @@ const MyLog = () => {
   if (isLoading || logs===undefined) {
     return <Loading center />;
   }
+  let myLogs=[]
   let user_info = [];
   let thisUser_id = "";
   for (let i = 0; i < users?.length; i++) {
@@ -45,8 +46,11 @@ const MyLog = () => {
       thisUser_id = users[i]._id;
     }
   }
-
-  
+  logs?.map((log)=>{
+    if (log.createdBy == user._id || log.createdBy == thisUser_id) {
+      myLogs.push(log)}
+  })
+  if (myLogs>0){
   return(
     logs?.map((log) => {
     let date = new moment.utc(log.createdAt)
@@ -101,7 +105,10 @@ const MyLog = () => {
     }
   
 
-  }));
+  }))}
+  else{
+    return <p style={{textAlign:"center"}}>You have no logs</p>
+  };
 };
 
 export default MyLog;
