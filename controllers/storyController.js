@@ -276,6 +276,36 @@ const deleteReply = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: 'Success! Job removed' })
 }
 
+const deleteLog = async (req, res) => {
+  const { id: logId } = req.params
+
+  const log = await DailyLog.findOne({ _id: logId })
+  
+  const replies=await Reply.find({storyId:logId})
+  console.log(replies)
+  for (let i=0;i<replies.length;i++){
+    let reply=(replies[i])
+    let replyId=reply["_id"]
+    const subreplies=await SubReply.find({replyId:replyId})
+    await reply.remove()
+    for (let i=0;i<subreplies.length;i++){
+      let sub=(subreplies[i])
+      await sub.remove()
+    }
+  }
+  if (!log) {
+    throw new NotFoundError(`No log with id :${logId}`)
+  }
+
+  checkPermissions(req.user, log.createdBy)
+
+  await log.remove()
+
+  // await replies.remove()
+
+  res.status(StatusCodes.OK).json({ msg: 'Success! Job removed' })
+}
+
 const deleteSubReply = async (req, res) => {
   const { id: replyId } = req.params
 
@@ -351,4 +381,4 @@ const showStats = async (req, res) => {
   res.status(StatusCodes.OK).json({ defaultStats, monthlyApplications })
 }
 
-export { updateLog,createLog, deleteSubReply,createStory, deleteJob, getAllJobs, updateJob, showStats,createReply, deleteReply, deleteReplybyStory,createSubReply }
+export { deleteLog, updateLog,createLog, deleteSubReply,createStory, deleteJob, getAllJobs, updateJob, showStats,createReply, deleteReply, deleteReplybyStory,createSubReply }

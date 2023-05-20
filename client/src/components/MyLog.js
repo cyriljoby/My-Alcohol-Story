@@ -50,7 +50,8 @@ const MyLog = () => {
     if (log.createdBy == user._id || log.createdBy == thisUser_id) {
       myLogs.push(log)}
   })
-  if (myLogs>0){
+  console.log(myLogs)
+  if (myLogs.length>0){
   return(
     logs?.map((log) => {
     let date = new moment.utc(log.createdAt)

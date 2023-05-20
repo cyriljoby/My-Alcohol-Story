@@ -264,6 +264,12 @@ const AppProvider = ({ children }) => {
       dispatch({ type: CLEAR_VALUES });
     } catch (error) {
       if (error.response.status === 401) return;
+      if (error.response.status === 400){
+        dispatch({
+          type: CREATE_STORY_ERROR,
+          payload: { msg: 'Try again later. You can only post a Dear Sobriety once every 5 minutes.' ,warning:false},
+        });
+      };
     }
   }
     clearAlert();
