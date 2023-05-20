@@ -173,7 +173,7 @@ const AddStory = () => {
         return;
       }
       for (let i = 0; i < triggers.length; i++) {
-        if (storyarea.value.includes(triggers[i])) {
+        if (storyarea.value.toLowerCase().includes(triggers[i])) {
           flag = true;
         } else {
           continue;
@@ -201,9 +201,7 @@ const AddStory = () => {
         return;
       }
       for (let i = 0; i < triggers.length; i++) {
-        console.log(triggers);
-        if (logarea.value.includes(triggers[i])) {
-          console.log("hj");
+        if (logarea.value.toLowerCase().includes(triggers[i])) {
           flag = true;
         } else {
           // console.log('log')
