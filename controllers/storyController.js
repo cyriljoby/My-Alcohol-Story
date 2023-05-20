@@ -79,7 +79,7 @@ const createLog = async (req, res) => {
     let result = DailyLog.find(queryObject)
     const logs = await result
     console.log(logs)
-    if (logs.length!=0){
+    if (logs?.length!=0){
       let createdAt=logs.slice(-1)[0]["createdAt"] 
       console.log(createdAt)
       let now=(new moment.utc)
@@ -94,12 +94,13 @@ const createLog = async (req, res) => {
         console.log('h')
         throw new BadRequestError(`Please wait 5 minutes before you post another Dear Sobriety`)
       }
-    const out = await DailyLog.create(req.body)
-    res.status(StatusCodes.CREATED).json( req.body )
+    
   }}
   else{
     res.status(404)
   }
+  const out = await DailyLog.create(req.body)
+  res.status(StatusCodes.CREATED).json( req.body )
 
 }
 
