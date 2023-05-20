@@ -68,12 +68,37 @@ const createReply = async (req, res) => {
 }
 
 const createLog = async (req, res) => {
-  try {
-    const {day,log,createdBy } = req.body
-    const logOutput = await DailyLog.create(req.body)
+  const { day, log,createdBy } = req.body
+  const queryObject = {
+    createdBy:createdBy
+  }
+  let verifyUser=User.find({_id:createdBy})
+  const user = await verifyUser
+  console.log(user)
+  if (verifyUser){
+    let result = DailyLog.find(queryObject)
+    const logs = await result
+    console.log(logs)
+    if (logs.length!=0){
+      let createdAt=logs.slice(-1)[0]["createdAt"] 
+      console.log(createdAt)
+      let now=(new moment.utc)
+      let diff=now.diff(createdAt);
+      const diffDuration = moment.duration(diff);
+      console.log(diffDuration.minutes())
+      let word='minutes'
+      if (diffDuration.minutes()==1){
+        word='minute'
+      }
+      if (diffDuration.minutes()<5){
+        console.log('h')
+        throw new BadRequestError(`Please wait 5 minutes before you post another Dear Sobriety`)
+      }
+    const out = await DailyLog.create(req.body)
     res.status(StatusCodes.CREATED).json( req.body )
-    
-  } catch (error) {
+  }}
+  else{
+    res.status(404)
   }
 
 }
@@ -230,36 +255,6 @@ const deleteJob = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ msg: 'Success! Job removed' })
 }
-
-const deleteLog = async (req, res) => {
-  const { id: logId } = req.params
-
-  const log = await DailyLog.findOne({ _id: logId })
-  
-  const replies=await Reply.find({storyId:logId})
-  console.log(replies)
-  for (let i=0;i<replies.length;i++){
-    let reply=(replies[i])
-    let replyId=reply["_id"]
-    const subreplies=await SubReply.find({replyId:replyId})
-    await reply.remove()
-    for (let i=0;i<subreplies.length;i++){
-      let sub=(subreplies[i])
-      await sub.remove()
-    }
-  }
-  if (!log) {
-    throw new NotFoundError(`No log with id :${logId}`)
-  }
-
-  checkPermissions(req.user, log.createdBy)
-
-  await log.remove()
-
-  // await replies.remove()
-
-  res.status(StatusCodes.OK).json({ msg: 'Success! Job removed' })
-}
 const deleteReply = async (req, res) => {
   const { id: replyId } = req.params
   const subreplies=await SubReply.find({replyId:replyId})
@@ -356,4 +351,4 @@ const showStats = async (req, res) => {
   res.status(StatusCodes.OK).json({ defaultStats, monthlyApplications })
 }
 
-export { deleteLog, updateLog,createLog, deleteSubReply,createStory, deleteJob, getAllJobs, updateJob, showStats,createReply, deleteReply, deleteReplybyStory,createSubReply }
+export { updateLog,createLog, deleteSubReply,createStory, deleteJob, getAllJobs, updateJob, showStats,createReply, deleteReply, deleteReplybyStory,createSubReply }
