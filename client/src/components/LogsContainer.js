@@ -14,8 +14,11 @@ import { BiReply } from "react-icons/bi";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import ReplyTemplate from "./replyTemplate";
 import moment from "moment";
+import { FaEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
+import { Link } from "react-router-dom";
 
-const LogsContainer = () => {
+const LogsContainer = ({profile}) => {
   const {
     getLogs,
     logs,
@@ -28,7 +31,9 @@ const LogsContainer = () => {
     subreplies,
     addSave,
     deleteSave,
-    saves
+    saves,
+    setEditLog,
+    deleteLog
   } = useAppContext();
   useEffect(() => {
     getLogs();
@@ -38,6 +43,11 @@ const LogsContainer = () => {
 
     // eslint-disable-next-line
   }, []);
+   const user = localStorage
+      .getItem("user")
+      .split(",")[0]
+      .replace('{"_id":', "")
+      .replace(/['"]+/g, "");
   let user_info = [];
   var targetRenderId;
   let user_id = localStorage.getItem("_id");
@@ -143,6 +153,24 @@ const LogsContainer = () => {
             </div>
 
             <h4>{alias}</h4>
+            {profile?
+            <div className="edit-btns">
+            
+            <Link
+              to="/edit-story"
+              className="btn edit-btn"
+              onClick={() => setEditLog(log._id)}
+            >
+              <FaEdit></FaEdit>
+            </Link>
+            <button
+              type="button"
+              className="btn delete-btn"
+              onClick={() => deleteLog(log._id)}
+            >
+              <MdDelete />
+            </button>
+          </div>:null}
             
             <p>
               {" "}
@@ -153,9 +181,9 @@ const LogsContainer = () => {
             <button className="btn open-reply" onClick={replyFunc}>
               <BiReply />
             </button>
-            {/* {saved.includes(log._id)?
+            {saved.includes(log._id)?
               <button id={log._id} onClick={unsave}>unsave</button>:
-              <button id={log._id} onClick={save}>save</button>} */}
+              <button id={log._id} onClick={save}>save</button>}
           </div>
 
           <h1
@@ -356,7 +384,11 @@ const LogsContainer = () => {
   }
   return (
     <div>
+      
       {logs?.map((log) => {
+        
+        if (profile){
+        if (log.createdBy===user){
         return (
           <Wrapper>
             <div key={log._id} className="story" style={{ paddingBottom: "0" }}>
@@ -368,7 +400,21 @@ const LogsContainer = () => {
               />
             </div>
           </Wrapper>
-        );
+        )}}
+        else{
+          return (
+            <Wrapper>
+              <div key={log._id} className="story" style={{ paddingBottom: "0" }}>
+                <RenderReplyBox id={"box" + log._id} log={log} />
+                <RenderButtton
+                  id={"replies" + log._id}
+                  log={log}
+                  counts={counts}
+                />
+              </div>
+            </Wrapper>
+          )
+        }
       })}
     </div>
   );

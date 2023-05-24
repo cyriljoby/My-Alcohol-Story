@@ -10,12 +10,15 @@ import {
   GiTortoise,
 } from "react-icons/gi";
 import { RiUserFill } from "react-icons/ri";
+import { Link } from "react-router-dom";
 import ReplyTemplate from "./replyTemplate";
 import moment from "moment";
 import { now } from "mongoose";
 import { useState, useRef } from "react";
 import { BiReply } from "react-icons/bi";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
+import { FaEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 var targetBoxId;
 var targetRenderId;
 let del = "";
@@ -25,7 +28,7 @@ let openIds = [];
 
 // import {BiReply} from "react-icons/bi";
 
-const StoryContainer = () => {
+const StoryContainer = ({profile}) => {
   // const [replyState, setreplyState] = useState(false);
 
   const {
@@ -40,7 +43,7 @@ const StoryContainer = () => {
     getUsers,
     users,
     createReply,
-    reply,
+    setEditLog,
     addSave,
     getReplies,
     replies,
@@ -48,7 +51,8 @@ const StoryContainer = () => {
     subreplies,
     getSaves,
     saves,
-    deleteSave
+    deleteSave,
+    setEditJob, deleteJob
   } = useAppContext();
   useEffect(() => {
     getUsers();
@@ -61,7 +65,11 @@ const StoryContainer = () => {
     // eslint-disable-next-line
   }, []);
   let user_info = [];
-  // console.log(stories)
+  const user = localStorage
+      .getItem("user")
+      .split(",")[0]
+      .replace('{"_id":', "")
+      .replace(/['"]+/g, "");
   let user_id = localStorage.getItem("_id");
   let replyValue = "";
   let arrow = <BsChevronDown />;
@@ -161,6 +169,24 @@ const StoryContainer = () => {
               </div>
 
               <h4>{alias}</h4>
+            {profile?
+            <div className="edit-btns">
+            
+            <Link
+              to="/edit-story"
+              className="btn edit-btn"
+              onClick={() => setEditJob(job["job"]._id)}
+            >
+              <FaEdit></FaEdit>
+            </Link>
+            <button
+              type="button"
+              className="btn delete-btn"
+              onClick={() => deleteJob(job["job"]._id)}
+            >
+              <MdDelete />
+            </button>
+          </div>:null}
               
               {/* <p>Posted {date}</p> */}
             </div>
@@ -168,9 +194,9 @@ const StoryContainer = () => {
               <button className="btn open-reply" onClick={replyFunc}>
                 <BiReply />
               </button>
-              {/* {saved.includes(job["job"]._id)?
+              {saved.includes(job["job"]._id)?
               <button id={job["job"]._id} onClick={unsave}>unsave</button>:
-              <button id={job["job"]._id} onClick={save}>save</button>} */}
+              <button id={job["job"]._id} onClick={save}>save</button>}
             </div>
           </div>
           <h1 className="story-title">{job["job"].title}</h1>
@@ -358,7 +384,8 @@ const StoryContainer = () => {
     <Wrapper>
       <div>
         {stories?.map((job) => {
-          //       count+=1
+          if (profile){
+          if (job.createdBy==user){
           let date = new moment.utc(job.createdAt)
             .local()
             .startOf("seconds")
@@ -377,7 +404,28 @@ const StoryContainer = () => {
               />
             </div>
           );
-        })}
+        }}
+        
+        else{
+          let date = new moment.utc(job.createdAt)
+            .local()
+            .startOf("seconds")
+            .fromNow();
+
+          // job.push(icon)
+
+          return (
+            <div key={job._id} className="story">
+              <RenderReplyBox id={"box" + job._id} job={job} />
+
+              <RenderButtton
+                id={"replies" + job._id}
+                job={job}
+                counts={counts}
+              />
+            </div>
+          );
+        }})}
       </div>
     </Wrapper>
   );

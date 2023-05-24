@@ -84,40 +84,4 @@ const StoryContainerEdit = ({
   );
 };
 export default StoryContainerEdit;
-//   return (
-//     <Wrapper>
-//       <header>
-//         <div className='main-icon'>{story.charAt(0)}</div>
-//         <div className='info'>
-//           <h5>{title}</h5>
-//           <p>{story}</p>
-//         </div>
-//       </header>
-//       <div className='content'>
-//         <div className='content-center'>
-//           <JobInfo icon={<FaCalendarAlt />} text={date} />
-//         </div>
-//         <footer>
-//           <div className='actions'>
-//             <Link
-//               to='/add-job'
-//               className='btn edit-btn'
-//               onClick={() => setEditJob(_id)}
-//             >
-//               Edit
-//             </Link>
-// <button
-//   type='button'
-//   className='btn delete-btn'
-//   onClick={() => deleteJob(_id)}
-// >
-//   Delete
-// </button>
-//           </div>
-//         </footer>
-//       </div>
-//     </Wrapper>
-//   )
-// }
-
 

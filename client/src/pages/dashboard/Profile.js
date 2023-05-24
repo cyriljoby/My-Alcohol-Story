@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { FormRow, Alert, FormRowSelect } from "../../components";
+import { FormRow, Alert, FormRowSelect, StoryContainer } from "../../components";
 import { useAppContext } from "../../context/appContext";
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
-import MyLog from "../../components/MyLog";
-import MyStory from "../../components/MyStory";
+import LogsContainer from "../../components/LogsContainer";
 import { RiUserFill } from "react-icons/ri";
 import {
   GiElephant,
@@ -52,7 +51,7 @@ const Profile = () => {
   const ButtonGroup = styled.div`
     display: flex;
   `;
-  const types = ["My Stories", "My Dear Sobrieties"];
+  const types = ["My Stories", "My Dear Sobrieties", "My Saved Posts"];
 
   const [name, setName] = useState(user?.name);
   const [email, setEmail] = useState(user?.email);
@@ -173,7 +172,7 @@ const Profile = () => {
         ))}
       </ButtonGroup>
 
-      {storyState == "My Stories" ? <MyStory /> : (storyState == "My Dear Sobrieties")?<MyLog/>:<MySaves/>}
+      {storyState == "My Stories" ? <StoryContainer profile={true} /> : (storyState == "My Dear Sobrieties")?<LogsContainer profile={true}/>:<MySaves/>}
     </div>
   );
 };
