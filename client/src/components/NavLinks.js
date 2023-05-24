@@ -14,7 +14,6 @@ const NavLinks = ({ toggleSidebar }) => {
   const {
     user
   } = useAppContext();
-  console.log(user.image)
   let image = user.image;
     if (image === "GiTortoise") {
       image = <GiTortoise />;

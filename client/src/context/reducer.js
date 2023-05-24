@@ -16,6 +16,7 @@ import {
   CREATE_STORY_SUCCESS,
   CREATE_STORY_ERROR,
   GET_STORIES_BEGIN,
+  GET_SAVES_SUCCESS,
   GET_STORIES_SUCCESS,
   SET_EDIT_STORY,
   DELETE_STORY_BEGIN,
@@ -189,6 +190,13 @@ const reducer = (state, action) => {
       stories: action.payload.stories,
       totalStories: action.payload.totalStories,
       numOfPages: action.payload.numOfPages,
+    };
+  }
+  if (action.type === GET_SAVES_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      saves: action.payload.saves,
     };
   }
 

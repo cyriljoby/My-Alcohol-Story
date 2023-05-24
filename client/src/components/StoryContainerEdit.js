@@ -13,6 +13,7 @@ import {
   GiTortoise,
 } from "react-icons/gi";
 import { FaUser } from "react-icons/fa";
+import { useEffect } from "react";
 
 const StoryContainerEdit = ({
   _id,
@@ -21,12 +22,24 @@ const StoryContainerEdit = ({
   createdAt,
   image,
   alias,
-  icon,
+  save
 }) => {
-  const { setEditJob, deleteJob } = useAppContext();
+  const { setEditJob, deleteJob,getReplies,getSubReplies } = useAppContext();
+  // useEffect(() => {
+  //   getReplies();
+  //   getSubReplies();
+    
 
+  //   // eslint-disable-next-line
+  // }, [replies]);
   let date = new moment.utc(createdAt).local().startOf("seconds").fromNow();
-
+  // function RenderReply(){
+  //   replies.map((reply=>{
+  //     if (reply["storyId"]==_id){
+  //       console.log('hii')
+  //     }
+  //   }))
+  // }
   return (
     <Wrapper>
       <div className="story">
@@ -38,7 +51,9 @@ const StoryContainerEdit = ({
 
             <h4>{alias}</h4>
           </div>
+          {save?null:(
           <div className="edit-btns">
+            
             <Link
               to="/edit-story"
               className="btn edit-btn"
@@ -53,7 +68,7 @@ const StoryContainerEdit = ({
             >
               <MdDelete />
             </button>
-          </div>
+          </div>)}
         </div>
         <h1 className="story-title">{title}</h1>
         <p>{story}</p>

@@ -13,6 +13,7 @@ import {
   GiTortoise,
 } from "react-icons/gi";
 import styled from "styled-components";
+import MySaves from "../../components/MySaves";
 
 const Profile = () => {
   let userId = localStorage
@@ -51,7 +52,7 @@ const Profile = () => {
   const ButtonGroup = styled.div`
     display: flex;
   `;
-  const types = ["My Stories", "My Dear Sobrieties"];
+  const types = ["My Stories", "My Dear Sobrieties", "My Saved Posts"];
 
   const [name, setName] = useState(user?.name);
   const [email, setEmail] = useState(user?.email);
@@ -172,7 +173,7 @@ const Profile = () => {
         ))}
       </ButtonGroup>
 
-      {storyState == "My Stories" ? <MyStory /> : <MyLog />}
+      {storyState == "My Stories" ? <MyStory /> : (storyState == "My Dear Sobrieties")?<MyLog/>:<MySaves/>}
     </div>
   );
 };

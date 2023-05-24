@@ -1,7 +1,7 @@
 import Story from '../models/Story.js'
 import User from '../models/User.js'
 import DailyLog from '../models/DailyLog.js'
-
+import Saves from '../models/Saves.js'
 import { StatusCodes } from 'http-status-codes'
 import {
   BadRequestError,
@@ -66,6 +66,17 @@ const createReply = async (req, res) => {
   }
 
 }
+const addSave = async (req, res) => {
+  try {
+    const { savedId, createdBy } = req.body
+    const replyOut = await Saves.create(req.body)
+  
+    res.status(StatusCodes.CREATED).json( req.body )
+    
+  } catch (error) {
+  }
+
+}
 
 const createLog = async (req, res) => {
   const { day, log,createdBy } = req.body
@@ -117,6 +128,16 @@ const createSubReply = async (req, res) => {
   }
 
 }
+
+const getSaves = async (req, res) => {
+  const {createdBy}=req.body
+  console.log(req.body)
+
+  let result = Saves.find({createdBy})
+  let saves= await result
+  console.log(saves)
+  res.status(StatusCodes.OK).json({ saves})
+};
 
 const getAllJobs = async (req, res) => {
   // console.log(req.query)
@@ -276,6 +297,21 @@ const deleteReply = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ msg: 'Success! Job removed' })
 }
+const deleteSave = async (req, res) => {
+  const { id: id } = req.params
+  console.log(id)
+  const save = await Saves.findOne({ savedId: id })
+
+  
+
+  checkPermissions(req.user, save.createdBy)
+
+  await save.remove()
+
+  // await replies.remove()
+
+  res.status(StatusCodes.OK).json({ msg: 'Success! Job removed' })
+}
 
 const deleteLog = async (req, res) => {
   const { id: logId } = req.params
@@ -382,4 +418,4 @@ const showStats = async (req, res) => {
   res.status(StatusCodes.OK).json({ defaultStats, monthlyApplications })
 }
 
-export { deleteLog, updateLog,createLog, deleteSubReply,createStory, deleteJob, getAllJobs, updateJob, showStats,createReply, deleteReply, deleteReplybyStory,createSubReply }
+export { deleteSave, getSaves, addSave, deleteLog, updateLog,createLog, deleteSubReply,createStory, deleteJob, getAllJobs, updateJob, showStats,createReply, deleteReply, deleteReplybyStory,createSubReply }

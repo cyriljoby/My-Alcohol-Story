@@ -41,18 +41,21 @@ const StoryContainer = () => {
     users,
     createReply,
     reply,
-    StoryId,
-    handleChange,
+    addSave,
     getReplies,
     replies,
     getSubReplies,
-    subreplies
+    subreplies,
+    getSaves,
+    saves,
+    deleteSave
   } = useAppContext();
   useEffect(() => {
     getUsers();
     getStories();
     getReplies();
     getSubReplies();
+    getSaves()
     
 
     // eslint-disable-next-line
@@ -62,6 +65,10 @@ const StoryContainer = () => {
   let user_id = localStorage.getItem("_id");
   let replyValue = "";
   let arrow = <BsChevronDown />;
+  let saved=[]
+  saves.map(save=>{
+    saved.push(save.savedId)
+  })
   for (let i = 0; i < users?.length; i++) {
     user_info.push({
       id: users[i]._id,
@@ -88,8 +95,18 @@ const StoryContainer = () => {
     let icon = "";
     const [replyState, setreplyState] = useState(false);
     const replyFunc = (e) => {
-      targetBoxId = e.currentTarget.id;
       setreplyState(!replyState);
+    };
+
+    const save = (e) => {
+      console.log('save')
+      targetBoxId = e.currentTarget.id
+      addSave(targetBoxId)
+    };
+    const unsave = (e) => {
+      console.log('un')
+      targetBoxId = e.currentTarget.id
+      deleteSave(targetBoxId)
     };
     const hi = (e) => {
       opens = [];
@@ -144,6 +161,9 @@ const StoryContainer = () => {
               </div>
 
               <h4>{alias}</h4>
+              {saved.includes(job["job"]._id)?
+              <button id={job["job"]._id} onClick={unsave}>unsave</button>:
+              <button id={job["job"]._id} onClick={save}>save</button>}
               {/* <p>Posted {date}</p> */}
             </div>
             <div className="edit-btns">

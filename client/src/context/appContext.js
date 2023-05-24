@@ -21,6 +21,7 @@ import {
   CREATE_STORY_SUCCESS,
   CREATE_STORY_ERROR,
   GET_STORIES_BEGIN,
+  GET_SAVES_SUCCESS,
   GET_STORIES_SUCCESS,
   GET_LOGS_SUCCESS,
   SET_EDIT_STORY,
@@ -70,6 +71,7 @@ const initialState = {
   storyId: "",
   day:"",
   log:"",
+  saves:[]
 };
 
 const AppContext = React.createContext();
@@ -294,6 +296,25 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  const addSave = async (savedId) => {
+    const createdBy = localStorage
+      .getItem("user")
+      .split(",")[0]
+      .replace('{"_id":', "")
+      .replace(/['"]+/g, "");
+    dispatch({ type: CREATE_STORY_BEGIN });
+    console.log('hi')
+    try {
+      await authFetch.post("/stories/save", {
+        savedId,
+        createdBy,
+      });
+  
+    } catch (error) {
+      if (error.response.status === 401) return;
+    }
+  };
+
   const createSubReply = async (subreply, replyId, createdByReplyId) => {
     const createdBy = localStorage
       .getItem("user")
@@ -326,7 +347,6 @@ const AppProvider = ({ children }) => {
     try {
       const { data } = await authFetch(url,{userId});
       const { stories } = data;
-      console.log(stories)
       dispatch({
         type: GET_STORIES_SUCCESS,
         payload: {
@@ -375,6 +395,32 @@ const AppProvider = ({ children }) => {
         type: GET_REPLIES_SUCCESS,
         payload: {
           replies,
+        },
+      });
+    } catch (error) {
+      logoutUser();
+    }
+    // clearAlert();
+  };
+
+  const getSaves = async () => {
+    let url = `/stories/getSave`;
+    const createdBy = localStorage
+      .getItem("user")
+      .split(",")[0]
+      .replace('{"_id":', "")
+      .replace(/['"]+/g, "");
+
+    dispatch({ type: GET_STORIES_BEGIN });
+    console.log(createdBy)
+    try {
+      const { data } = await authFetch.post(url, {createdBy});
+      const { saves } = data;
+
+      dispatch({
+        type: GET_SAVES_SUCCESS,
+        payload: {
+          saves,
         },
       });
     } catch (error) {
@@ -490,6 +536,20 @@ const AppProvider = ({ children }) => {
     
   };
 
+  const deleteSave = async (id) => {
+    console.log('hi')
+    dispatch({ type: DELETE_STORY_BEGIN });
+    try {
+      await authFetch.delete(`/stories/save/${id}`);
+      // deleteReplybyStory(jobId)
+      getSaves();
+    } catch (error) {
+      // logoutUser();
+    }
+
+    
+  };
+
   const deleteLog = async (logId) => {
     dispatch({ type: DELETE_STORY_BEGIN });
     try {
@@ -577,7 +637,10 @@ const AppProvider = ({ children }) => {
         getLogs,
         editLog,
         setEditLog,
-        deleteLog
+        deleteLog,
+        addSave,
+        getSaves,
+        deleteSave
       }}
     >
       {children}

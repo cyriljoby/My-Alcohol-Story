@@ -14,14 +14,18 @@ import {
   getAllJobs,
   updateJob,
   showStats,
-  createReply,
+  deleteSave,
   createLog,
   updateLog,
-  deleteLog
+  deleteLog,
+  addSave,
+  getSaves,
 } from '../controllers/storyController.js'
 
 router.route('/').post(createStory).get(getAllJobs)
-// router.route('/reply').post(createReply)
+router.route('/save').post(addSave)
+router.route('/save/:id').delete(deleteSave)
+router.route('/getSave').post(getSaves)
 router.route('/log').post(createLog)
 router.route('/log/:id').patch(updateLog).delete(deleteLog)
 // remember about :id

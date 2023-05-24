@@ -14,7 +14,7 @@ import {
 } from "react-icons/gi";
 import { FaUser } from "react-icons/fa";
 
-const StoryContainerEdit = ({
+const LogContainerEdit = ({
     alias,
     createdAt,
     createdBy,
@@ -63,7 +63,7 @@ const StoryContainerEdit = ({
     </Wrapper>
   );
 };
-export default StoryContainerEdit;
+export default LogContainerEdit;
 //   return (
 //     <Wrapper>
 //       <header>
