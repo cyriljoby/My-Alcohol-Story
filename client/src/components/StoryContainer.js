@@ -161,15 +161,16 @@ const StoryContainer = () => {
               </div>
 
               <h4>{alias}</h4>
-              {saved.includes(job["job"]._id)?
-              <button id={job["job"]._id} onClick={unsave}>unsave</button>:
-              <button id={job["job"]._id} onClick={save}>save</button>}
+              
               {/* <p>Posted {date}</p> */}
             </div>
             <div className="edit-btns">
               <button className="btn open-reply" onClick={replyFunc}>
                 <BiReply />
               </button>
+              {saved.includes(job["job"]._id)?
+              <button id={job["job"]._id} onClick={unsave}>unsave</button>:
+              <button id={job["job"]._id} onClick={save}>save</button>}
             </div>
           </div>
           <h1 className="story-title">{job["job"].title}</h1>

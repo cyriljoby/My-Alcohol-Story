@@ -143,9 +143,7 @@ const LogsContainer = () => {
             </div>
 
             <h4>{alias}</h4>
-            {saved.includes(log._id)?
-              <button id={log._id} onClick={unsave}>unsave</button>:
-              <button id={log._id} onClick={save}>save</button>}
+            
             <p>
               {" "}
               {month} {date}, {year}
@@ -155,6 +153,9 @@ const LogsContainer = () => {
             <button className="btn open-reply" onClick={replyFunc}>
               <BiReply />
             </button>
+            {saved.includes(log._id)?
+              <button id={log._id} onClick={unsave}>unsave</button>:
+              <button id={log._id} onClick={save}>save</button>}
           </div>
 
           <h1
