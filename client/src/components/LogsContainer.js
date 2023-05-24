@@ -153,9 +153,9 @@ const LogsContainer = () => {
             <button className="btn open-reply" onClick={replyFunc}>
               <BiReply />
             </button>
-            {saved.includes(log._id)?
+            {/* {saved.includes(log._id)?
               <button id={log._id} onClick={unsave}>unsave</button>:
-              <button id={log._id} onClick={save}>save</button>}
+              <button id={log._id} onClick={save}>save</button>} */}
           </div>
 
           <h1
