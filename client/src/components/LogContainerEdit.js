@@ -23,11 +23,13 @@ const LogContainerEdit = ({
     log,
     month,
     updatedAt,
-    _id
+    _id,
+    save,
+
     
 }) => {
-  const {  deleteLog,setEditLog } = useAppContext();
-
+  const {  deleteLog,setEditLog, deleteSave, saves } = useAppContext();
+  console.log(alias, day, image, log, _id)
 //   let date = new moment.utc(createdAt).local().startOf("seconds").fromNow();
   return (
     <Wrapper>
@@ -40,6 +42,14 @@ const LogContainerEdit = ({
 
             <h4>{alias}</h4>
           </div>
+          {save?
+          <button
+              type="button"
+              className="btn delete-btn"
+              onClick={() => deleteSave(_id)}
+            >
+              <MdDelete />
+            </button>:
           <div className="edit-btns">
             <Link
               to="/edit-log"
@@ -55,7 +65,7 @@ const LogContainerEdit = ({
             >
               <MdDelete />
             </button>
-          </div>
+          </div>}
         </div>
         <h1 className="story-title">Day {day}</h1>
         <p>{log}</p>

@@ -26,6 +26,9 @@ const LogsContainer = () => {
     replies,
     getSubReplies,
     subreplies,
+    addSave,
+    deleteSave,
+    saves
   } = useAppContext();
   useEffect(() => {
     getLogs();
@@ -40,6 +43,11 @@ const LogsContainer = () => {
   let user_id = localStorage.getItem("_id");
   let opens = [];
   let openIds = [];
+  let saved=[]
+  saves.map(save=>{
+    saved.push(save.savedId)
+  })
+
   var targetBoxId;
   let replyValue = "";
   let del = "";
@@ -58,7 +66,6 @@ const LogsContainer = () => {
     </Wrapper>
   );
 }
-  console.log(user_info);
   const handleReplyInput = (e) => {
     replyValue = e.target.value;
   };
@@ -70,6 +77,18 @@ const LogsContainer = () => {
       targetBoxId = e.currentTarget.id;
       setreplyState(!replyState);
     };
+
+    const save = (e) => {
+      console.log('save')
+      targetBoxId = e.currentTarget.id
+      addSave(targetBoxId)
+    };
+    const unsave = (e) => {
+      console.log('un')
+      targetBoxId = e.currentTarget.id
+      deleteSave(targetBoxId)
+    };
+
     const createNewReply = (e) => {
       opens = [];
       e.preventDefault();
@@ -124,6 +143,9 @@ const LogsContainer = () => {
             </div>
 
             <h4>{alias}</h4>
+            {saved.includes(log._id)?
+              <button id={log._id} onClick={unsave}>unsave</button>:
+              <button id={log._id} onClick={save}>save</button>}
             <p>
               {" "}
               {month} {date}, {year}

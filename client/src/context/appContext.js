@@ -309,6 +309,7 @@ const AppProvider = ({ children }) => {
         savedId,
         createdBy,
       });
+      getSaves()
   
     } catch (error) {
       if (error.response.status === 401) return;
@@ -541,7 +542,6 @@ const AppProvider = ({ children }) => {
     dispatch({ type: DELETE_STORY_BEGIN });
     try {
       await authFetch.delete(`/stories/save/${id}`);
-      // deleteReplybyStory(jobId)
       getSaves();
     } catch (error) {
       // logoutUser();

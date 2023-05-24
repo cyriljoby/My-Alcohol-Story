@@ -102,12 +102,11 @@ return(
           if (icon === "GiElephant") {
             icon = <GiElephant />;
           }
-          let id = mySave._id
-          let story = true
+          let story = mySave.title
         return(
             <div>
-            {story ?<StoryContainerEdit id={id} title={mySave.title} story = {mySave.story} createdAt={mySave.createdAt} image={icon} alias={alias} save={true}/>:(
-            <LogContainerEdit alias={alias} createdAt={mySave.createdAt} createdBy={mySave.createdBy} day={mySave.day} image={icon} log={mySave.log} month={mySave.month} updatedAt={mySave.updatedAt} _id={mySave._id}/>)}
+            {story ?<StoryContainerEdit _id={mySave._id} title={mySave.title} story = {mySave.story} createdAt={mySave.createdAt} image={icon} alias={alias} save={true}/>:(
+            <LogContainerEdit alias={alias} createdAt={mySave.createdAt} createdBy={mySave.createdBy} day={mySave.day} image={icon} log={mySave.log} month={mySave.month} updatedAt={mySave.updatedAt} _id={mySave._id} save={true}/>)}
             </div>
             // <StoryContainerEdit id={id} title={mySave.title} story = {mySave.story} createdAt={mySave.createdAt} image={icon} alias={alias} save={true}/>
         )

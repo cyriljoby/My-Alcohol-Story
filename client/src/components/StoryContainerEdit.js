@@ -24,7 +24,7 @@ const StoryContainerEdit = ({
   alias,
   save
 }) => {
-  const { setEditJob, deleteJob,getReplies,getSubReplies } = useAppContext();
+  const { setEditJob, deleteJob,getReplies,getSubReplies, deleteSave } = useAppContext();
   // useEffect(() => {
   //   getReplies();
   //   getSubReplies();
@@ -51,7 +51,14 @@ const StoryContainerEdit = ({
 
             <h4>{alias}</h4>
           </div>
-          {save?null:(
+          {save?
+          <button
+              type="button"
+              className="btn delete-btn"
+              onClick={() => deleteSave(_id)}
+            >
+              <MdDelete />
+            </button>:(
           <div className="edit-btns">
             
             <Link
