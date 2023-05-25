@@ -22,7 +22,6 @@ import { MdDelete } from "react-icons/md";
 var targetBoxId;
 var targetRenderId;
 let del = "";
-let count = 0;
 let opens = [];
 let openIds = [];
 
