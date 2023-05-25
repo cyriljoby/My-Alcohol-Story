@@ -57,7 +57,7 @@ const StoryContainerEdit = ({
               className="btn delete-btn"
               onClick={() => deleteSave(_id)}
             >
-              <MdDelete />
+              Unsave
             </button>:(
           <div className="edit-btns">
             

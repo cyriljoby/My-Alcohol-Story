@@ -124,7 +124,6 @@ const reducer = (state, action) => {
     };
   }
   if (action.type === HANDLE_CHANGE) {
-    console.log([action.payload.name], action.payload.value);
     return {
       ...state,
       page: 1,
@@ -183,7 +182,6 @@ const reducer = (state, action) => {
     return { ...state, isLoading: true, showAlert: false };
   }
   if (action.type === GET_STORIES_SUCCESS) {
-    console.log(action.payload.stories);
     return {
       ...state,
       isLoading: false,
@@ -228,6 +226,7 @@ const reducer = (state, action) => {
       ...state,
       isLoading: false,
       subreplies: action.payload.subreplies,
+      subreplyIds: action.payload.subreplyIds
     };
   }
   if (action.type === SET_EDIT_STORY) {
@@ -245,7 +244,6 @@ const reducer = (state, action) => {
   }
   if (action.type === SET_EDIT_LOG) {
     const story_info = state.logs.find((log) => log._id === action.payload.id);
-    console.log(story_info);
     const { day, log, _id } = story_info;
     return {
       ...state,

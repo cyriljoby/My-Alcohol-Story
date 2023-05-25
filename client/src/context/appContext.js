@@ -46,6 +46,7 @@ const user = localStorage.getItem("user");
 const initialState = {
   isLoading: false,
   showAlert: false,
+  subreplyIds:[],
   alertText: "",
   alertType: "",
   user: user ? JSON.parse(user) : null,
@@ -88,7 +89,6 @@ const AppProvider = ({ children }) => {
   authFetch.interceptors.request.use(
     (config) => {
       config.headers.common["Authorization"] = `Bearer ${state.token}`;
-      // console.log(state.token)
       return config;
     },
     (error) => {
@@ -102,8 +102,7 @@ const AppProvider = ({ children }) => {
       return response;
     },
     (error) => {
-      // console.log(error.response)
-      if (error.response.status === 401) {
+    if (error.response.status === 401) {
         logoutUser();
       }
       return Promise.reject(error);
@@ -433,16 +432,26 @@ const AppProvider = ({ children }) => {
   const getSubReplies = async () => {
     let url = `/stories`;
     // console.log(state)
+    const { subreplyIds } = state;
+    
 
     dispatch({ type: GET_STORIES_BEGIN });
     try {
       const { data } = await authFetch(url);
-
       const { subreplies } = data;
+      
+      subreplyIds.length=0
+      subreplies?.map((subreply,index)=>{
+        console.log('hi')
+        subreplyIds.push(subreply["replyId"])
+      })
+
+      console.log(subreplyIds.length,subreplies.length)
       dispatch({
         type: GET_SUBREPLIES_SUCCESS,
         payload: {
           subreplies,
+          subreplyIds
         },
       });
     } catch (error) {

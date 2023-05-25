@@ -29,7 +29,6 @@ const LogContainerEdit = ({
     
 }) => {
   const {  deleteLog,setEditLog, deleteSave, saves } = useAppContext();
-  console.log(alias, day, image, log, _id)
 //   let date = new moment.utc(createdAt).local().startOf("seconds").fromNow();
   return (
     <Wrapper>
@@ -48,7 +47,7 @@ const LogContainerEdit = ({
               className="btn delete-btn"
               onClick={() => deleteSave(_id)}
             >
-              <MdDelete />
+              Unsave
             </button>:
           <div className="edit-btns">
             <Link

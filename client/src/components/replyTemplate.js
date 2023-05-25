@@ -248,7 +248,6 @@ const ReplyTemplate = ({
       }
     }
   }
-  // console.log(del,reply)
   return (
     <div>
       <RenderSubReplyBox />

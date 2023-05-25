@@ -37,7 +37,7 @@ const StoryContainer = ({profile}) => {
     isLoading,
     page,
     search,
-    searchStatus,
+    subreplyIds,
     searchType,
     sort,
     getUsers,
@@ -107,12 +107,10 @@ const StoryContainer = ({profile}) => {
     };
 
     const save = (e) => {
-      console.log('save')
       targetBoxId = e.currentTarget.id
       addSave(targetBoxId)
     };
     const unsave = (e) => {
-      console.log('un')
       targetBoxId = e.currentTarget.id
       deleteSave(targetBoxId)
     };
@@ -194,9 +192,12 @@ const StoryContainer = ({profile}) => {
               <button className="btn open-reply" onClick={replyFunc}>
                 <BiReply />
               </button>
+              {profile?null:
+              <div>
               {saved.includes(job["job"]._id)?
               <button id={job["job"]._id} onClick={unsave}>unsave</button>:
               <button id={job["job"]._id} onClick={save}>save</button>}
+              </div>}
             </div>
           </div>
           <h1 className="story-title">{job["job"].title}</h1>
@@ -225,6 +226,7 @@ const StoryContainer = ({profile}) => {
   }
 
   let counts = [];
+  
   
   let opened = false;
   function RenderButtton({ job, counts }) {
@@ -259,7 +261,15 @@ const StoryContainer = ({profile}) => {
         })}
       }
     };
+
     replies?.map((reply) => {
+      if (subreplyIds.length>0){
+        let subcount=subreplyIds?.filter((x) => x == reply["_id"]).length;
+        for (let i=0;i<subcount;i++){
+          counts.push(reply["storyId"]);
+        }
+      }
+      
       counts.push(reply["storyId"]);
     });
 
@@ -291,10 +301,8 @@ const StoryContainer = ({profile}) => {
               }
                             // subList.push(content,subalias,subicon,aliasparent)
               
-              // console.log(subList)
             }
             subreplies?.map((sub)=>{
-              // console.log(sub)
               if (reply["_id"]==sub["replyId"]){
                 content=(sub["subreply"])
               

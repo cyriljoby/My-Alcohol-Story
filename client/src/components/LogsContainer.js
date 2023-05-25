@@ -49,6 +49,7 @@ const LogsContainer = ({profile}) => {
       .replace('{"_id":', "")
       .replace(/['"]+/g, "");
   let user_info = [];
+  let subreplyIds=[]
   var targetRenderId;
   let user_id = localStorage.getItem("_id");
   let opens = [];
@@ -89,12 +90,10 @@ const LogsContainer = ({profile}) => {
     };
 
     const save = (e) => {
-      console.log('save')
       targetBoxId = e.currentTarget.id
       addSave(targetBoxId)
     };
     const unsave = (e) => {
-      console.log('un')
       targetBoxId = e.currentTarget.id
       deleteSave(targetBoxId)
     };
@@ -181,9 +180,12 @@ const LogsContainer = ({profile}) => {
             <button className="btn open-reply" onClick={replyFunc}>
               <BiReply />
             </button>
+            {profile?null:
+            <div>
             {saved.includes(log._id)?
               <button id={log._id} onClick={unsave}>unsave</button>:
               <button id={log._id} onClick={save}>save</button>}
+              </div>}
           </div>
 
           <h1
@@ -234,6 +236,7 @@ const LogsContainer = ({profile}) => {
   let opened = false;
   let counts = [];
   function RenderButtton({ log, counts }) {
+    subreplyIds=[]
     counts = [];
     const [showState, setshowState] = useState(() => {
       if (sessionStorage.getItem(log._id) === "open") {
@@ -261,9 +264,17 @@ const LogsContainer = ({profile}) => {
         }
       }
     };
+    subreplies?.map((subreply,index)=>{
+      subreplyIds.push(subreply["replyId"])
+    })
     replies?.map((reply) => {
+      let subcount=subreplyIds.filter((x) => x == reply["_id"]).length;
+      for (let i=0;i<subcount;i++){
+        counts.push(reply["storyId"]);
+      }
       counts.push(reply["storyId"]);
     });
+    
 
     let count = counts.filter((x) => x == log._id).length;
     let alias = "";
@@ -293,7 +304,6 @@ const LogsContainer = ({profile}) => {
               }
             }
             subreplies?.map((sub) => {
-              // console.log(sub)
               if (reply["_id"] == sub["replyId"]) {
                 content = sub["subreply"];
 
