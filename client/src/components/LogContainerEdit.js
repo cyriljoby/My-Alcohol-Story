@@ -13,6 +13,8 @@ import {
   GiTortoise,
 } from "react-icons/gi";
 import { FaUser } from "react-icons/fa";
+import {BsFillBookmarkFill} from "react-icons/bs";
+import {BsBookmark} from "react-icons/bs";
 
 const LogContainerEdit = ({
     alias,
@@ -47,7 +49,7 @@ const LogContainerEdit = ({
               className="btn delete-btn"
               onClick={() => deleteSave(_id)}
             >
-              Unsave
+              <BsFillBookmarkFill/>
             </button>:
           <div className="edit-btns">
             <Link

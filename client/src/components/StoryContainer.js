@@ -19,6 +19,10 @@ import { BiReply } from "react-icons/bi";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import {BsFillBookmarkFill} from "react-icons/bs";
+import {BsBookmark} from "react-icons/bs";
+
+
 var targetBoxId;
 var targetRenderId;
 let del = "";
@@ -194,8 +198,8 @@ const StoryContainer = ({profile}) => {
               {profile?null:
               <div>
               {saved.includes(job["job"]._id)?
-              <button id={job["job"]._id} onClick={unsave}>unsave</button>:
-              <button id={job["job"]._id} onClick={save}>save</button>}
+              <button id={job["job"]._id} onClick={unsave}><BsFillBookmarkFill/></button>:
+              <button id={job["job"]._id} onClick={save}><BsBookmark/></button>}
               </div>}
             </div>
           </div>

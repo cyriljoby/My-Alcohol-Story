@@ -14,6 +14,7 @@ import {
 } from "react-icons/gi";
 import { FaUser } from "react-icons/fa";
 import { useEffect } from "react";
+import {BsFillBookmarkFill} from "react-icons/bs";
 
 const StoryContainerEdit = ({
   _id,
@@ -36,7 +37,6 @@ const StoryContainerEdit = ({
   // function RenderReply(){
   //   replies.map((reply=>{
   //     if (reply["storyId"]==_id){
-  //       console.log('hii')
   //     }
   //   }))
   // }
@@ -57,7 +57,7 @@ const StoryContainerEdit = ({
               className="btn delete-btn"
               onClick={() => deleteSave(_id)}
             >
-              Unsave
+              <BsFillBookmarkFill/>
             </button>:(
           <div className="edit-btns">
             

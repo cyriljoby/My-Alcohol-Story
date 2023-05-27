@@ -17,7 +17,8 @@ import moment from "moment";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { Link } from "react-router-dom";
-
+import {BsFillBookmarkFill} from "react-icons/bs";
+import {BsBookmark} from "react-icons/bs";
 const LogsContainer = ({profile}) => {
   const {
     getLogs,
@@ -183,8 +184,8 @@ const LogsContainer = ({profile}) => {
             {profile?null:
             <div>
             {saved.includes(log._id)?
-              <button id={log._id} onClick={unsave}>unsave</button>:
-              <button id={log._id} onClick={save}>save</button>}
+              <button id={log._id} onClick={unsave}><BsFillBookmarkFill/></button>:
+              <button id={log._id} onClick={save}><BsBookmark/></button>}
               </div>}
           </div>
 
