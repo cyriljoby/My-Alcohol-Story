@@ -81,6 +81,21 @@ const LogsContainer = ({profile}) => {
   const handleReplyInput = (e) => {
     replyValue = e.target.value;
   };
+
+  function None (){
+    let count=0
+    logs?.map((log=>{
+      if (log.createdBy===user){
+        count+=1
+      }
+    }))
+    if (profile && count==0){
+      return <p style={{ textAlign: "center" ,margin:"0 auto"}} >No Dear Sobrieties to display</p>
+    }
+    else{
+      return null
+    }
+  }
   function RenderReplyBox({ log }) {
     let alias = "";
     let icon = "";
@@ -393,6 +408,7 @@ const LogsContainer = ({profile}) => {
       );
     }
   }
+  let profilecount=0
   return (
     <div>
       
@@ -400,6 +416,7 @@ const LogsContainer = ({profile}) => {
         
         if (profile){
         if (log.createdBy===user){
+          profilecount+=1
         return (
           <Wrapper>
             <div key={log._id} className="story" style={{ paddingBottom: "0" }}>
@@ -427,7 +444,9 @@ const LogsContainer = ({profile}) => {
           )
         }
       })}
+      <None/>
     </div>
+   
   );
 };
 

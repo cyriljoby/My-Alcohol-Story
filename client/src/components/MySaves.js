@@ -12,6 +12,7 @@ import {
 import { RiUserFill } from "react-icons/ri";
 import LogContainerEdit from "./LogContainerEdit";
 import StoryContainerEdit from "./StoryContainerEdit";
+import StoryContainer from "./StoryContainer";
 import moment from "moment";
 const MySaves = () => {
   const {
@@ -105,6 +106,8 @@ return(
           let story = mySave.title
         return(
             <div>
+              {/* <StoryContainer save={true}/> */}
+
             {story ?<StoryContainerEdit _id={mySave._id} title={mySave.title} story = {mySave.story} createdAt={mySave.createdAt} image={icon} alias={alias} save={true}/>:(
             <LogContainerEdit alias={alias} createdAt={mySave.createdAt} createdBy={mySave.createdBy} day={mySave.day} image={icon} log={mySave.log} month={mySave.month} updatedAt={mySave.updatedAt} _id={mySave._id} save={true}/>)}
             </div>

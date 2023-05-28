@@ -31,7 +31,7 @@ let openIds = [];
 
 // import {BiReply} from "react-icons/bi";
 
-const StoryContainer = ({profile}) => {
+const StoryContainer = ({profile,save}) => {
   // const [replyState, setreplyState] = useState(false);
 
   const {
@@ -100,7 +100,20 @@ const StoryContainer = ({profile}) => {
     replyValue = e.target.value;
   };
   
-
+  function None (){
+    let count=0
+    stories?.map((story=>{
+      if (story.createdBy===user){
+        count+=1
+      }
+    }))
+    if (profile && count==0){
+      return <p style={{ textAlign: "center" ,margin:"0 auto"}} >No Stories to display</p>
+    }
+    else{
+      return null
+    }
+  }
   function RenderReplyBox(job) {
     let alias = "";
     let icon = "";
@@ -416,6 +429,22 @@ const StoryContainer = ({profile}) => {
             </div>
           );
         }}
+
+        else if (save){
+          saves?.map((save=>{
+            return (
+              <div key={job._id} className="story">
+                <RenderReplyBox id={"box" + job._id} job={job} />
+  
+                <RenderButtton
+                  id={"replies" + job._id}
+                  job={job}
+                  counts={counts}
+                />
+              </div>
+            );
+          }))
+        }
         
         else{
           let date = new moment.utc(job.createdAt)
@@ -437,8 +466,11 @@ const StoryContainer = ({profile}) => {
             </div>
           );
         }})}
+        <None/> 
       </div>
+      
     </Wrapper>
+    
   );
 };
 
