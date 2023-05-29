@@ -139,6 +139,12 @@ const Wrapper = styled.section`
   .reply-icon {
     transform: translateX(-50%);
   }
+  
+    @media screen and (max-width: 450px) {
+    .story-date {
+      display: none;
+    }
+  }
 `;
 export default Wrapper;
 
