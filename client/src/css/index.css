@@ -762,3 +762,17 @@ Team
     font-size: 8rem;
   }
 }
+
+.tab-icon {
+  display: none;
+}
+
+@media screen and (max-width: 600px) {
+  .tab-icon {
+    display: block;
+  }
+
+  .tab-type {
+    display: none;
+  }
+}
