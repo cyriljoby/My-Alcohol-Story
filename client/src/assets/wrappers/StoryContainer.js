@@ -146,7 +146,11 @@ const Wrapper = styled.section`
     cursor: pointer;
   }
 
-  @media screen and (max-width: 450px) {
+  .alt-edit {
+    justify-self: end;
+  }
+
+  @media screen and (max-width: 480px) {
     .story-date {
       display: none;
     }
