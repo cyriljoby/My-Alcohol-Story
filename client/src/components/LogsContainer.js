@@ -19,6 +19,7 @@ import { MdDelete } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { BsFillBookmarkFill } from "react-icons/bs";
 import { BsBookmark } from "react-icons/bs";
+import Loading from "./Loading";
 const LogsContainer = ({ profile, save }) => {
   const {
     getLogs,
@@ -56,6 +57,9 @@ const LogsContainer = ({ profile, save }) => {
   let opens = [];
   let openIds = [];
   let saved = [];
+  if (!logs){
+    return(<Loading center={true}/>)
+  }
   saves.map((save) => {
     saved.push(save.savedId);
   });
