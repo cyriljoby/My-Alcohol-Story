@@ -52,7 +52,7 @@ const Profile = () => {
     display: flex;
   `;
   const types = ["My Stories", "My Dear Sobrieties", "My Saved Posts"];
-
+const icons=[<RiUserFill/>,<GiElephant/>,<GiButterfly/>]
   const [name, setName] = useState(user?.name);
   const [email, setEmail] = useState(user?.email);
   const [alias, setAlias] = useState(user?.alias);
@@ -161,12 +161,13 @@ const Profile = () => {
           justifyContent: "center",
         }}
       >
-        {types.map((type) => (
+        {types.map((type,index) => (
           <Tab
             key={type}
             active={storyState === type}
             onClick={() => setStoryState(type)}
           >
+            {icons[index]}
             {type}
           </Tab>
         ))}

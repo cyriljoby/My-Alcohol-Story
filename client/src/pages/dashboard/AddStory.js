@@ -4,6 +4,7 @@ import Wrapper from "../../assets/wrappers/DashboardFormPage";
 import { useState } from "react";
 import Popup from "reactjs-popup";
 import styled from "styled-components";
+import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 
 // import { useDetectClickOutside } from 'react-detect-click-outside';
 
@@ -47,6 +48,7 @@ const AddStory = () => {
     }
   `;
   const types = ["Add Story", "Add Dear Sobriety"];
+  const icons=[<BsChevronDown/>,<BsChevronUp/>]
 
   const [popupState, setPopupState] = useState(false);
   const [closeState, setCloseState] = useState(false);
@@ -233,12 +235,13 @@ const AddStory = () => {
       <Wrapper>
         {showAlert && <Alert />}
         <ButtonGroup style={{ marginTop: "-1rem", marginBottom: "1rem" }}>
-          {types.map((type) => (
+          {types.map((type,index) => (
             <Tab
               key={type}
               active={storyState === type}
               onClick={() => setStoryState(type)}
             >
+              {icons[index]}
               {type}
             </Tab>
           ))}
