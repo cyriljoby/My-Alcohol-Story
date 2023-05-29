@@ -17,9 +17,9 @@ import moment from "moment";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { Link } from "react-router-dom";
-import {BsFillBookmarkFill} from "react-icons/bs";
-import {BsBookmark} from "react-icons/bs";
-const LogsContainer = ({profile,save}) => {
+import { BsFillBookmarkFill } from "react-icons/bs";
+import { BsBookmark } from "react-icons/bs";
+const LogsContainer = ({ profile, save }) => {
   const {
     getLogs,
     logs,
@@ -34,7 +34,7 @@ const LogsContainer = ({profile,save}) => {
     deleteSave,
     saves,
     setEditLog,
-    deleteLog
+    deleteLog,
   } = useAppContext();
   useEffect(() => {
     getLogs();
@@ -44,21 +44,21 @@ const LogsContainer = ({profile,save}) => {
 
     // eslint-disable-next-line
   }, []);
-   const user = localStorage
-      .getItem("user")
-      .split(",")[0]
-      .replace('{"_id":', "")
-      .replace(/['"]+/g, "");
+  const user = localStorage
+    .getItem("user")
+    .split(",")[0]
+    .replace('{"_id":', "")
+    .replace(/['"]+/g, "");
   let user_info = [];
-  let subreplyIds=[]
+  let subreplyIds = [];
   var targetRenderId;
   let user_id = localStorage.getItem("_id");
   let opens = [];
   let openIds = [];
-  let saved=[]
-  saves.map(save=>{
-    saved.push(save.savedId)
-  })
+  let saved = [];
+  saves.map((save) => {
+    saved.push(save.savedId);
+  });
 
   var targetBoxId;
   let replyValue = "";
@@ -72,28 +72,31 @@ const LogsContainer = ({profile,save}) => {
     });
   }
   if (logs?.length === 0) {
-  return (
-    <Wrapper>
-      <h2>No Dear Sobrieties to display...</h2>
-    </Wrapper>
-  );
-}
+    return (
+      <Wrapper>
+        <h2>No Dear Sobrieties to display...</h2>
+      </Wrapper>
+    );
+  }
   const handleReplyInput = (e) => {
     replyValue = e.target.value;
   };
 
-  function None (){
-    let count=0
-    logs?.map((log=>{
-      if (log.createdBy===user){
-        count+=1
+  function None() {
+    let count = 0;
+    logs?.map((log) => {
+      if (log.createdBy === user) {
+        count += 1;
       }
-    }))
-    if (profile && count==0){
-      return <p style={{ textAlign: "center" ,margin:"0 auto"}} >No Dear Sobrieties to display</p>
-    }
-    else{
-      return null
+    });
+    if (profile && count == 0) {
+      return (
+        <p style={{ textAlign: "center", margin: "0 auto" }}>
+          No Dear Sobrieties to display
+        </p>
+      );
+    } else {
+      return null;
     }
   }
   function RenderReplyBox({ log }) {
@@ -106,18 +109,15 @@ const LogsContainer = ({profile,save}) => {
     };
 
     const save = (e) => {
-      targetBoxId = e.currentTarget.id
-      console.log('hi')
-      if (saved?.includes(targetBoxId)){
-        console.log('un')
-        deleteSave(targetBoxId)
+      targetBoxId = e.currentTarget.id;
+      console.log("hi");
+      if (saved?.includes(targetBoxId)) {
+        console.log("un");
+        deleteSave(targetBoxId);
+      } else {
+        console.log(targetBoxId);
+        addSave(targetBoxId);
       }
-      else{
-        
-        console.log(targetBoxId)
-        addSave(targetBoxId)
-      }
-      
     };
 
     const createNewReply = (e) => {
@@ -174,25 +174,25 @@ const LogsContainer = ({profile,save}) => {
             </div>
 
             <h4>{alias}</h4>
-            {profile?
-            <div className="edit-btns">
-            
-            <Link
-              to="/edit-story"
-              className="btn edit-btn"
-              onClick={() => setEditLog(log._id)}
-            >
-              <FaEdit></FaEdit>
-            </Link>
-            <button
-              type="button"
-              className="btn delete-btn"
-              onClick={() => deleteLog(log._id)}
-            >
-              <MdDelete />
-            </button>
-          </div>:null}
-            
+            {profile ? (
+              <div className="edit-btns">
+                <Link
+                  to="/edit-story"
+                  className="btn edit-btn"
+                  onClick={() => setEditLog(log._id)}
+                >
+                  <FaEdit></FaEdit>
+                </Link>
+                <button
+                  type="button"
+                  className="btn delete-btn"
+                  onClick={() => deleteLog(log._id)}
+                >
+                  <MdDelete />
+                </button>
+              </div>
+            ) : null}
+
             <p className="story-date">
               {" "}
               {month} {date}, {year}
@@ -202,11 +202,15 @@ const LogsContainer = ({profile,save}) => {
             <button className="btn open-reply" onClick={replyFunc}>
               <BiReply />
             </button>
-            {profile?null:
-            <div>
-              <button id={log._id} onClick={save}>{saved.includes(log._id)?<BsFillBookmarkFill/>:<BsBookmark/>}</button>
-              </div>}
-              
+            {profile ? null : (
+              <button className="save" id={log._id} onClick={save}>
+                {saved.includes(log._id) ? (
+                  <BsFillBookmarkFill />
+                ) : (
+                  <BsBookmark />
+                )}
+              </button>
+            )}
           </div>
 
           <h1
@@ -257,7 +261,7 @@ const LogsContainer = ({profile,save}) => {
   let opened = false;
   let counts = [];
   function RenderButtton({ log, counts }) {
-    subreplyIds=[]
+    subreplyIds = [];
     counts = [];
     const [showState, setshowState] = useState(() => {
       if (sessionStorage.getItem(log._id) === "open") {
@@ -285,17 +289,16 @@ const LogsContainer = ({profile,save}) => {
         }
       }
     };
-    subreplies?.map((subreply,index)=>{
-      subreplyIds.push(subreply["replyId"])
-    })
+    subreplies?.map((subreply, index) => {
+      subreplyIds.push(subreply["replyId"]);
+    });
     replies?.map((reply) => {
-      let subcount=subreplyIds.filter((x) => x == reply["_id"]).length;
-      for (let i=0;i<subcount;i++){
+      let subcount = subreplyIds.filter((x) => x == reply["_id"]).length;
+      for (let i = 0; i < subcount; i++) {
         counts.push(reply["storyId"]);
       }
       counts.push(reply["storyId"]);
     });
-    
 
     let count = counts.filter((x) => x == log._id).length;
     let alias = "";
@@ -413,57 +416,17 @@ const LogsContainer = ({profile,save}) => {
       );
     }
   }
-  let profilecount=0
-  if (save){
-    return(
-    saves.map((save=>{
-      return(logs.map((log)=>{
-        if (save.savedId==log._id){
-            console.log(log)
-            return (
-              <Wrapper>
-              <div key={log._id} className="story">
-                <RenderReplyBox id={"box" + log._id} log={log} />
-  
-                <RenderButtton
-                  id={"replies" + log._id}
-                  log={log}
-                  counts={counts}
-                />
-              </div>
-              </Wrapper>
-            );
-        }
-    }
-    )
-    )})))
-  }
-  else{
-  return (
-    <div>
-      
-      {logs?.map((log) => {
-        
-        if (profile){
-        if (log.createdBy===user){
-          profilecount+=1
-        return (
-          <Wrapper>
-            <div key={log._id} className="story" style={{ paddingBottom: "0" }}>
-              <RenderReplyBox id={"box" + log._id} log={log} />
-              <RenderButtton
-                id={"replies" + log._id}
-                log={log}
-                counts={counts}
-              />
-            </div>
-          </Wrapper>
-        )}}
-        else{
+  let profilecount = 0;
+  if (save) {
+    return saves.map((save) => {
+      return logs.map((log) => {
+        if (save.savedId == log._id) {
+          console.log(log);
           return (
             <Wrapper>
-              <div key={log._id} className="story" style={{ paddingBottom: "0" }}>
+              <div key={log._id} className="story">
                 <RenderReplyBox id={"box" + log._id} log={log} />
+
                 <RenderButtton
                   id={"replies" + log._id}
                   log={log}
@@ -471,13 +434,57 @@ const LogsContainer = ({profile,save}) => {
                 />
               </div>
             </Wrapper>
-          )
+          );
         }
-      })}
-      <None/>
-    </div>
-   
-  );}
+      });
+    });
+  } else {
+    return (
+      <div>
+        {logs?.map((log) => {
+          if (profile) {
+            if (log.createdBy === user) {
+              profilecount += 1;
+              return (
+                <Wrapper>
+                  <div
+                    key={log._id}
+                    className="story"
+                    style={{ paddingBottom: "0" }}
+                  >
+                    <RenderReplyBox id={"box" + log._id} log={log} />
+                    <RenderButtton
+                      id={"replies" + log._id}
+                      log={log}
+                      counts={counts}
+                    />
+                  </div>
+                </Wrapper>
+              );
+            }
+          } else {
+            return (
+              <Wrapper>
+                <div
+                  key={log._id}
+                  className="story"
+                  style={{ paddingBottom: "0" }}
+                >
+                  <RenderReplyBox id={"box" + log._id} log={log} />
+                  <RenderButtton
+                    id={"replies" + log._id}
+                    log={log}
+                    counts={counts}
+                  />
+                </div>
+              </Wrapper>
+            );
+          }
+        })}
+        <None />
+      </div>
+    );
+  }
 };
 
 export default LogsContainer;
