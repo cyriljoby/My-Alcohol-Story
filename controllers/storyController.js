@@ -246,6 +246,7 @@ const deleteJob = async (req, res) => {
   console.log('hi')
 
   const job = await Story.findOne({ _id: jobId })
+  const saves = await Saves.deleteMany({savedId:jobId})
   const replies=await Reply.find({storyId:jobId})
   for (let i=0;i<replies.length;i++){
     let reply=(replies[i])
@@ -309,9 +310,8 @@ const deleteLog = async (req, res) => {
   const { id: logId } = req.params
 
   const log = await DailyLog.findOne({ _id: logId })
-  
-  const replies=await Reply.find({storyId:logId})
   const saves = await Saves.deleteMany({savedId:logId})
+  const replies=await Reply.find({storyId:logId})
   for (let i=0;i<replies.length;i++){
     let reply=(replies[i])
     let replyId=reply["_id"]
@@ -329,7 +329,7 @@ const deleteLog = async (req, res) => {
   checkPermissions(req.user, log.createdBy)
 
   await log.remove()
-
+  // await replies.remove()
 
   res.status(StatusCodes.OK).json({ msg: 'Success! Job removed' })
 }
