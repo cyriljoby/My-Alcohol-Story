@@ -174,8 +174,21 @@ const LogsContainer = ({ profile, save }) => {
             </div>
 
             <h4>{alias}</h4>
+
+            <p className="story-date">
+              {" "}
+              {month} {date}, {year}
+            </p>
+          </div>
+          <div className="edit-btns">
+            <button className="btn open-reply" onClick={replyFunc}>
+              <BiReply />
+            </button>
             {profile ? (
-              <div className="edit-btns">
+              <div
+                className="edit-btns"
+                style={{ alignContent: "center", marginLeft: "0.5rem" }}
+              >
                 <Link
                   to="/edit-story"
                   className="btn edit-btn"
@@ -192,16 +205,6 @@ const LogsContainer = ({ profile, save }) => {
                 </button>
               </div>
             ) : null}
-
-            <p className="story-date">
-              {" "}
-              {month} {date}, {year}
-            </p>
-          </div>
-          <div className="edit-btns">
-            <button className="btn open-reply" onClick={replyFunc}>
-              <BiReply />
-            </button>
             {profile ? null : (
               <button className="save" id={log._id} onClick={save}>
                 {saved.includes(log._id) ? (
