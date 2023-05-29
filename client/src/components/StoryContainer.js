@@ -19,9 +19,8 @@ import { BiReply } from "react-icons/bi";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-import {BsFillBookmarkFill} from "react-icons/bs";
-import {BsBookmark} from "react-icons/bs";
-
+import { BsFillBookmarkFill } from "react-icons/bs";
+import { BsBookmark } from "react-icons/bs";
 
 var targetBoxId;
 var targetRenderId;
@@ -31,7 +30,7 @@ let openIds = [];
 
 // import {BiReply} from "react-icons/bi";
 
-const StoryContainer = ({profile,save}) => {
+const StoryContainer = ({ profile, save }) => {
   // const [replyState, setreplyState] = useState(false);
 
   const {
@@ -55,31 +54,31 @@ const StoryContainer = ({profile,save}) => {
     getSaves,
     saves,
     deleteSave,
-    setEditJob, deleteJob
+    setEditJob,
+    deleteJob,
   } = useAppContext();
   useEffect(() => {
     getUsers();
     getStories();
     getReplies();
     getSubReplies();
-    getSaves()
-    
+    getSaves();
 
     // eslint-disable-next-line
   }, []);
   let user_info = [];
   const user = localStorage
-      .getItem("user")
-      .split(",")[0]
-      .replace('{"_id":', "")
-      .replace(/['"]+/g, "");
+    .getItem("user")
+    .split(",")[0]
+    .replace('{"_id":', "")
+    .replace(/['"]+/g, "");
   let user_id = localStorage.getItem("_id");
   let replyValue = "";
   let arrow = <BsChevronDown />;
-  let saved=[]
-  saves.map(save=>{
-    saved.push(save.savedId)
-  })
+  let saved = [];
+  saves.map((save) => {
+    saved.push(save.savedId);
+  });
   for (let i = 0; i < users?.length; i++) {
     user_info.push({
       id: users[i]._id,
@@ -99,19 +98,22 @@ const StoryContainer = ({profile,save}) => {
   const handleReplyInput = (e) => {
     replyValue = e.target.value;
   };
-  
-  function None (){
-    let count=0
-    stories?.map((story=>{
-      if (story.createdBy===user){
-        count+=1
+
+  function None() {
+    let count = 0;
+    stories?.map((story) => {
+      if (story.createdBy === user) {
+        count += 1;
       }
-    }))
-    if (profile && count==0){
-      return <p style={{ textAlign: "center" ,margin:"0 auto"}} >No Stories to display</p>
-    }
-    else{
-      return null
+    });
+    if (profile && count == 0) {
+      return (
+        <p style={{ textAlign: "center", margin: "0 auto" }}>
+          No Stories to display
+        </p>
+      );
+    } else {
+      return null;
     }
   }
   function RenderReplyBox(job) {
@@ -122,21 +124,17 @@ const StoryContainer = ({profile,save}) => {
       setreplyState(!replyState);
     };
 
-
     const save = (e) => {
-      targetBoxId = e.currentTarget.id
-      console.log('hi')
-      let _id=''
-      if (saved?.includes(targetBoxId)){
-        console.log('un')
-        deleteSave(targetBoxId)
+      targetBoxId = e.currentTarget.id;
+      console.log("hi");
+      let _id = "";
+      if (saved?.includes(targetBoxId)) {
+        console.log("un");
+        deleteSave(targetBoxId);
+      } else {
+        console.log(targetBoxId);
+        addSave(targetBoxId);
       }
-      else{
-        
-        console.log(targetBoxId)
-        addSave(targetBoxId)
-      }
-      
     };
     const hi = (e) => {
       opens = [];
@@ -181,52 +179,57 @@ const StoryContainer = ({profile,save}) => {
     if (icon === "AiOutlineUser") {
       icon = <RiUserFill />;
     }
-      
-      return (
-        <div>
-          <div className="story-header">
-            <div className="user-info">
-              <div className="story-icon">
-                <span className="icon">{icon}</span>
+
+    return (
+      <div>
+        <div className="story-header">
+          <div className="user-info">
+            <div className="story-icon">
+              <span className="icon">{icon}</span>
+            </div>
+
+            <h4>{alias}</h4>
+            {profile ? (
+              <div className="edit-btns">
+                <Link
+                  to="/edit-story"
+                  className="btn edit-btn"
+                  onClick={() => setEditJob(job["job"]._id)}
+                >
+                  <FaEdit></FaEdit>
+                </Link>
+                <button
+                  type="button"
+                  className="btn delete-btn"
+                  onClick={() => deleteJob(job["job"]._id)}
+                >
+                  <MdDelete />
+                </button>
               </div>
+            ) : null}
 
-              <h4>{alias}</h4>
-            {profile?
-            <div className="edit-btns">
-            
-            <Link
-              to="/edit-story"
-              className="btn edit-btn"
-              onClick={() => setEditJob(job["job"]._id)}
-            >
-              <FaEdit></FaEdit>
-            </Link>
-            <button
-              type="button"
-              className="btn delete-btn"
-              onClick={() => deleteJob(job["job"]._id)}
-            >
-              <MdDelete />
-            </button>
-          </div>:null}
-              
-              {/* <p>Posted {date}</p> */}
-            </div>
-            <div className="edit-btns">
-              <button className="btn open-reply" onClick={replyFunc}>
-                <BiReply />
-              </button>
-              {profile?null:
-              <div>
-              <button id={job["job"]._id} onClick={save}>{saved.includes(job["job"]._id)?<BsFillBookmarkFill/>:<BsBookmark/>}</button>
-              {/* <button id={job["job"]._id} onClick={save}><BsBookmark/></button>} */}
-              </div>}
-            </div>
+            {/* <p>Posted {date}</p> */}
           </div>
-          <h1 className="story-title">{job["job"].title}</h1>
-          <p>{job["job"].story}</p>
+          <div className="edit-btns">
+            <button className="btn open-reply" onClick={replyFunc}>
+              <BiReply />
+            </button>
+            {profile ? null : (
+              <button className="save" id={job["job"]._id} onClick={save}>
+                {saved.includes(job["job"]._id) ? (
+                  <BsFillBookmarkFill />
+                ) : (
+                  <BsBookmark />
+                )}
+              </button>
+            )}
+          </div>
+        </div>
+        <h1 className="story-title">{job["job"].title}</h1>
+        <p>{job["job"].story}</p>
 
-          {replyState?<div className="reply-container">
+        {replyState ? (
+          <div className="reply-container">
             <textarea
               id="reply"
               name="reply"
@@ -243,22 +246,19 @@ const StoryContainer = ({profile,save}) => {
             >
               Reply
             </button>
-          </div>:null}
-        </div>
-      );
+          </div>
+        ) : null}
+      </div>
+    );
   }
 
   let counts = [];
-  
-  
+
   let opened = false;
   function RenderButtton({ job, counts }) {
     counts = [];
     const [showState, setshowState] = useState(() => {
-      if (
-        
-        sessionStorage.getItem(job._id) === "open"
-      ) {
+      if (sessionStorage.getItem(job._id) === "open") {
         return true;
       } else {
         return false;
@@ -275,24 +275,23 @@ const StoryContainer = ({profile,save}) => {
       } else {
         sessionStorage.setItem(job._id, "open");
       }
-      if (props_list.length!=0){
-        {props_list.map((props) => {
- 
-          sessionStorage.setItem(props._id, "close");
-
-          
-        })}
+      if (props_list.length != 0) {
+        {
+          props_list.map((props) => {
+            sessionStorage.setItem(props._id, "close");
+          });
+        }
       }
     };
 
     replies?.map((reply) => {
-      if (subreplyIds.length>0){
-        let subcount=subreplyIds?.filter((x) => x == reply["_id"]).length;
-        for (let i=0;i<subcount;i++){
+      if (subreplyIds.length > 0) {
+        let subcount = subreplyIds?.filter((x) => x == reply["_id"]).length;
+        for (let i = 0; i < subcount; i++) {
           counts.push(reply["storyId"]);
         }
       }
-      
+
       counts.push(reply["storyId"]);
     });
 
@@ -304,11 +303,11 @@ const StoryContainer = ({profile,save}) => {
       {
         replies?.map((reply) => {
           let subList = [];
-          let content=''
-          let subalias=''
-          let subicon=''
-          let aliasparent=''
-          
+          let content = "";
+          let subalias = "";
+          let subicon = "";
+          let aliasparent = "";
+
           if (reply["storyId"] === job._id) {
             for (let i = 0; i < user_info.length; i++) {
               if (reply.createdBy === user_info[i].id) {
@@ -322,39 +321,43 @@ const StoryContainer = ({profile,save}) => {
               } else {
                 del = false;
               }
-                            // subList.push(content,subalias,subicon,aliasparent)
-              
+              // subList.push(content,subalias,subicon,aliasparent)
             }
-            subreplies?.map((sub)=>{
-              if (reply["_id"]==sub["replyId"]){
-                content=(sub["subreply"])
-              
+            subreplies?.map((sub) => {
+              if (reply["_id"] == sub["replyId"]) {
+                content = sub["subreply"];
 
-              for (let i = 0; i < user_info.length; i++) {
-                if (sub["createdBy"] === user_info[i].id) {
-                  subalias=(user_info[i].alias);
-                  subicon=(user_info[i].icon)
-                } 
-                if (sub["createdByReplyId"] === user_info[i].id) {
-                      aliasparent=user_info[i].alias;
-                    } 
+                for (let i = 0; i < user_info.length; i++) {
+                  if (sub["createdBy"] === user_info[i].id) {
+                    subalias = user_info[i].alias;
+                    subicon = user_info[i].icon;
+                  }
+                  if (sub["createdByReplyId"] === user_info[i].id) {
+                    aliasparent = user_info[i].alias;
+                  }
+                }
+                let subCreatedBy = sub["createdBy"];
+                let subId = sub["_id"];
+                subList.push({
+                  content: content,
+                  subalias: subalias,
+                  subicon: subicon,
+                  aliasparent: aliasparent,
+                  subCreatedBy: subCreatedBy,
+                  subId: subId,
+                });
               }
-              let subCreatedBy=sub["createdBy"]
-              let subId=sub["_id"]
-              subList.push({"content":content,"subalias":subalias,"subicon":subicon,"aliasparent":aliasparent,"subCreatedBy":subCreatedBy,"subId":subId })
-            }
-
-            })
+            });
             let props = {
               _id: reply["_id"],
-              createdBy:reply["createdBy"],
+              createdBy: reply["createdBy"],
               reply: reply["reply"],
               createdAt: reply["createdAt"],
               icon: icon,
               alias: alias,
               del: del,
-              sub:subList,
-              opens:opens,
+              sub: subList,
+              opens: opens,
             };
             props_list.push(props);
           }
@@ -381,19 +384,17 @@ const StoryContainer = ({profile,save}) => {
             </button>
           </div>
           <div>
-            {multiple?props_list.map((props) => {
- 
+            {multiple ? (
+              props_list.map((props) => {
                 return <ReplyTemplate {...props} />;
-
-                
-                }):<h1 style={{ paddingBottom: "2rem" }}>no comments</h1>}
-            
+              })
+            ) : (
+              <h1 style={{ paddingBottom: "2rem" }}>no comments</h1>
+            )}
           </div>
         </div>
-      );}
-
-    
-    else {
+      );
+    } else {
       let multiple = count > 0;
       return (
         <div>
@@ -411,100 +412,96 @@ const StoryContainer = ({profile,save}) => {
       );
     }
   }
-  if (save){
-    return(
-    saves.map((save=>{
-      return(stories.map((story)=>{
-        if (save.savedId==story._id){
-            console.log(story)
-            return (
-              <Wrapper>
+  if (save) {
+    return saves.map((save) => {
+      return stories.map((story) => {
+        if (save.savedId == story._id) {
+          console.log(story);
+          return (
+            <Wrapper>
               <div key={story._id} className="story">
                 <RenderReplyBox id={"box" + story._id} job={story} />
-  
+
                 <RenderButtton
                   id={"replies" + story._id}
                   job={story}
                   counts={counts}
                 />
               </div>
-              </Wrapper>
-            );
+            </Wrapper>
+          );
         }
-    }
-    )
-    )})))
+      });
+    });
+  } else {
+    return (
+      <Wrapper>
+        <div>
+          {stories?.map((job) => {
+            if (profile) {
+              if (job.createdBy == user) {
+                let date = new moment.utc(job.createdAt)
+                  .local()
+                  .startOf("seconds")
+                  .fromNow();
+
+                // job.push(icon)
+
+                return (
+                  <div key={job._id} className="story">
+                    <RenderReplyBox id={"box" + job._id} job={job} />
+
+                    <RenderButtton
+                      id={"replies" + job._id}
+                      job={job}
+                      counts={counts}
+                    />
+                  </div>
+                );
+              }
+            }
+
+            // else if (save){
+            //   saves?.map((save=>{
+            //     return (
+            //       <div key={job._id} className="story">
+            //         <RenderReplyBox id={"box" + job._id} job={job} />
+
+            //         <RenderButtton
+            //           id={"replies" + job._id}
+            //           job={job}
+            //           counts={counts}
+            //         />
+            //       </div>
+            //     );
+            //   }))
+            // }
+            else {
+              let date = new moment.utc(job.createdAt)
+                .local()
+                .startOf("seconds")
+                .fromNow();
+
+              // job.push(icon)
+
+              return (
+                <div key={job._id} className="story">
+                  <RenderReplyBox id={"box" + job._id} job={job} />
+
+                  <RenderButtton
+                    id={"replies" + job._id}
+                    job={job}
+                    counts={counts}
+                  />
+                </div>
+              );
+            }
+          })}
+          <None />
+        </div>
+      </Wrapper>
+    );
   }
-  else{
-  return (
-    <Wrapper>
-      <div>
-   
-        {stories?.map((job) => {
-          if (profile){
-          if (job.createdBy==user){
-          let date = new moment.utc(job.createdAt)
-            .local()
-            .startOf("seconds")
-            .fromNow();
-
-          // job.push(icon)
-
-          return (
-            <div key={job._id} className="story">
-              <RenderReplyBox id={"box" + job._id} job={job} />
-
-              <RenderButtton
-                id={"replies" + job._id}
-                job={job}
-                counts={counts}
-              />
-            </div>
-          );
-        }}
-
-        // else if (save){
-        //   saves?.map((save=>{
-        //     return (
-        //       <div key={job._id} className="story">
-        //         <RenderReplyBox id={"box" + job._id} job={job} />
-  
-        //         <RenderButtton
-        //           id={"replies" + job._id}
-        //           job={job}
-        //           counts={counts}
-        //         />
-        //       </div>
-        //     );
-        //   }))
-        // }
-        
-        else{
-          let date = new moment.utc(job.createdAt)
-            .local()
-            .startOf("seconds")
-            .fromNow();
-
-          // job.push(icon)
-
-          return (
-            <div key={job._id} className="story">
-              <RenderReplyBox id={"box" + job._id} job={job} />
-
-              <RenderButtton
-                id={"replies" + job._id}
-                job={job}
-                counts={counts}
-              />
-            </div>
-          );
-        }})}
-        <None/> 
-      </div>
-      
-    </Wrapper>
-    
-  );}
 };
 
 export default StoryContainer;
