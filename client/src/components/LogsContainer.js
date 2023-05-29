@@ -193,7 +193,7 @@ const LogsContainer = ({profile,save}) => {
             </button>
           </div>:null}
             
-            <p>
+            <p className="story-date">
               {" "}
               {month} {date}, {year}
             </p>
