@@ -110,12 +110,9 @@ const LogsContainer = ({ profile, save }) => {
 
     const save = (e) => {
       targetBoxId = e.currentTarget.id;
-      console.log("hi");
       if (saved?.includes(targetBoxId)) {
-        console.log("un");
         deleteSave(targetBoxId);
       } else {
-        console.log(targetBoxId);
         addSave(targetBoxId);
       }
     };
@@ -422,9 +419,8 @@ const LogsContainer = ({ profile, save }) => {
   let profilecount = 0;
   if (save) {
     return saves.map((save) => {
-      return logs.map((log) => {
+      return logs?.map((log) => {
         if (save.savedId == log._id) {
-          console.log(log);
           return (
             <Wrapper>
               <div key={log._id} className="story">

@@ -114,7 +114,6 @@ const AppProvider = ({ children }) => {
     clearAlert();
   };
   const maxAlert = () => {
-    // console.log('tthis')
     dispatch({ type: MAX_ALERT });
     clearAlert();
   };
@@ -302,7 +301,6 @@ const AppProvider = ({ children }) => {
       .replace('{"_id":', "")
       .replace(/['"]+/g, "");
     dispatch({ type: CREATE_STORY_BEGIN });
-    console.log('hi')
     try {
       await authFetch.post("/stories/save", {
         savedId,
@@ -339,7 +337,6 @@ const AppProvider = ({ children }) => {
     const { page, search, searchStatus, searchType, sort } = state;
 
     let url = `/stories?page=${page}&status=${searchStatus}&jobType=${searchType}&sort=${sort}`;
-    // console.log(state)
     if (search) {
       url = url + `&search=${search}`;
     }
@@ -362,14 +359,11 @@ const AppProvider = ({ children }) => {
     const { page, search, searchStatus, searchType, sort } = state;
 
     let url = `/stories?page=${page}&status=${searchStatus}&jobType=${searchType}&sort=${sort}`;
-    // console.log(state)
  
     dispatch({ type: GET_STORIES_BEGIN });
     try {
       const { data } = await authFetch(url,{userId});
-      console.log(data)
       const { logs } = data;
-      console.log(logs)
       dispatch({
         type: GET_LOGS_SUCCESS,
         payload: {
@@ -383,12 +377,10 @@ const AppProvider = ({ children }) => {
 
   const getReplies = async () => {
     let url = `/stories`;
-    // console.log(state)
 
     dispatch({ type: GET_STORIES_BEGIN });
     try {
       const { data } = await authFetch(url);
-      console.log(data)
       const { replies } = data;
       
       dispatch({
@@ -412,7 +404,6 @@ const AppProvider = ({ children }) => {
       .replace(/['"]+/g, "");
 
     dispatch({ type: GET_STORIES_BEGIN });
-    console.log(createdBy)
     try {
       const { data } = await authFetch.post(url, {createdBy});
       const { saves } = data;
@@ -431,7 +422,6 @@ const AppProvider = ({ children }) => {
 
   const getSubReplies = async () => {
     let url = `/stories`;
-    // console.log(state)
     const { subreplyIds } = state;
     
 
@@ -442,11 +432,9 @@ const AppProvider = ({ children }) => {
       
       subreplyIds.length=0
       subreplies?.map((subreply,index)=>{
-        console.log('hi')
         subreplyIds.push(subreply["replyId"])
       })
 
-      console.log(subreplyIds.length,subreplies.length)
       dispatch({
         type: GET_SUBREPLIES_SUCCESS,
         payload: {
@@ -464,7 +452,6 @@ const AppProvider = ({ children }) => {
     const { page, search, searchStatus, searchType, sort } = state;
 
     let url = `/stories?page=${page}&status=${searchStatus}&jobType=${searchType}&sort=${sort}&id=${userId}`;
-    // console.log(state)
     if (search) {
       url = url + `&search=${search}`;
     }
@@ -473,7 +460,6 @@ const AppProvider = ({ children }) => {
       const { data } = await authFetch(url);
 
       const { users } = data;
-      // console.log(users);
       dispatch({
         type: GET_USERS_SUCCESS,
         payload: {
@@ -515,7 +501,6 @@ const AppProvider = ({ children }) => {
 
   const editLog = async () => {
     dispatch({ type: EDIT_STORY_BEGIN });
-    console.log(state.editStoryId)
     try {
       const { day, log } = state;
       await authFetch.patch(`/stories/log/${state.editLogId}`, {
@@ -547,7 +532,6 @@ const AppProvider = ({ children }) => {
   };
 
   const deleteSave = async (id) => {
-    console.log('hi')
     dispatch({ type: DELETE_STORY_BEGIN });
     try {
       await authFetch.delete(`/stories/save/${id}`);

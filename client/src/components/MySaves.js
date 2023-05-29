@@ -40,6 +40,9 @@ function None(){
   if (saves.length<=0){
     return <p style={{ textAlign: "center" ,margin:"0 auto"}}>No Saved Posts</p>
   }
+  else{
+    return null
+  }
 }
 return(
   <div>

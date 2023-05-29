@@ -126,13 +126,10 @@ const StoryContainer = ({ profile, save }) => {
 
     const save = (e) => {
       targetBoxId = e.currentTarget.id;
-      console.log("hi");
       let _id = "";
       if (saved?.includes(targetBoxId)) {
-        console.log("un");
         deleteSave(targetBoxId);
       } else {
-        console.log(targetBoxId);
         addSave(targetBoxId);
       }
     };
@@ -419,7 +416,6 @@ const StoryContainer = ({ profile, save }) => {
     return saves.map((save) => {
       return stories.map((story) => {
         if (save.savedId == story._id) {
-          console.log(story);
           return (
             <Wrapper>
               <div key={story._id} className="story">

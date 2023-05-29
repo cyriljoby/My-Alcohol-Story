@@ -191,12 +191,10 @@ const AddStory = () => {
         titlearea.value = "";
       }
     } else {
-      console.log(log, day);
 
       const logarea = document.getElementById("log");
       const dayarea = document.getElementById("day");
       if (!log || !day) {
-        console.log("log");
         displayAlert();
         return;
       }
@@ -204,7 +202,6 @@ const AddStory = () => {
         if (logarea.value.toLowerCase().includes(triggers[i])) {
           flag = true;
         } else {
-          // console.log('log')
           continue;
         }
       }

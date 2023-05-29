@@ -85,24 +85,19 @@ const createLog = async (req, res) => {
   }
   let verifyUser=User.find({_id:createdBy})
   const user = await verifyUser
-  console.log(user)
   if (verifyUser){
     let result = DailyLog.find(queryObject)
     const logs = await result
-    console.log(logs)
     if (logs?.length!=0){
       let createdAt=logs.slice(-1)[0]["createdAt"] 
-      console.log(createdAt)
       let now=(new moment.utc)
       let diff=now.diff(createdAt);
       const diffDuration = moment.duration(diff);
-      console.log(diffDuration.minutes())
       let word='minutes'
       if (diffDuration.minutes()==1){
         word='minute'
       }
       if (diffDuration.minutes()<5){
-        console.log('h')
         throw new BadRequestError(`Please wait 5 minutes before you post another Dear Sobriety`)
       }
     
@@ -131,11 +126,9 @@ const createSubReply = async (req, res) => {
 
 const getSaves = async (req, res) => {
   const {createdBy}=req.body
-  console.log(req.body)
 
   let result = Saves.find({createdBy})
   let saves= await result
-  console.log(saves)
   res.status(StatusCodes.OK).json({ saves})
 };
 
@@ -225,7 +218,6 @@ const updateJob = async (req, res) => {
 }
 
 const updateLog= async (req, res) => {
-  console.log('here')
   const { id: logId } = req.params
   const { day, log } = req.body
 
@@ -251,14 +243,15 @@ const updateLog= async (req, res) => {
 
 const deleteJob = async (req, res) => {
   const { id: jobId } = req.params
+  console.log('hi')
 
   const job = await Story.findOne({ _id: jobId })
-
   const replies=await Reply.find({storyId:jobId})
   for (let i=0;i<replies.length;i++){
     let reply=(replies[i])
     let replyId=reply["_id"]
     const subreplies=await SubReply.find({replyId:replyId})
+    
     await reply.remove()
     for (let i=0;i<subreplies.length;i++){
       let sub=(subreplies[i])
@@ -272,6 +265,7 @@ const deleteJob = async (req, res) => {
   checkPermissions(req.user, job.createdBy)
 
   await job.remove()
+  // await saves.remove()
 
   // await replies.remove()
 
@@ -299,7 +293,6 @@ const deleteReply = async (req, res) => {
 }
 const deleteSave = async (req, res) => {
   const { id: id } = req.params
-  console.log(id)
   const save = await Saves.findOne({ savedId: id })
 
   
@@ -318,7 +311,7 @@ const deleteLog = async (req, res) => {
   const log = await DailyLog.findOne({ _id: logId })
   
   const replies=await Reply.find({storyId:logId})
-  console.log(replies)
+  const saves = await Saves.deleteMany({savedId:logId})
   for (let i=0;i<replies.length;i++){
     let reply=(replies[i])
     let replyId=reply["_id"]
@@ -337,7 +330,6 @@ const deleteLog = async (req, res) => {
 
   await log.remove()
 
-  // await replies.remove()
 
   res.status(StatusCodes.OK).json({ msg: 'Success! Job removed' })
 }
