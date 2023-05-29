@@ -10,8 +10,7 @@ import {
   GiTortoise,
 } from "react-icons/gi";
 import { RiUserFill } from "react-icons/ri";
-import LogContainerEdit from "./LogContainerEdit";
-import StoryContainerEdit from "./StoryContainerEdit";
+import LogsContainer from "./LogsContainer";
 import StoryContainer from "./StoryContainer";
 import moment from "moment";
 const MySaves = () => {
@@ -37,83 +36,17 @@ const MySaves = () => {
 
     // eslint-disable-next-line
   }, []);
-  if (isLoading || logs===undefined) {
-    return <Loading center />;
+function None(){
+  if (saves.length<=0){
+    return <p style={{ textAlign: "center" ,margin:"0 auto"}}>No Saved Posts</p>
   }
-  let mySaves=[]
-  let user_info = [];
-  let thisUser_id = "";
-  let alias=''
-  let icon=''
-  for (let i = 0; i < users?.length; i++) {
-    user_info.push({
-      id: users[i]._id,
-      alias: users[i].alias,
-      icon: users[i].image,
-    });
-    if (users[i].alias === user.alias) {
-      thisUser_id = users[i]._id;
-    }
-  }
-
-  if (saves.length>0){
-    saves.map((save)=>{
-        logs.map((log)=>{
-            if (save.savedId==log._id){
-                mySaves.push(log)
-            }
-        })
-        stories.map((story)=>{
-            if (save.savedId==story._id){
-                mySaves.push(story)
-            }
-        }
-        )
-    })
+}
 return(
-    mySaves.map((mySave=>{
-        for (let i = 0; i < user_info.length; i++) {
-            if (mySave.createdBy === user_info[i].id) {
-                alias = user_info[i].alias;
-               icon = user_info[i].icon;
-            } else {
-              continue;
-            }
-          }
-          if (icon === "GiTortoise") {
-            icon = <GiTortoise />;
-          }
-    
-          if (icon === "GiDeer") {
-            icon = <GiDeer />;
-          }
-    
-          if (icon === "RiUserFill") {
-            icon = <RiUserFill />;
-          }
-    
-          if (icon === "GiButterfly") {
-            icon = <GiButterfly />;
-          }
-    
-          if (icon === "GiDolphin") {
-            icon = <GiDolphin />;
-          }
-    
-          if (icon === "GiElephant") {
-            icon = <GiElephant />;
-          }
-          let story = mySave.title
-        return(
-            <div>
-              {/* <StoryContainer save={true}/> */}
-
-            {story ?<StoryContainerEdit _id={mySave._id} title={mySave.title} story = {mySave.story} createdAt={mySave.createdAt} image={icon} alias={alias} save={true}/>:(
-            <LogContainerEdit alias={alias} createdAt={mySave.createdAt} createdBy={mySave.createdBy} day={mySave.day} image={icon} log={mySave.log} month={mySave.month} updatedAt={mySave.updatedAt} _id={mySave._id} save={true}/>)}
-            </div>
-            // <StoryContainerEdit id={id} title={mySave.title} story = {mySave.story} createdAt={mySave.createdAt} image={icon} alias={alias} save={true}/>
-        )
-    }))
+  <div>
+  <StoryContainer save={true}/>
+  <LogsContainer save={true}/>
+  <None />
+  </div>
 )
 }
 //     logs?.map((log) => {
@@ -170,10 +103,6 @@ return(
   
 
 //   }))}
-  else{
-    return   <p style={{textAlign: "center",margin:"0 auto"}}>You have no Saved Posts</p>
 
-  };
-};
 
 export default MySaves;

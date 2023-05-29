@@ -304,7 +304,6 @@ const deleteSave = async (req, res) => {
 
   
 
-  checkPermissions(req.user, save.createdBy)
 
   await save.remove()
 

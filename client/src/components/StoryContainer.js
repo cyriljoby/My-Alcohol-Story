@@ -122,13 +122,21 @@ const StoryContainer = ({profile,save}) => {
       setreplyState(!replyState);
     };
 
+
     const save = (e) => {
       targetBoxId = e.currentTarget.id
-      addSave(targetBoxId)
-    };
-    const unsave = (e) => {
-      targetBoxId = e.currentTarget.id
-      deleteSave(targetBoxId)
+      console.log('hi')
+      let _id=''
+      if (saved?.includes(targetBoxId)){
+        console.log('un')
+        deleteSave(targetBoxId)
+      }
+      else{
+        
+        console.log(targetBoxId)
+        addSave(targetBoxId)
+      }
+      
     };
     const hi = (e) => {
       opens = [];
@@ -210,9 +218,8 @@ const StoryContainer = ({profile,save}) => {
               </button>
               {profile?null:
               <div>
-              {saved.includes(job["job"]._id)?
-              <button id={job["job"]._id} onClick={unsave}><BsFillBookmarkFill/></button>:
-              <button id={job["job"]._id} onClick={save}><BsBookmark/></button>}
+              <button id={job["job"]._id} onClick={save}>{saved.includes(job["job"]._id)?<BsFillBookmarkFill/>:<BsBookmark/>}</button>
+              {/* <button id={job["job"]._id} onClick={save}><BsBookmark/></button>} */}
               </div>}
             </div>
           </div>
@@ -404,9 +411,35 @@ const StoryContainer = ({profile,save}) => {
       );
     }
   }
+  if (save){
+    return(
+    saves.map((save=>{
+      return(stories.map((story)=>{
+        if (save.savedId==story._id){
+            console.log(story)
+            return (
+              <Wrapper>
+              <div key={story._id} className="story">
+                <RenderReplyBox id={"box" + story._id} job={story} />
+  
+                <RenderButtton
+                  id={"replies" + story._id}
+                  job={story}
+                  counts={counts}
+                />
+              </div>
+              </Wrapper>
+            );
+        }
+    }
+    )
+    )})))
+  }
+  else{
   return (
     <Wrapper>
       <div>
+   
         {stories?.map((job) => {
           if (profile){
           if (job.createdBy==user){
@@ -430,21 +463,21 @@ const StoryContainer = ({profile,save}) => {
           );
         }}
 
-        else if (save){
-          saves?.map((save=>{
-            return (
-              <div key={job._id} className="story">
-                <RenderReplyBox id={"box" + job._id} job={job} />
+        // else if (save){
+        //   saves?.map((save=>{
+        //     return (
+        //       <div key={job._id} className="story">
+        //         <RenderReplyBox id={"box" + job._id} job={job} />
   
-                <RenderButtton
-                  id={"replies" + job._id}
-                  job={job}
-                  counts={counts}
-                />
-              </div>
-            );
-          }))
-        }
+        //         <RenderButtton
+        //           id={"replies" + job._id}
+        //           job={job}
+        //           counts={counts}
+        //         />
+        //       </div>
+        //     );
+        //   }))
+        // }
         
         else{
           let date = new moment.utc(job.createdAt)
@@ -471,7 +504,7 @@ const StoryContainer = ({profile,save}) => {
       
     </Wrapper>
     
-  );
+  );}
 };
 
 export default StoryContainer;

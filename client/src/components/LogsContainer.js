@@ -19,7 +19,7 @@ import { MdDelete } from "react-icons/md";
 import { Link } from "react-router-dom";
 import {BsFillBookmarkFill} from "react-icons/bs";
 import {BsBookmark} from "react-icons/bs";
-const LogsContainer = ({profile}) => {
+const LogsContainer = ({profile,save}) => {
   const {
     getLogs,
     logs,
@@ -107,11 +107,17 @@ const LogsContainer = ({profile}) => {
 
     const save = (e) => {
       targetBoxId = e.currentTarget.id
-      addSave(targetBoxId)
-    };
-    const unsave = (e) => {
-      targetBoxId = e.currentTarget.id
-      deleteSave(targetBoxId)
+      console.log('hi')
+      if (saved?.includes(targetBoxId)){
+        console.log('un')
+        deleteSave(targetBoxId)
+      }
+      else{
+        
+        console.log(targetBoxId)
+        addSave(targetBoxId)
+      }
+      
     };
 
     const createNewReply = (e) => {
@@ -198,10 +204,9 @@ const LogsContainer = ({profile}) => {
             </button>
             {profile?null:
             <div>
-            {saved.includes(log._id)?
-              <button id={log._id} onClick={unsave}><BsFillBookmarkFill/></button>:
-              <button id={log._id} onClick={save}><BsBookmark/></button>}
+              <button id={log._id} onClick={save}>{saved.includes(log._id)?<BsFillBookmarkFill/>:<BsBookmark/>}</button>
               </div>}
+              
           </div>
 
           <h1
@@ -409,6 +414,31 @@ const LogsContainer = ({profile}) => {
     }
   }
   let profilecount=0
+  if (save){
+    return(
+    saves.map((save=>{
+      return(logs.map((log)=>{
+        if (save.savedId==log._id){
+            console.log(log)
+            return (
+              <Wrapper>
+              <div key={log._id} className="story">
+                <RenderReplyBox id={"box" + log._id} log={log} />
+  
+                <RenderButtton
+                  id={"replies" + log._id}
+                  log={log}
+                  counts={counts}
+                />
+              </div>
+              </Wrapper>
+            );
+        }
+    }
+    )
+    )})))
+  }
+  else{
   return (
     <div>
       
@@ -447,7 +477,7 @@ const LogsContainer = ({profile}) => {
       <None/>
     </div>
    
-  );
+  );}
 };
 
 export default LogsContainer;
