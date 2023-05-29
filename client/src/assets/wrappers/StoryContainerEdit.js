@@ -80,7 +80,7 @@ const Wrapper = styled.section`
     margin-top: -0.5rem;
   }
 
-  @media screen and (max-width: 450px) {
+  @media screen and (max-width: 480px) {
     .story-date {
       display: none;
     }
