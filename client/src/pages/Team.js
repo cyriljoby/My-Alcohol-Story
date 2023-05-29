@@ -6,11 +6,11 @@ import anit from "../assets/images/anit.png";
 import cyril from "../assets/images/cyril.png";
 import dhanush from "../assets/images/dhanush.jpg";
 import lukas from "../assets/images/lukas.png";
-import user from "../assets/images/user.png";
+import sathvik from "../assets/images/sathvik.jpg";
 import { BsLinkedin } from "react-icons/bs";
 import { FaEnvelope } from "react-icons/fa";
 
-const Landing = () => {
+const Team = () => {
   return (
     <Wrapper>
       <header className="landing-header">
@@ -121,7 +121,7 @@ const Landing = () => {
             <div class="card">
               <div class="card-side card-front">
                 <div className="card-photo-container">
-                  <img src={user} alt="" class="card-photo" />
+                  <img src={sathvik} alt="" class="card-photo" />
                 </div>
                 <div class="card-info">
                   <h4 class="card-title">
@@ -210,4 +210,4 @@ const Landing = () => {
   );
 };
 
-export default Landing;
+export default Team;
