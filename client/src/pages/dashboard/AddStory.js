@@ -142,7 +142,7 @@ const AddStory = () => {
                   onClick={directcreateStory}
                   style={{ margin: "0.5rem 0" }}
                 >
-                  Post Story
+                  Post
                 </button>
                 <button
                   className="btn btn-block modal-clear-btn"
@@ -277,7 +277,7 @@ const AddStory = () => {
                 onClick={handleSubmit}
                 disabled={isLoading}
               >
-                submit
+                post
               </button>
               <RenderPopup />
               <button
