@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { FormRow, Alert, FormRowSelect, StoryContainer } from "../../components";
+import {
+  FormRow,
+  Alert,
+  FormRowSelect,
+  StoryContainer,
+} from "../../components";
 import { useAppContext } from "../../context/appContext";
 import Wrapper from "../../assets/wrappers/DashboardFormPage";
 import LogsContainer from "../../components/LogsContainer";
@@ -13,6 +18,7 @@ import {
 } from "react-icons/gi";
 import styled from "styled-components";
 import MySaves from "../../components/MySaves";
+import { BsCardText, BsBook, BsBookmark } from "react-icons/bs";
 
 const Profile = () => {
   let userId = localStorage
@@ -52,7 +58,7 @@ const Profile = () => {
     display: flex;
   `;
   const types = ["My Stories", "My Dear Sobrieties", "My Saved Posts"];
-const icons=[<RiUserFill/>,<GiElephant/>,<GiButterfly/>]
+  const icons = [<BsCardText />, <BsBook />, <BsBookmark />];
   const [name, setName] = useState(user?.name);
   const [email, setEmail] = useState(user?.email);
   const [alias, setAlias] = useState(user?.alias);
@@ -161,22 +167,27 @@ const icons=[<RiUserFill/>,<GiElephant/>,<GiButterfly/>]
           justifyContent: "center",
         }}
       >
-        {types.map((type,index) => (
+        {types.map((type, index) => (
           <Tab
             key={type}
             active={storyState === type}
             onClick={() => setStoryState(type)}
           >
-            {icons[index]}
-            {type}
+            <span className="tab-icon">{icons[index]}</span>
+            <span className="tab-type">{type}</span>
           </Tab>
         ))}
       </ButtonGroup>
 
-      {storyState == "My Stories" ? <StoryContainer profile={true} /> : (storyState == "My Dear Sobrieties")?<LogsContainer profile={true}/>:<MySaves/>}
+      {storyState == "My Stories" ? (
+        <StoryContainer profile={true} />
+      ) : storyState == "My Dear Sobrieties" ? (
+        <LogsContainer profile={true} />
+      ) : (
+        <MySaves />
+      )}
     </div>
   );
 };
 
 export default Profile;
-
