@@ -13,7 +13,7 @@ const Wrapper = styled.section`
   .story-header {
     display: grid;
     align-items: center;
-    grid-template-columns: 1fr 30px;
+    grid-template-columns: 1fr 60px;
   }
 
   .story-header img {
@@ -139,12 +139,17 @@ const Wrapper = styled.section`
   .reply-icon {
     transform: translateX(-50%);
   }
-  
-    @media screen and (max-width: 450px) {
+
+  .save {
+    border: none;
+    align-self: center;
+    cursor: pointer;
+  }
+
+  @media screen and (max-width: 450px) {
     .story-date {
       display: none;
     }
   }
 `;
 export default Wrapper;
-
