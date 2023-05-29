@@ -4,7 +4,7 @@ import Wrapper from "../../assets/wrappers/DashboardFormPage";
 import { useState } from "react";
 import Popup from "reactjs-popup";
 import styled from "styled-components";
-import { BsChevronDown, BsChevronUp } from "react-icons/bs";
+import { BsCardText, BsBook } from "react-icons/bs";
 
 // import { useDetectClickOutside } from 'react-detect-click-outside';
 
@@ -48,7 +48,7 @@ const AddStory = () => {
     }
   `;
   const types = ["Add Story", "Add Dear Sobriety"];
-  const icons=[<BsChevronDown/>,<BsChevronUp/>]
+  const icons = [<BsCardText />, <BsBook />];
 
   const [popupState, setPopupState] = useState(false);
   const [closeState, setCloseState] = useState(false);
@@ -193,7 +193,6 @@ const AddStory = () => {
         titlearea.value = "";
       }
     } else {
-
       const logarea = document.getElementById("log");
       const dayarea = document.getElementById("day");
       if (!log || !day) {
@@ -235,14 +234,14 @@ const AddStory = () => {
       <Wrapper>
         {showAlert && <Alert />}
         <ButtonGroup style={{ marginTop: "-1rem", marginBottom: "1rem" }}>
-          {types.map((type,index) => (
+          {types.map((type, index) => (
             <Tab
               key={type}
               active={storyState === type}
               onClick={() => setStoryState(type)}
             >
-              {icons[index]}
-              {type}
+              <span className="tab-icon"> {icons[index]}</span>
+              <span className="tab-type">{type}</span>
             </Tab>
           ))}
         </ButtonGroup>
