@@ -37,6 +37,7 @@
     "morgan": "^1.10.0",
     "normalize.css": "^8.0.1",
     "react": "^18.2.0",
+    "react-chat-elements": "^12.0.9",
     "react-detect-click-outside": "^1.1.7",
     "react-icons": "^4.4.0",
     "react-router-dom": "^6.4.0",

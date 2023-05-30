@@ -10,6 +10,7 @@ import {
 } from "./pages/dashboard";
 import EditStory from "./pages/dashboard/EditStory";
 import EditLog from "./pages/dashboard/EditLog";
+import DirectMessages from "./pages/dashboard/DirectMessages";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         >
           <Route path="/" element={<AllStories />} />
           <Route path="daily-logs" element={<DailyLog />} />
+          <Route path="messages" element={<DirectMessages />} />
           <Route path="add-story" element={<AddStory />} />
           <Route path="edit-story" element={<EditStory />} />
           <Route path="edit-log" element={<EditLog />} />
