@@ -10,7 +10,7 @@ import {
 } from "react-icons/gi";
 import { RiUserFill } from "react-icons/ri";
 import Wrapper from "../assets/wrappers/StoryContainer";
-import { BiReply } from "react-icons/bi";
+import { BiReply, BiMessageEdit } from "react-icons/bi";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import ReplyTemplate from "./replyTemplate";
 import moment from "moment";
@@ -53,7 +53,7 @@ const LogsContainer = ({ profile, save }) => {
   let user_info = [];
   let subreplyIds = [];
   var targetRenderId;
-  let user_id = localStorage.getItem("_id");
+  let user_id = JSON.parse(localStorage.getItem("_id"));
   let opens = [];
   let openIds = [];
   let saved = [];
@@ -111,6 +111,10 @@ const LogsContainer = ({ profile, save }) => {
       targetBoxId = e.currentTarget.id;
       setreplyState(!replyState);
     };
+
+    const chatFunc = (e) => {
+
+    }
 
     const save = (e) => {
       targetBoxId = e.currentTarget.id;
@@ -185,6 +189,11 @@ const LogsContainer = ({ profile, save }) => {
             <button className="btn open-reply" onClick={replyFunc}>
               <BiReply />
             </button>
+            {log.createdBy !== user_id ? (
+              <button className="btn start-chat" onClick={chatFunc}>
+                <BiMessageEdit />
+              </button>
+            ) : null}
             {profile ? (
               <div
                 className="edit-btns"
@@ -207,7 +216,7 @@ const LogsContainer = ({ profile, save }) => {
               </div>
             ) : null}
             {profile ? null : (
-              <button className="save" id={log._id} onClick={save}>
+              <button className="btn save" id={log._id} onClick={save}>
                 {saved.includes(log._id) ? (
                   <BsFillBookmarkFill />
                 ) : (

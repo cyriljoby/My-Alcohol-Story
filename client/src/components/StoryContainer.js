@@ -15,7 +15,7 @@ import ReplyTemplate from "./replyTemplate";
 import moment from "moment";
 import { now } from "mongoose";
 import { useState, useRef } from "react";
-import { BiReply } from "react-icons/bi";
+import {BiMessageEdit, BiReply} from "react-icons/bi";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
@@ -76,7 +76,7 @@ const StoryContainer = ({ profile, save }) => {
     .split(",")[0]
     .replace('{"_id":', "")
     .replace(/['"]+/g, "");
-  let user_id = localStorage.getItem("_id");
+  let user_id = JSON.parse(localStorage.getItem("_id"));
   let replyValue = "";
   let arrow = <BsChevronDown />;
   let saved = [];
@@ -128,6 +128,9 @@ const StoryContainer = ({ profile, save }) => {
       setreplyState(!replyState);
     };
 
+    const chatFunc = (e) => {
+
+    }
     const save = (e) => {
       targetBoxId = e.currentTarget.id;
       let _id = "";
@@ -197,6 +200,11 @@ const StoryContainer = ({ profile, save }) => {
             <button className="btn open-reply" onClick={replyFunc}>
               <BiReply />
             </button>
+            {job["job"].createdBy !== user_id ? (
+              <button className="btn start-chat" onClick={chatFunc}>
+                <BiMessageEdit />
+              </button>
+            ) : null}
             {profile ? (
               <div
                 className="edit-btns"

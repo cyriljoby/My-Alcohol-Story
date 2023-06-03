@@ -69,8 +69,7 @@ const Wrapper = styled.section`
 
   .edit-btns {
     justify-self: end;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
   }
 
   .edit-btns button,
@@ -89,10 +88,13 @@ const Wrapper = styled.section`
 
   .open-reply {
     font-size: 1.5rem;
-    padding: 0.25rem;
-    padding: 0.25rem 0.55rem;
     background-color: transparent;
     box-shadow: none;
+  }
+  
+  .start-chat {
+    font-size: 1.1rem;
+    padding: 0.25rem 0.4rem !important;
   }
 
   .reply-container {
@@ -142,8 +144,8 @@ const Wrapper = styled.section`
 
   .save {
     border: none;
-    align-self: center;
     cursor: pointer;
+    padding: 0.25rem 0.4rem !important;
   }
 
   .alt-edit {
