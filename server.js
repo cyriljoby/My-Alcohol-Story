@@ -61,14 +61,7 @@ app.use(errorHandlerMiddleware);
 
 const port = process.env.PORT || 5200;
 
-const httpServer = createServer(app);
-
-const io = new Server(httpServer, {
-  path: "/",
-  cors: {
-    origin: "http://localhost:3000",
-  }
-});
+const websocketHttpServer = createServer();
 
 const start = async () => {
   try {
@@ -77,26 +70,36 @@ const start = async () => {
       process.env.user,
       process.env.password
     );
-    httpServer.listen(port, () => {
+    app.listen(port, () => {
       console.log(`Server is listening on port ${port}...`);
-      console.log("Websocket Server is listening on port 5200...");
+    });
+    websocketHttpServer.listen(3001, () => {
+      console.log("Websocket server is listening on port 3001...");
     });
   } catch (error) {
     console.log(error);
   }
 };
 
+const io = new Server(websocketHttpServer,{
+  path: "/",
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+  },
+});
+
 io.use((socket, next) => {
   const token = socket.handshake.auth.token;
   if (!token) {
-    throw new UnAuthenticatedError('Authentication Invalid')
+    next(new UnAuthenticatedError('Authentication Invalid'))
   }
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET)
     socket.userId = payload.userId
     next()
   } catch (error) {
-    throw new UnAuthenticatedError('Authentication Invalid')
+    next(new UnAuthenticatedError('Authentication Invalid'))
   }
 });
 

@@ -4,28 +4,43 @@ import {Button, Input, MessageBox, MessageList} from "react-chat-elements";
 import {GiDeer} from "react-icons/gi";
 import ChatList from "../../components/ChatList"
 import { io } from "socket.io-client";
-import {useEffect} from "react";
-
-const socket = io("http://localhost:5200/", {
-  auth: {
-    token: localStorage.getItem("token"),
-  }
-});
+import {useEffect, useRef, useState} from "react";
+import { useLocation } from "react-router-dom";
+import {useAppContext} from "../../context/appContext";
 
 const DirectMessages = () => {
+  const { socket } = useAppContext();
 
-  const sendMessage = (data) => {
-    socket.emit("create-message", {
-      message: data.message,
-    });
+  const createSocketListeners = () => {
+    console.log("Creating socket listeners");
   }
 
   useEffect(() => {
-    socket.on("receive-message", (data) => {
-      console.log(data.message);
-    });
+    if (socket && socket.connected) {
+      createSocketListeners();
+    } else {
+      const socketInterval = setInterval(() => {
+        if (socket && socket.connected) {
+          clearInterval(socketInterval);
+          createSocketListeners();
+        }
+      }, 100);
+    }
+
+    return () => {
+      if (socket && socket.connected) {
+        // Clean up or perform any necessary actions when the component unmounts
+      }
+    }
   }, [socket]);
 
+  const sendMessage = (data) => {
+    if (socket && socket.connected) {
+      // socket.emit("create-message", {
+      //   message: data.message,
+      // });
+    }
+  }
 
   return (
     <div

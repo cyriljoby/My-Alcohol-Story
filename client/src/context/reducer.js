@@ -34,6 +34,7 @@ import {
   CREATE_LOG_SUCCESS,
   GET_LOGS_SUCCESS,
   SET_EDIT_LOG,
+  CREATE_WEBSOCKET,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -317,6 +318,9 @@ const reducer = (state, action) => {
   }
   if (action.type === CHANGE_PAGE) {
     return { ...state, page: action.payload.page };
+  }
+  if (action.type === CREATE_WEBSOCKET) {
+    return { ...state, socket: action.payload.socket };
   }
   throw new Error(`no such action : ${action.type}`);
 };

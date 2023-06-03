@@ -37,8 +37,10 @@ import {
   GET_SUBREPLIES_SUCCESS,
   CREATE_LOG_SUCCESS,
   SET_EDIT_LOG,
-  EDIT_LOG_SUCCESS
+  EDIT_LOG_SUCCESS,
+  CREATE_WEBSOCKET,
 } from "./actions";
+import {io} from "socket.io-client";
 
 const token = localStorage.getItem("token");
 const user = localStorage.getItem("user");
@@ -72,7 +74,8 @@ const initialState = {
   storyId: "",
   day:"",
   log:"",
-  saves:[]
+  saves:[],
+  socket: null,
 };
 
 const AppContext = React.createContext();
@@ -192,6 +195,30 @@ const AppProvider = ({ children }) => {
       }
     }
     clearAlert();
+  };
+
+  const createWebsocket = () => {
+    try {
+      const socket = io(`${window.location.hostname}:3001`, {
+        auth: {
+          token: state.token,
+        }
+      });
+
+      socket.on("connect", () => {
+        console.log("connected to socket");
+      });
+      socket.on("disconnect", () => {
+        console.log("disconnected from socket");
+      });
+      socket.on("connect_error", (error) => {
+        console.log(error);
+      });
+
+      dispatch({ type: CREATE_WEBSOCKET, payload: { socket } });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleChange = ({ name, value }) => {
@@ -633,7 +660,8 @@ const AppProvider = ({ children }) => {
         deleteLog,
         addSave,
         getSaves,
-        deleteSave
+        deleteSave,
+        createWebsocket,
       }}
     >
       {children}
