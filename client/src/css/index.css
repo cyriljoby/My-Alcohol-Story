@@ -572,7 +572,7 @@ ul {
 }
 
 /*
-=============== 
+===============
 Team
 ===============
 */
@@ -795,12 +795,15 @@ Team
     }
     .chat-row {
       display: flex;
+      width: 100%;
       flex-direction: row;
       align-items: center;
       padding: 5px;
+      background-color: white;
+      border-width: 0;
     }
     .chat-row:hover {
-      background-color: #f5f5f5;
+      background-color: #eaeaea;
     }
     .chat-list {
       padding: 5px;
@@ -853,4 +856,3 @@ Team
       flex: 15%;
     }
 }
-

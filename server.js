@@ -1,8 +1,11 @@
 import express from "express";
+import { createServer } from "http";
+import { Server } from "socket.io";
 const app = express();
 import dotenv from "dotenv";
 dotenv.config();
 import "express-async-errors";
+import cors from "cors";
 import morgan from "morgan";
 
 import { dirname } from "path";
@@ -26,6 +29,8 @@ import replyRouter from "./routes/replyRoutes.js";
 import notFoundMiddleware from "./middleware/not-found.js";
 import errorHandlerMiddleware from "./middleware/error-handler.js";
 import authenticateUser from "./middleware/auth.js";
+import {UnAuthenticatedError} from "./errors/index.js";
+import jwt from "jsonwebtoken";
 
 if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
@@ -39,6 +44,7 @@ app.use(express.static(path.resolve(__dirname, "./client/build")));
 app.use(express.json());
 app.use(helmet());
 app.use(xss());
+app.use(cors());
 app.use(mongoSanitize());
 
 app.use("/api/v1/auth", authRouter);
@@ -55,6 +61,15 @@ app.use(errorHandlerMiddleware);
 
 const port = process.env.PORT || 5200;
 
+const httpServer = createServer(app);
+
+const io = new Server(httpServer, {
+  path: "/",
+  cors: {
+    origin: "http://localhost:3000",
+  }
+});
+
 const start = async () => {
   try {
     await connectDB(
@@ -62,12 +77,41 @@ const start = async () => {
       process.env.user,
       process.env.password
     );
-    app.listen(port, () => {
+    httpServer.listen(port, () => {
       console.log(`Server is listening on port ${port}...`);
+      console.log("Websocket Server is listening on port 5200...");
     });
   } catch (error) {
     console.log(error);
   }
 };
 
-start();
+io.use((socket, next) => {
+  const token = socket.handshake.auth.token;
+  if (!token) {
+    throw new UnAuthenticatedError('Authentication Invalid')
+  }
+  try {
+    const payload = jwt.verify(token, process.env.JWT_SECRET)
+    socket.userId = payload.userId
+    next()
+  } catch (error) {
+    throw new UnAuthenticatedError('Authentication Invalid')
+  }
+});
+
+io.on("connection", (socket) => {
+  console.log(`Client connected: ${socket.id}`);
+
+  socket.on("create-message", (data) => {
+    socket.broadcast.emit("receive-message", {
+      message: data.message,
+    });
+  });
+
+  socket.on("disconnect", () => {
+    console.log(`Client disconnected: ${socket.id}`);
+  });
+});
+
+await start();

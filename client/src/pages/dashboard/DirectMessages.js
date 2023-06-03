@@ -3,8 +3,30 @@ import "react-chat-elements/dist/main.css"
 import {Button, Input, MessageBox, MessageList} from "react-chat-elements";
 import {GiDeer} from "react-icons/gi";
 import ChatList from "../../components/ChatList"
+import { io } from "socket.io-client";
+import {useEffect} from "react";
+
+const socket = io("http://localhost:5200/", {
+  auth: {
+    token: localStorage.getItem("token"),
+  }
+});
 
 const DirectMessages = () => {
+
+  const sendMessage = (data) => {
+    socket.emit("create-message", {
+      message: data.message,
+    });
+  }
+
+  useEffect(() => {
+    socket.on("receive-message", (data) => {
+      console.log(data.message);
+    });
+  }, [socket]);
+
+
   return (
     <div
       className="messages-div"
