@@ -220,6 +220,7 @@ const AppProvider = ({ children }) => {
       });
       dispatch({ type: CREATE_STORY_SUCCESS });
       dispatch({ type: CLEAR_VALUES });
+      findResource(story)
     } catch (error) {
       if (error.response.status === 401) return;
       dispatch({
@@ -470,6 +471,18 @@ const AppProvider = ({ children }) => {
       logoutUser();
     }
   };
+
+  const findResource = async (prompt) => {
+    try {
+      const { data } = await axios.post(
+        `/find-resource`,
+        {prompt}
+      );
+      console.log(prompt)
+    } catch (error) {
+      // logoutUser();
+    }
+  };
   const setEditJob = (id) => {
     dispatch({ type: SET_EDIT_STORY, payload: { id } });
   };
@@ -633,7 +646,8 @@ const AppProvider = ({ children }) => {
         deleteLog,
         addSave,
         getSaves,
-        deleteSave
+        deleteSave,
+        findResource
       }}
     >
       {children}

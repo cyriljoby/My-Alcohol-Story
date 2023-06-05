@@ -13,6 +13,12 @@ import mongoose from 'mongoose'
 import moment from 'moment'
 import Reply from '../models/Reply.js'
 import SubReply from '../models/SubReply.js'
+import {Configuration, OpenAIApi} from "openai"
+const configuration = new Configuration({
+  apiKey:process.env.OPEN_AI_KEY,
+
+})
+const openai= new OpenAIApi(configuration);
 const createStory = async (req, res) => {
   
   const { title, story,createdBy } = req.body
@@ -26,19 +32,19 @@ const createStory = async (req, res) => {
   let result = Story.find(queryObject)
   const stories = await result
   // console.log(jobs.length)
-  if (stories.length!=0){
-    let createdAt=stories.slice(-1)[0]["createdAt"] 
-    let now=(new moment.utc)
-    let diff=now.diff(createdAt);
-    const diffDuration = moment.duration(diff);
-    let word='minutes'
-    if (diffDuration.minutes()==1){
-      word='minute'
-    }
-    if (diffDuration.minutes()<5){
-      throw new BadRequestError(`Please wait 5 minutes before you post another story.It has been ${diffDuration.minutes()} ${word} since your last story.`)
-    }
-  }
+  // if (stories.length!=0){
+  //   let createdAt=stories.slice(-1)[0]["createdAt"] 
+  //   let now=(new moment.utc)
+  //   let diff=now.diff(createdAt);
+  //   const diffDuration = moment.duration(diff);
+  //   let word='minutes'
+  //   if (diffDuration.minutes()==1){
+  //     word='minute'
+  //   }
+  //   if (diffDuration.minutes()<5){
+  //     throw new BadRequestError(`Please wait 5 minutes before you post another story.It has been ${diffDuration.minutes()} ${word} since your last story.`)
+  //   }
+  // }
   
 
   if (!title || !story) {
@@ -54,6 +60,36 @@ const createStory = async (req, res) => {
     res.status(404)
   }
 }
+const findResource = async (req, res) => {
+  try {
+    const { prompt } = req.body;
+    console.log(prompt)
+    const response = await openai.createCompletion({
+      model: "text-davinci-003",
+      prompt: `
+      Reccomend a single resource with no description for a user who entered this story with no sentences. Pick a resource from this list :[Suicide & Crisis Lifeline, Alateen, Trans Lifeline, Crisis Text Line, Drugabuse.gov, Rethinking Drinking, American Society on Addiction Medicine]
+      `,
+      n:1,
+      max_tokens: 50,
+      temperature: 0,
+
+      // stop: [{}],
+    });
+    
+    return res.status(200).json({
+      success: true,
+      // data: response.data,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: 'false',
+      error: error.response
+        ? error.response.data
+        : "There was an issue on the server",
+    });
+  }
+}
+
 
 const createReply = async (req, res) => {
   try {
@@ -409,4 +445,4 @@ const showStats = async (req, res) => {
   res.status(StatusCodes.OK).json({ defaultStats, monthlyApplications })
 }
 
-export { deleteSave, getSaves, addSave, deleteLog, updateLog,createLog, deleteSubReply,createStory, deleteJob, getAllJobs, updateJob, showStats,createReply, deleteReply, deleteReplybyStory,createSubReply }
+export { findResource, deleteSave, getSaves, addSave, deleteLog, updateLog,createLog, deleteSubReply,createStory, deleteJob, getAllJobs, updateJob, showStats,createReply, deleteReply, deleteReplybyStory,createSubReply }

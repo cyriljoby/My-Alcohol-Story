@@ -20,9 +20,11 @@ import {
   deleteLog,
   addSave,
   getSaves,
+  findResource
 } from '../controllers/storyController.js'
 
 router.route('/').post(createStory).get(getAllJobs)
+router.route('/getResource').post(findResource)
 router.route('/save').post(addSave)
 router.route('/save/:id').delete(deleteSave)
 router.route('/getSave').post(getSaves)
