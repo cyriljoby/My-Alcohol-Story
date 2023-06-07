@@ -24,6 +24,7 @@ const AddStory = () => {
     log,
     day,
     createLog,
+    resource
   } = useAppContext();
   const Tab = styled.button`
     font-size: 20px;
@@ -51,12 +52,14 @@ const AddStory = () => {
   const icons = [<BsCardText />, <BsBook />];
 
   const [popupState, setPopupState] = useState(false);
+  const [resourceState, setResurceState] = useState(false);
   const [closeState, setCloseState] = useState(false);
   let triggers = ["murder", "kill", "shoot", "suicide"];
   const directcreateStory = (e) => {
     e.preventDefault();
     setCloseState(true);
     setPopupState(false);
+    setResurceState(false)
     const titlearea = document.getElementById("title");
     const storyarea = document.getElementById("story");
     if (!title || !story) {
@@ -78,6 +81,7 @@ const AddStory = () => {
     e.preventDefault();
     setCloseState(true);
     setPopupState(false);
+    setResurceState(false)
     const titlearea = document.getElementById("title");
     const storyarea = document.getElementById("story");
     storyarea.value = "";
@@ -87,6 +91,7 @@ const AddStory = () => {
   const closePop = () => {
     setPopupState(false);
     setCloseState(false);
+    setResurceState(false)
   };
   function RenderPopup() {
     setCloseState(false);
@@ -155,10 +160,61 @@ const AddStory = () => {
           )}
         </Popup>
       );
+    } 
+    if (resourceState &&resource!='' ) {
+
+      return (
+        <Popup disableBackdropClick backdrop="static" open={true} modal nested>
+          {(close) => (
+            <div
+              className="modal"
+              style={{
+                maxWidth: "90vw",
+                background: "#ffffff",
+                padding: "2rem",
+              }}
+            >
+              <button
+                className="close"
+                onClick={() => {
+                  close();
+                  closePop();
+                }}
+                style={{ fontSize: "1.5rem" }}
+              >
+                &times;
+              </button>
+              {/* <h3 className="header"> Warning </h3> */}
+              <div className="content">
+                {" "}
+                {resource}
+                page.
+              </div>
+              <div className="modal-btn-container">
+                <button
+                  className="btn btn-block submit-btn"
+                  onClick={directcreateStory}
+                  style={{ margin: "0.5rem 0" }}
+                >
+                  Go To Resouce
+                </button>
+                <button
+                  className="btn btn-block modal-clear-btn"
+                  onClick={clearEntries}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          )}
+        </Popup>
+      );
     } else {
       return null;
     }
   }
+
+
   const handleSubmit = (e) => {
     let flag = false;
     e.preventDefault();
@@ -187,11 +243,14 @@ const AddStory = () => {
         createStory();
         storyarea.value = "";
         titlearea.value = "";
+        setResurceState(true)
       }
       if (closeState) {
         storyarea.value = "";
         titlearea.value = "";
       }
+  
+      
     } else {
       const logarea = document.getElementById("log");
       const dayarea = document.getElementById("day");

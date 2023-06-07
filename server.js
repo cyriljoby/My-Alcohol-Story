@@ -69,6 +69,7 @@ app.post("/find-resource", async (req, res) => {
       model: "text-davinci-003",
       prompt: `
       Reccomend a single resource with no description for a user who entered this story with no sentences. Pick a resource from this list :[Suicide & Crisis Lifeline, Alateen, Trans Lifeline, Crisis Text Line, Drugabuse.gov, Rethinking Drinking, American Society on Addiction Medicine]
+      ${prompt}
       `,
       n:1,
       max_tokens: 50,

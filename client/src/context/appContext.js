@@ -4,6 +4,7 @@ import reducer from "./reducer";
 import axios from "axios";
 import {
   GET_USERS_SUCCESS,
+  GET_RESOURCE_SUCCESS,
   DISPLAY_ALERT,
   MAX_ALERT,
   CLEAR_ALERT,
@@ -72,7 +73,8 @@ const initialState = {
   storyId: "",
   day:"",
   log:"",
-  saves:[]
+  saves:[],
+  resource:""
 };
 
 const AppContext = React.createContext();
@@ -211,6 +213,13 @@ const AppProvider = ({ children }) => {
     
     
     try {
+      let resource=''
+    dispatch({
+      type: GET_RESOURCE_SUCCESS,
+      payload: {
+        resource,
+      },
+    });
       const { title, story } = state;
       await authFetch.post("/stories", {
         title,
@@ -473,12 +482,26 @@ const AppProvider = ({ children }) => {
   };
 
   const findResource = async (prompt) => {
+    let resource=''
+    dispatch({
+      type: GET_RESOURCE_SUCCESS,
+      payload: {
+        resource,
+      },
+    });
     try {
       const { data } = await axios.post(
         `/find-resource`,
         {prompt}
       );
-      console.log(prompt)
+      resource=data.data.choices[0].text
+      console.log(resource)
+      dispatch({
+        type: GET_RESOURCE_SUCCESS,
+        payload: {
+          resource,
+        },
+      });
     } catch (error) {
       // logoutUser();
     }
