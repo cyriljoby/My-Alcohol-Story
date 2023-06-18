@@ -35,6 +35,8 @@ import {
   GET_LOGS_SUCCESS,
   SET_EDIT_LOG,
   CREATE_WEBSOCKET,
+  GET_CURRENT_MESSAGES_SUCCESS,
+  GET_CHATS_SUCCESS
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -321,6 +323,12 @@ const reducer = (state, action) => {
   }
   if (action.type === CREATE_WEBSOCKET) {
     return { ...state, socket: action.payload.socket };
+  }
+  if (action.type === GET_CURRENT_MESSAGES_SUCCESS) {
+    return { ...state, currentMessages: action.payload.messages };
+  }
+  if (action.type === GET_CHATS_SUCCESS) {
+    return { ...state, chats: action.payload.chats };
   }
   throw new Error(`no such action : ${action.type}`);
 };

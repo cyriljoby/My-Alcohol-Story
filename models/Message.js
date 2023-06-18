@@ -16,6 +16,10 @@ const MessageSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Please provide text'],
     },
+    read: {
+      type: Boolean,
+      default: false,
+    }
   },
   { timestamps: true }
 )

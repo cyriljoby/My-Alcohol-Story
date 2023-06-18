@@ -3,13 +3,13 @@ import mongoose from 'mongoose'
 const ChatSchema = new mongoose.Schema(
   {
     users: {
-      type: mongoose.Types.ObjectId,
+      type: [mongoose.Types.ObjectId],
       ref: 'User',
-      required: [true, 'Please provide user'],
+      required: [true, 'Please provide users'],
     },
     latestMessage: {
-      type: mongoose.Types.ObjectId,
-      ref: 'Message',
+      type: String,
+      required: false,
     }
   },
   { timestamps: true }

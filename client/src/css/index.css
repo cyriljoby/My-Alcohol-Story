@@ -777,11 +777,32 @@ Team
   }
 }
 
+/* scrollbar */
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #afaeae;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #727070;
+}
+
 /* Direct Message Styles */
 
 @media (min-width: 1000px) {
     .messages-div {
-      max-width: 1000px;
       display: flex;
     }
     .chat-panel {
@@ -790,6 +811,8 @@ Team
       padding: 20px;
       border-radius: 0.25rem;
       max-width: 1000px;
+      max-height: 600px;
+      min-height: 400px;
       margin: 5px;
       box-shadow: var(--shadow-2);
     }
@@ -807,6 +830,8 @@ Team
     }
     .chat-list {
       padding: 5px;
+      max-height: 500px;
+      overflow: auto;
     }
     .chat-icon {
       margin: 5px;
@@ -815,25 +840,35 @@ Team
       margin: 5px;
     }
     .chat-name {
-      margin: 1px
+      margin: 1px;
+      text-align: left;
     }
     .chat-status {
-      margin: 1px
+      margin: 1px;
+      text-align: left;
     }
     .message-panel {
+      display: flex;
+      flex-direction: column;
       width: 70%;
       background-color: white;
       padding: 2rem;
       border-radius: 0.25rem;
       max-width: 1000px;
+      max-height: 600px;
+      min-height: 400px;
       margin: 5px;
       box-shadow: var(--shadow-2);
     }
     .message-list {
       padding: 5px;
+      max-height: 500px;
     }
     .message-list > .rce-mlist > .rce-container-mbox > .rce-mbox {
       max-width: 50%;
+    }
+    .message-list > .rce-mlist {
+      scroll-behavior: smooth;
     }
     .rce-mbox-text:after {
       content: "\00a0\00a0\00a0\00a0\00a0" !important;
@@ -841,6 +876,7 @@ Team
     .input-div {
       padding: 5px;
       display: flex;
+      margin-top: auto
     }
     .message-input {
       margin: 2px;

@@ -39,6 +39,8 @@ import {
   SET_EDIT_LOG,
   EDIT_LOG_SUCCESS,
   CREATE_WEBSOCKET,
+  GET_CURRENT_MESSAGES_SUCCESS,
+  GET_CHATS_SUCCESS,
 } from "./actions";
 import {io} from "socket.io-client";
 
@@ -76,6 +78,7 @@ const initialState = {
   log:"",
   saves:[],
   socket: null,
+  currentMessages: [],
 };
 
 const AppContext = React.createContext();
@@ -208,10 +211,16 @@ const AppProvider = ({ children }) => {
       socket.on("connect", () => {
         console.log("connected to socket");
       });
+
       socket.on("disconnect", () => {
         console.log("disconnected from socket");
       });
+
       socket.on("connect_error", (error) => {
+        console.log(error);
+      });
+
+      socket.on("error", (error) => {
         console.log(error);
       });
 
@@ -220,6 +229,41 @@ const AppProvider = ({ children }) => {
       console.log(error);
     }
   };
+
+  const getCurrentMessages = async ({recipient}) => {
+    console.log("getting messages through get")
+    try {
+      console.log("getting messages through getTTT")
+      console.log(recipient)
+      const { data } = await authFetch.get("chat/messages", {
+        params: {
+          recipient
+        }
+      });
+
+      const { messages } = data;
+
+      console.log({messages})
+
+      console.log({data});
+      dispatch({ type: GET_CURRENT_MESSAGES_SUCCESS, payload: { messages } });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const getChatRooms = async () => {
+    try {
+      const { data } = await authFetch.get("chat")
+
+      const { chats } = data;
+
+      console.log({data});
+      dispatch({ type: GET_CHATS_SUCCESS, payload: { chats } });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const handleChange = ({ name, value }) => {
     dispatch({ type: HANDLE_CHANGE, payload: { name, value } });
@@ -662,6 +706,8 @@ const AppProvider = ({ children }) => {
         getSaves,
         deleteSave,
         createWebsocket,
+        getCurrentMessages,
+        getChatRooms,
       }}
     >
       {children}

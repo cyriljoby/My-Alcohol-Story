@@ -20,6 +20,9 @@ import { Link } from "react-router-dom";
 import { BsFillBookmarkFill } from "react-icons/bs";
 import { BsBookmark } from "react-icons/bs";
 import Loading from "./Loading";
+import { useNavigate } from 'react-router-dom'
+
+
 const LogsContainer = ({ profile, save }) => {
   const {
     getLogs,
@@ -105,6 +108,7 @@ const LogsContainer = ({ profile, save }) => {
   }
   function RenderReplyBox({ log }) {
     let alias = "";
+    let iconName = "";
     let icon = "";
     const [replyState, setreplyState] = useState(false);
     const replyFunc = (e) => {
@@ -112,8 +116,10 @@ const LogsContainer = ({ profile, save }) => {
       setreplyState(!replyState);
     };
 
-    const chatFunc = (e) => {
+    const navigate = useNavigate()
 
+    const chatFunc = (recipient, alias, iconName) => {
+      navigate(`/messages?recipient=${recipient}&alias=${alias}&icon=${iconName}`)
     }
 
     const save = (e) => {
@@ -135,30 +141,30 @@ const LogsContainer = ({ profile, save }) => {
     for (let i = 0; i < user_info.length; i++) {
       if (log.createdBy === user_info[i].id) {
         alias = user_info[i].alias;
-        icon = user_info[i].icon;
+        iconName = user_info[i].icon;
       } else {
         continue;
       }
     }
-    if (icon === "GiTortoise") {
+    if (iconName === "GiTortoise") {
       icon = <GiTortoise />;
     }
-    if (icon === "GiDeer") {
+    if (iconName === "GiDeer") {
       icon = <GiDeer />;
     }
-    if (icon === "RiUserFill") {
+    if (iconName === "RiUserFill") {
       icon = <RiUserFill />;
     }
-    if (icon === "GiButterfly") {
+    if (iconName === "GiButterfly") {
       icon = <GiButterfly />;
     }
-    if (icon === "GiDolphin") {
+    if (iconName === "GiDolphin") {
       icon = <GiDolphin />;
     }
-    if (icon === "GiElephant") {
+    if (iconName === "GiElephant") {
       icon = <GiElephant />;
     }
-    if (icon === "AiOutlineUser") {
+    if (iconName === "AiOutlineUser") {
       icon = <RiUserFill />;
     }
     let datestring = new moment.utc(log.createdAt)
@@ -190,7 +196,7 @@ const LogsContainer = ({ profile, save }) => {
               <BiReply />
             </button>
             {log.createdBy !== user_id ? (
-              <button className="btn start-chat" onClick={chatFunc}>
+              <button className="btn start-chat" onClick={() => chatFunc(log.createdBy, alias, iconName)}>
                 <BiMessageEdit />
               </button>
             ) : null}

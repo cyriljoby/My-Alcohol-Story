@@ -10,7 +10,7 @@ import {
   GiTortoise,
 } from "react-icons/gi";
 import { RiUserFill } from "react-icons/ri";
-import { Link } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import ReplyTemplate from "./replyTemplate";
 import moment from "moment";
 import { now } from "mongoose";
@@ -83,6 +83,7 @@ const StoryContainer = ({ profile, save }) => {
   saves.map((save) => {
     saved.push(save.savedId);
   });
+
   for (let i = 0; i < users?.length; i++) {
     user_info.push({
       id: users[i]._id,
@@ -122,15 +123,19 @@ const StoryContainer = ({ profile, save }) => {
   }
   function RenderReplyBox(job) {
     let alias = "";
+    let iconName = "";
     let icon = "";
     const [replyState, setreplyState] = useState(false);
     const replyFunc = (e) => {
       setreplyState(!replyState);
     };
 
-    const chatFunc = (e) => {
+    const navigate = useNavigate()
 
+    const chatFunc = (recipient, alias, iconName) => {
+      navigate(`/messages?recipient=${recipient}&alias=${alias}&icon=${iconName}`)
     }
+
     const save = (e) => {
       targetBoxId = e.currentTarget.id;
       let _id = "";
@@ -151,36 +156,36 @@ const StoryContainer = ({ profile, save }) => {
     for (let i = 0; i < user_info.length; i++) {
       if (job["job"].createdBy === user_info[i].id) {
         alias = user_info[i].alias;
-        icon = user_info[i].icon;
+        iconName = user_info[i].icon;
       } else {
         continue;
       }
     }
-    if (icon === "GiTortoise") {
+    if (iconName === "GiTortoise") {
       icon = <GiTortoise />;
     }
 
-    if (icon === "GiDeer") {
+    if (iconName === "GiDeer") {
       icon = <GiDeer />;
     }
 
-    if (icon === "RiUserFill") {
+    if (iconName === "RiUserFill") {
       icon = <RiUserFill />;
     }
 
-    if (icon === "GiButterfly") {
+    if (iconName === "GiButterfly") {
       icon = <GiButterfly />;
     }
 
-    if (icon === "GiDolphin") {
+    if (iconName === "GiDolphin") {
       icon = <GiDolphin />;
     }
 
-    if (icon === "GiElephant") {
+    if (iconName === "GiElephant") {
       icon = <GiElephant />;
     }
 
-    if (icon === "AiOutlineUser") {
+    if (iconName === "AiOutlineUser") {
       icon = <RiUserFill />;
     }
 
@@ -201,7 +206,7 @@ const StoryContainer = ({ profile, save }) => {
               <BiReply />
             </button>
             {job["job"].createdBy !== user_id ? (
-              <button className="btn start-chat" onClick={chatFunc}>
+              <button className="btn start-chat" onClick={() => chatFunc(job["job"].createdBy, alias, iconName)}>
                 <BiMessageEdit />
               </button>
             ) : null}
