@@ -236,7 +236,7 @@ const AddStory = () => {
       );
     } 
     if (resourceState &&resource!=''   ) {
-      resource.split('(',')')
+      // resource.split('(',')')
       let start= resource.split('(')
       let split=(start[1].split(')'))
       split.unshift(start[0])
@@ -272,7 +272,7 @@ const AddStory = () => {
                   className="btn btn-block submit-btn"
                   style={{ margin: "0.5rem 0" }}
                 >
-                  <a href={split[1]}>Go To Resource</a>
+                  <a href={split[1]} target="_blank" style={{color:"white"}}>Go To Resource</a>
                 </button>
 
               </div>

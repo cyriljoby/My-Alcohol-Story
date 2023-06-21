@@ -68,12 +68,12 @@ app.post("/find-resource", async (req, res) => {
     const response = await openai.createCompletion({
       model: "text-davinci-003",
       prompt: `
-      a user enters a story on an online website. based on this story recommend them an online resource. at the very end of the recommendation add a link inside parentheses. limit 50 words
+      a user enters a story on an online website. based on this story recommend them an online resource in an emotional and heartfelt manner in third person.the name of the resource must be within the reccomendatiton. at the very end of the recommendation add a link inside parentheses. 
       ${prompt}
       `,
       n:1,
-      max_tokens: 100,
-      temperature: 0,
+      max_tokens: 200,
+      temperature: 0.7,
     });
     console.log(response.data)
     return res.status(200).json({
