@@ -68,11 +68,11 @@ app.post("/find-resource", async (req, res) => {
     const response = await openai.createCompletion({
       model: "text-davinci-003",
       prompt: `
-      a user enters this story on an online website. based on the story pick a resource from this list: [ Suicide & Crisis Lifeline, Alateen, Trans Lifeline, Crisis Text Line, Drugabuse.gov, Rethinking Drinking, American Society on Addiction Medicine] and return the index of the resource assuming a zero-indexed list. The answer should have no text.
+      a user enters a story on an online website. based on this story recommend them an online resource. at the very end of the recommendation add a link inside parentheses. limit 50 words
       ${prompt}
       `,
       n:1,
-      max_tokens: 50,
+      max_tokens: 100,
       temperature: 0,
     });
     console.log(response.data)

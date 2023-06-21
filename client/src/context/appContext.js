@@ -265,11 +265,13 @@ const AppProvider = ({ children }) => {
     }
     else{
     try {
+      let resource=''
       await authFetch.post("/stories/log", {
         day,
         log,
         createdBy
       });
+      findResource(log)
       dispatch({ type: CREATE_LOG_SUCCESS });
       dispatch({ type: CLEAR_VALUES });
     } catch (error) {

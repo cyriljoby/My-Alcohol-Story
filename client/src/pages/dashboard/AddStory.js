@@ -235,8 +235,12 @@ const AddStory = () => {
         </Popup>
       );
     } 
-    if (resourceState &&resource!='' && isNaN(resource)===false  ) {
-      console.log(parseInt(resource))
+    if (resourceState &&resource!=''   ) {
+      resource.split('(',')')
+      let start= resource.split('(')
+      let split=(start[1].split(')'))
+      split.unshift(start[0])
+      console.log(split)
       return (
         <Popup disableBackdropClick backdrop="static" open={true} modal nested>
           {(close) => (
@@ -262,7 +266,15 @@ const AddStory = () => {
               <h3>Reccomended Resource</h3>
               <div className="content">
                 {" "}
-                {responses[parseInt(resource)]}
+                {split[0]}
+                {split[2]}
+                <button
+                  className="btn btn-block submit-btn"
+                  style={{ margin: "0.5rem 0" }}
+                >
+                  <a href={split[1]}>Go To Resource</a>
+                </button>
+
               </div>
             </div>
           )}
