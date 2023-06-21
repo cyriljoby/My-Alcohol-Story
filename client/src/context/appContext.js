@@ -271,7 +271,9 @@ const AppProvider = ({ children }) => {
         log,
         createdBy
       });
-      findResource(log)
+      if (day==1 || day%10===0){
+      findResource(log)}
+ 
       dispatch({ type: CREATE_LOG_SUCCESS });
       dispatch({ type: CLEAR_VALUES });
     } catch (error) {
