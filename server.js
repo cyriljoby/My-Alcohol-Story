@@ -68,14 +68,12 @@ app.post("/find-resource", async (req, res) => {
     const response = await openai.createCompletion({
       model: "text-davinci-003",
       prompt: `
-      Reccomend a single resource with no description for a user who entered this story with no sentences. Pick a resource from this list :[Suicide & Crisis Lifeline, Alateen, Trans Lifeline, Crisis Text Line, Drugabuse.gov, Rethinking Drinking, American Society on Addiction Medicine]
+      a user enters this story on an online website. based on the story pick a resource from this list: [ Suicide & Crisis Lifeline, Alateen, Trans Lifeline, Crisis Text Line, Drugabuse.gov, Rethinking Drinking, American Society on Addiction Medicine] and return the index of the resource assuming a zero-indexed list. The answer should have no text.
       ${prompt}
       `,
       n:1,
       max_tokens: 50,
       temperature: 0,
-
-      // stop: [{}],
     });
     console.log(response.data)
     return res.status(200).json({
