@@ -262,52 +262,7 @@ const LogsContainer = ({ profile, save }) => {
     );
   }
 
-  let opened = false;
-  let counts = [];
-  function RenderButtton({ log, counts }) {
-    subreplyIds = [];
-    counts = [];
-    const [showState, setshowState] = useState(() => {
-      if (sessionStorage.getItem(log._id) === "open") {
-        return true;
-      } else {
-        return false;
-      }
-    });
 
-    let props_list = [];
-    const showReplies = (e) => {
-      targetRenderId = e.currentTarget.id;
-      opened = false;
-      setshowState(!showState);
-      if (showState) {
-        sessionStorage.setItem(log._id, "close");
-      } else {
-        sessionStorage.setItem(log._id, "open");
-      }
-      if (props_list.length != 0) {
-        {
-          props_list.map((props) => {
-            sessionStorage.setItem(props._id, "close");
-          });
-        }
-      }
-    };
-    subreplies?.map((subreply, index) => {
-      subreplyIds.push(subreply["replyId"]);
-    });
-    replies?.map((reply) => {
-      let subcount = subreplyIds.filter((x) => x == reply["_id"]).length;
-      for (let i = 0; i < subcount; i++) {
-        counts.push(reply["storyId"]);
-      }
-      counts.push(reply["storyId"]);
-    });
-
-
-
-    
-  }
   let profilecount = 0;
   if (save) {
     return saves.map((save) => {
@@ -317,12 +272,6 @@ const LogsContainer = ({ profile, save }) => {
             <Wrapper>
               <div key={log._id} className="story">
                 <RenderReplyBox id={"box" + log._id} log={log} />
-
-                <RenderButtton
-                  id={"replies" + log._id}
-                  log={log}
-                  counts={counts}
-                />
               </div>
             </Wrapper>
           );
@@ -344,11 +293,6 @@ const LogsContainer = ({ profile, save }) => {
                     style={{ paddingBottom: "0" }}
                   >
                     <RenderReplyBox id={"box" + log._id} log={log} />
-                    <RenderButtton
-                      id={"replies" + log._id}
-                      log={log}
-                      counts={counts}
-                    />
                   </div>
                 </Wrapper>
               );
@@ -362,11 +306,7 @@ const LogsContainer = ({ profile, save }) => {
                   style={{ paddingBottom: "0" }}
                 >
                   <RenderReplyBox id={"box" + log._id} log={log} />
-                  <RenderButtton
-                    id={"replies" + log._id}
-                    log={log}
-                    counts={counts}
-                  />
+    
                 </div>
               </Wrapper>
             );
