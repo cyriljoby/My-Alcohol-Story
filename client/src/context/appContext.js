@@ -1,4 +1,4 @@
-import React, { useReducer, useContext } from "react";
+import React, {useReducer, useContext, useEffect} from "react";
 
 import reducer from "./reducer";
 import axios from "axios";
@@ -43,6 +43,8 @@ import {
   GET_CHATS_SUCCESS,
 } from "./actions";
 import {io} from "socket.io-client";
+import {GiButterfly, GiDeer, GiDolphin, GiElephant, GiTortoise} from "react-icons/gi";
+import {RiUserFill} from "react-icons/ri";
 
 const token = localStorage.getItem("token");
 const user = localStorage.getItem("user");
@@ -79,6 +81,19 @@ const initialState = {
   saves:[],
   socket: null,
   currentMessages: [],
+  currentChat: null,
+  currentChats: [],
+  displayGreeting: true,
+};
+
+const iconMap = {
+  GiTortoise: <GiTortoise />,
+  GiDeer: <GiDeer />,
+  RiUserFill: <RiUserFill />,
+  GiButterfly: <GiButterfly />,
+  GiDolphin: <GiDolphin />,
+  GiElephant: <GiElephant />,
+  AiOutlineUser: <RiUserFill />,
 };
 
 const AppContext = React.createContext();
@@ -202,6 +217,9 @@ const AppProvider = ({ children }) => {
 
   const createWebsocket = () => {
     try {
+
+      const { user, currentChats, currentChat, currentMessages } = state;
+
       const socket = io(`${window.location.hostname}:3001`, {
         auth: {
           token: state.token,
@@ -224,17 +242,105 @@ const AppProvider = ({ children }) => {
         console.log(error);
       });
 
+
+      const handleMessageReceived = ({ message, sender }) => {
+        if (message.chat === currentChat.chatRoomId) {
+          const formattedMessage = {
+            position: sender._id === user._id ? "right" : "left",
+            type: "text",
+            title: sender.alias,
+            text: message.content,
+          };
+
+          dispatch({ type: HANDLE_CHANGE, payload: { name: "currentMessages", value: [...currentMessages, formattedMessage]} });
+        }
+
+        const updatedChats = currentChats.map((chat) => {
+          if (chat.chatRoomId === message.chat) {
+            return {
+              ...chat,
+              latestMessage: message.content,
+            };
+          } else {
+            return chat;
+          }
+        });
+        dispatch({ type: HANDLE_CHANGE, payload: { name: "currentChats", value: updatedChats} });
+      };
+
+      const handleNewChatReceived = ({ chat, users }) => {
+        console.log("New chat received");
+
+        const filteredUsers = users.filter((filterUser) => {
+          return filterUser._id !== user._id;
+        });
+
+        const formattedChat = {
+          image: iconMap[filteredUsers[0].image],
+          alias: filteredUsers[0].alias,
+          userId: filteredUsers[0]._id,
+          latestMessage: chat.latestMessage,
+          draft: false,
+          chatRoomId: chat._id,
+        };
+
+        if (
+          currentChat &&
+          currentChat.draft &&
+          currentChat.userId === formattedChat.userId
+        ) {
+          const filteredChats = currentChats.filter(
+            (filterChat) => filterChat.draft !== true
+          );
+          dispatch({ type: HANDLE_CHANGE, payload: { name: "currentChats", value: [formattedChat, ...filteredChats]} });
+        } else if (currentChat && currentChat.userId !== formattedChat.userId) {
+          const filteredChats = currentChats.filter(
+            (filterChat) => filterChat.userId !== currentChat.userId
+          );
+          dispatch({ type: HANDLE_CHANGE, payload: { name: "currentChats", value: [currentChat, formattedChat, ...filteredChats]} });
+        } else if (!currentChat) {
+          dispatch({
+            type: HANDLE_CHANGE,
+            payload: {
+              name: "currentChats",
+              value: [formattedChat, ...currentChats].filter(
+                (value) => Object.keys(value).length !== 0
+              )
+            }
+          });
+        }
+      };
+
+      socket.on("new-message", handleMessageReceived);
+      socket.on("new-chat", handleNewChatReceived);
+
       dispatch({ type: CREATE_WEBSOCKET, payload: { socket } });
     } catch (error) {
       console.log(error);
     }
   };
 
+  useEffect(() => {
+    if (state.token) {
+      console.log("creating websocket")
+      createWebsocket();
+    } else {
+      if (state.socket) {
+        state.socket.close();
+      }
+    }
+
+    return () => {
+      if (state.socket) {
+        state.socket.close();
+      }
+    };
+  }, [state.currentChats, state.currentChat, state.currentMessages, state.token, state.user]);
+
+
   const getCurrentMessages = async ({recipient}) => {
-    console.log("getting messages through get")
+    const { user } = state;
     try {
-      console.log("getting messages through getTTT")
-      console.log(recipient)
       const { data } = await authFetch.get("chat/messages", {
         params: {
           recipient
@@ -243,23 +349,74 @@ const AppProvider = ({ children }) => {
 
       const { messages } = data;
 
-      console.log({messages})
+      if (messages && messages.length > 0) {
+        const formattedMessages = messages.map((message) => {
+          return {
+            position: message.sender._id === user._id ? "right" : "left",
+            type: "text",
+            title: message.sender.alias,
+            text: message.content,
+          };
+        });
+        dispatch({ type: HANDLE_CHANGE, payload: { name: "displayGreeting", value: false } });
+        dispatch({ type: HANDLE_CHANGE, payload: { name: "currentMessages", value: formattedMessages } });
+      }
 
-      console.log({data});
-      dispatch({ type: GET_CURRENT_MESSAGES_SUCCESS, payload: { messages } });
+      if (messages && messages.length === 0) {
+        dispatch({ type: HANDLE_CHANGE, payload: { name: "displayGreeting", value: true } });
+        dispatch({ type: HANDLE_CHANGE, payload: { name: "currentMessages", value: [] } });
+      }
+
     } catch (error) {
       console.log(error);
     }
   }
 
+
   const getChatRooms = async () => {
     try {
+      const { currentChat } = state;
       const { data } = await authFetch.get("chat")
 
       const { chats } = data;
 
-      console.log({data});
-      dispatch({ type: GET_CHATS_SUCCESS, payload: { chats } });
+      if (chats && chats.length > 0) {
+        const formattedChats = chats.map((chat) => {
+          const filteredUsers = chat.users.filter(
+            (filterUser) => filterUser._id !== JSON.parse(user)._id
+          );
+          return {
+            image: iconMap[filteredUsers[0].image],
+            alias: filteredUsers[0].alias,
+            userId: filteredUsers[0]._id,
+            latestMessage: chat.latestMessage,
+            draft: false,
+            chatRoomId: chat._id,
+          };
+        });
+
+        if (currentChat && currentChat.draft) {
+          const chatsWithCurrentRecipient = formattedChats.filter(
+            (chat) => chat.userId === currentChat.userId
+          );
+
+          if (chatsWithCurrentRecipient.length > 0) {
+            const nonDraftChats = formattedChats.filter(
+              (chat) => chat.userId !== currentChat.userId
+            );
+            const existingChat = nonDraftChats.find(
+              (chat) => chat.userId === currentChat.userId
+            );
+
+            dispatch({ type: HANDLE_CHANGE, payload: { name: "currentChats", value: [existingChat, ...nonDraftChats] } });
+            dispatch({ type: HANDLE_CHANGE, payload: { name: "currentChat", value: existingChat } });
+          } else {
+            dispatch({ type: HANDLE_CHANGE, payload: { name: "currentChats", value: [currentChat, ...formattedChats] } });
+          }
+        } else {
+          dispatch({ type: HANDLE_CHANGE, payload: { name: "currentChats", value: formattedChats } });
+        }
+      }
     } catch (error) {
       console.log(error);
     }

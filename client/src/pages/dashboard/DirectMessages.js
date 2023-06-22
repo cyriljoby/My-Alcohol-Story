@@ -27,166 +27,24 @@ const iconMap = {
 const DirectMessages = () => {
   const {
     socket,
-    chats,
     getChatRooms,
     currentMessages,
     getCurrentMessages,
     user,
+    currentChat,
+    currentChats,
+    handleChange,
+    displayGreeting,
   } = useAppContext();
 
   const messagesEndRef = useRef(null);
 
   const [chatInput, setChatInput] = useState("");
 
-  const [localCurrentMessages, setLocalCurrentMessages] = useState([]);
-
-  const [localCurrentChats, setLocalCurrentChats] = useState([]);
-
-  const [currentChat, setCurrentChat] = useState(null);
-
-  const [displayGreeting, setDisplayGreeting] = useState(true);
-
   const location = useLocation();
 
   useEffect(() => {
-    let handleMessageReceived;
-    let handleNewChatReceived;
-
-    const createSocketListeners = () => {
-      console.log("Creating socket listeners");
-
-      handleMessageReceived = ({ message, sender }) => {
-        if (message.chat === currentChat.chatRoomId) {
-          const formattedMessage = {
-            position: sender._id === user._id ? "right" : "left",
-            type: "text",
-            title: sender.alias,
-            text: message.content,
-          };
-          setLocalCurrentMessages([...localCurrentMessages, formattedMessage]);
-        }
-
-        const updatedChats = localCurrentChats.map((chat) => {
-          if (chat.chatRoomId === message.chat) {
-            return {
-              ...chat,
-              latestMessage: message.content,
-            };
-          } else {
-            return chat;
-          }
-        });
-        setLocalCurrentChats(updatedChats);
-      };
-
-      handleNewChatReceived = ({ chat, users }) => {
-        console.log("New chat received");
-
-        const filteredUsers = users.filter((filterUser) => {
-          return filterUser._id !== user._id;
-        });
-
-        const formattedChat = {
-          image: iconMap[filteredUsers[0].image],
-          alias: filteredUsers[0].alias,
-          userId: filteredUsers[0]._id,
-          latestMessage: chat.latestMessage,
-          draft: false,
-          chatRoomId: chat._id,
-        };
-
-        if (
-          currentChat &&
-          currentChat.draft &&
-          currentChat.userId === formattedChat.userId
-        ) {
-          const filteredChats = localCurrentChats.filter(
-            (filterChat) => filterChat.draft !== true
-          );
-          setLocalCurrentChats([formattedChat, ...filteredChats]);
-          // setTimeout(() => {
-          //   console.log("Changing chat");
-          //   changeChat(formattedChat.userId);
-          // }, 1000);
-        } else if (currentChat && currentChat.userId !== formattedChat.userId) {
-          const filteredChats = localCurrentChats.filter(
-            (filterChat) => filterChat.userId !== currentChat.userId
-          );
-          setLocalCurrentChats([currentChat, formattedChat, ...filteredChats]);
-        } else if (!currentChat) {
-          setLocalCurrentChats(
-            [formattedChat, ...localCurrentChats].filter(
-              (value) => Object.keys(value).length !== 0
-            )
-          );
-        }
-      };
-
-      socket.on("new-message", handleMessageReceived);
-      socket.on("new-chat", handleNewChatReceived);
-    };
-
-    if (socket && socket.connected) {
-      createSocketListeners();
-    } else {
-      const socketInterval = setInterval(() => {
-        if (socket && socket.connected) {
-          clearInterval(socketInterval);
-          createSocketListeners();
-        }
-      }, 5000);
-    }
-
-    return () => {
-      if (socket && socket.connected) {
-        socket.off("new-message", handleMessageReceived);
-        socket.off("new-chat", handleNewChatReceived);
-      }
-    };
-  }, [currentChat, localCurrentChats, localCurrentMessages]);
-
-  const formatChats = () => {
-    if (chats && chats.length > 0) {
-      const formattedChats = chats.map((chat) => {
-        const filteredUsers = chat.users.filter(
-          (filterUser) => filterUser._id !== user._id
-        );
-        return {
-          image: iconMap[filteredUsers[0].image],
-          alias: filteredUsers[0].alias,
-          userId: filteredUsers[0]._id,
-          latestMessage: chat.latestMessage,
-          draft: false,
-          chatRoomId: chat._id,
-        };
-      });
-
-      if (currentChat && currentChat.draft) {
-        const chatsWithCurrentRecipient = formattedChats.filter(
-          (chat) => chat.userId === currentChat.userId
-        );
-
-        if (chatsWithCurrentRecipient.length > 0) {
-          const nonDraftChats = formattedChats.filter(
-            (chat) => chat.userId !== currentChat.userId
-          );
-          const existingChat = nonDraftChats.find(
-            (chat) => chat.userId === currentChat.userId
-          );
-          setLocalCurrentChats([existingChat, ...nonDraftChats]);
-          setCurrentChat(existingChat);
-        } else {
-          setLocalCurrentChats([currentChat, ...formattedChats]);
-        }
-      } else {
-        setLocalCurrentChats(formattedChats);
-      }
-    }
-  };
-
-  useEffect(() => {
     getChatRooms();
-    formatChats();
 
     if (location.search) {
       const parsed = queryString.parse(location.search);
@@ -198,30 +56,52 @@ const DirectMessages = () => {
           draft: true,
         };
 
-        const cleanedChats = localCurrentChats.filter((chat) => !chat.draft);
+        const cleanedChats = currentChats.filter((chat) => !chat.draft);
 
-        setDisplayGreeting(false);
-        setLocalCurrentChats([chatDraft, ...cleanedChats]);
-        setCurrentChat(chatDraft);
+        handleChange({
+          name: "displayGreeting",
+          value: false,
+        });
+
+        handleChange({
+          name: "currentChat",
+          value: chatDraft,
+        });
+
+        handleChange({
+          name: "currentChats",
+          value: [chatDraft, ...cleanedChats],
+        });
       }
     }
 
     return () => {
-      setLocalCurrentChats([]);
-      setLocalCurrentMessages([]);
-      setCurrentChat(null);
-      setDisplayGreeting(true);
+      handleChange({
+        name: "currentChat",
+        value: null,
+      });
+
+      handleChange({
+        name: "currentChats",
+        value: [],
+      });
+
+      handleChange({
+        name: "currentMessages",
+        value: [],
+      });
+
+      handleChange({
+        name: "displayGreeting",
+        value: true,
+      });
     };
   }, []);
 
   useEffect(() => {
-    formatChats();
-  }, [chats]);
-
-  useEffect(() => {
     if (currentChat) {
       if (currentChat.draft) {
-        const nonDraftChats = localCurrentChats.filter(
+        const nonDraftChats = currentChats.filter(
           (chat) => chat.draft !== true
         );
         const existingChat = nonDraftChats.find(
@@ -229,51 +109,53 @@ const DirectMessages = () => {
         );
 
         if (existingChat) {
-          setLocalCurrentChats(nonDraftChats);
-          setCurrentChat(existingChat);
+          handleChange({
+            name: "currentChats",
+            value: nonDraftChats,
+          });
+
+          handleChange({
+            name: "currentChat",
+            value: existingChat,
+          });
+
           changeChat(existingChat.userId);
         }
       }
-      setDisplayGreeting(false);
+      handleChange({
+        name: "displayGreeting",
+        value: false,
+      });
     }
-  }, [localCurrentChats, currentChat]);
+  }, [currentChats, currentChat]);
+
 
   useEffect(() => {
-    if (currentChat && currentMessages && currentMessages.length > 0) {
-      const formattedMessages = currentMessages.map((message) => {
-        return {
-          position: message.sender._id === user._id ? "right" : "left",
-          type: "text",
-          title: message.sender.alias,
-          text: message.content,
-        };
-      });
-      setDisplayGreeting(false);
-      setLocalCurrentMessages(formattedMessages);
-    }
-
-    if (currentMessages && currentMessages.length === 0) {
-      setLocalCurrentMessages([]);
-      setDisplayGreeting(true);
+    if (currentMessages && currentMessages.length > 0) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [currentMessages]);
 
-  useEffect(() => {
-    if (localCurrentMessages && localCurrentMessages.length > 0) {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [localCurrentMessages]);
 
   const changeChat = (recipient) => {
-    const chat = localCurrentChats.find((chat) => chat.userId === recipient && !chat.draft);
+    const chat = currentChats.find((chat) => chat.userId === recipient && !chat.draft);
     if (
       chat &&
       ((currentChat && currentChat.userId !== chat.userId) || (!currentChat || currentChat.draft))
     ) {
       console.log("Changing chat");
       // TODO: change chat color etc to indicate active chat
-      setDisplayGreeting(false);
-      setCurrentChat(chat);
+
+      handleChange({
+        name: "currentChat",
+        value: chat,
+      });
+
+      handleChange({
+        name: "displayGreeting",
+        value: false,
+      });
+
       getCurrentMessages({
         recipient: chat.userId,
       });
@@ -322,14 +204,14 @@ const DirectMessages = () => {
   return (
     <div className="messages-div">
       <div className="chat-panel">
-        {localCurrentChats.length === 0 ? (
+        {currentChats.length === 0 ? (
           <div className="greeting-div">
             <p className="greeting">
               You don't have any chats yet! Create a new chat!
             </p>
           </div>
         ) : null}
-        <ChatList users={localCurrentChats} changeChat={changeChat} />
+        <ChatList users={currentChats} changeChat={changeChat} />
       </div>
       <div className="message-panel">
         {displayGreeting ? (
@@ -345,7 +227,7 @@ const DirectMessages = () => {
             className="message-list"
             lockable={false}
             toBottomHeight={"100%"}
-            dataSource={localCurrentMessages}
+            dataSource={currentMessages}
             referance={messagesEndRef}
           />
         )}
