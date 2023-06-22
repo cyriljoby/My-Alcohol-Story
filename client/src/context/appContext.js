@@ -266,6 +266,12 @@ const AppProvider = ({ children }) => {
     else{
     try {
       let resource=''
+      dispatch({
+        type: GET_RESOURCE_SUCCESS,
+        payload: {
+          resource,
+        },
+      });
       await authFetch.post("/stories/log", {
         day,
         log,

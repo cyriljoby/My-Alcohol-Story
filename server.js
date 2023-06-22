@@ -68,12 +68,14 @@ app.post("/find-resource", async (req, res) => {
     const response = await openai.createCompletion({
       model: "text-davinci-003",
       prompt: `
-      a user enters a story on an online website. based on this story recommend them an online resource in an emotional and heartfelt manner in third person.the name of the resource must be within the reccomendatiton. at the very end of the recommendation add a link inside parentheses. 
+      {Partnership to End Addiction:https://drugfree.org/, Community Anti-Drug Coalitions of America: https://www.cadca.org/, NIDA: https://nida.nih.gov/research-topics/publications/drug-facts, DEA:https://www.getsmartaboutdrugs.gov/, Medicine Abuse Project: https://drugfree.org/article/medicine-abuse-project-partners/, National Association for Children of Addiction: https://nacoa.org/, NIDA Publications: https://nida.nih.gov/research-topics/publications, PEERx: Teen Prescription Drug Abuse Prevention: https://nida.nih.gov/research-topics/parents-educators}
+      a user enters a story on an online website. based on this story recommend them only a single online resource from the above dictionary in an emotional and heartfelt manner in third person. go through the entire dictionary instead of chosing the firt resource always.the name of the resource must be within the reccomendatiton. at the very end of the recommendation add the single corresponding link inside square brackets.  max 150 words
+
       ${prompt}
       `,
       n:1,
       max_tokens: 200,
-      temperature: 0.7,
+      temperature: 1,
     });
     console.log(response.data)
     return res.status(200).json({
