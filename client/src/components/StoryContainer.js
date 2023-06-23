@@ -67,8 +67,7 @@ const StoryContainer = ({ profile, save }) => {
     // eslint-disable-next-line
   }, []);
   if (!stories){
-    return(<Loading center={true
-    }/>)
+    return(<Loading center={true}/>)
   }
   let user_info = [];
   const user = localStorage

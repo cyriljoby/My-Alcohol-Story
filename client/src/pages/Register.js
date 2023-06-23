@@ -27,7 +27,6 @@ const Register = () => {
   }
   const handleInput=(e) =>{
     setValues({ ...values, image: e.target.value })
-    // console.log(values)
   }
   const onSubmit = (e) => {
     e.preventDefault()

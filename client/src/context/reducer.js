@@ -29,6 +29,7 @@ import {
   CLEAR_FILTERS,
   CHANGE_PAGE,
   GET_USERS_SUCCESS,
+  GET_RESOURCE_SUCCESS,
   GET_REPLIES_SUCCESS,
   GET_SUBREPLIES_SUCCESS,
   CREATE_LOG_SUCCESS,
@@ -212,6 +213,14 @@ const reducer = (state, action) => {
       users: action.payload.users,
       totalStories: action.payload.totalStories,
       numOfPages: action.payload.numOfPages,
+    };
+  }
+
+  if (action.type === GET_RESOURCE_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      resource: action.payload.resource
     };
   }
   if (action.type === GET_REPLIES_SUCCESS) {

@@ -4,6 +4,7 @@ import reducer from "./reducer";
 import axios from "axios";
 import {
   GET_USERS_SUCCESS,
+  GET_RESOURCE_SUCCESS,
   DISPLAY_ALERT,
   MAX_ALERT,
   CLEAR_ALERT,
@@ -72,7 +73,8 @@ const initialState = {
   storyId: "",
   day:"",
   log:"",
-  saves:[]
+  saves:[],
+  resource:""
 };
 
 const AppContext = React.createContext();
@@ -211,6 +213,13 @@ const AppProvider = ({ children }) => {
     
     
     try {
+      let resource=''
+    dispatch({
+      type: GET_RESOURCE_SUCCESS,
+      payload: {
+        resource,
+      },
+    });
       const { title, story } = state;
       await authFetch.post("/stories", {
         title,
@@ -220,6 +229,7 @@ const AppProvider = ({ children }) => {
       });
       dispatch({ type: CREATE_STORY_SUCCESS });
       dispatch({ type: CLEAR_VALUES });
+      findResource(story)
     } catch (error) {
       if (error.response.status === 401) return;
       dispatch({
@@ -255,11 +265,21 @@ const AppProvider = ({ children }) => {
     }
     else{
     try {
+      let resource=''
+      dispatch({
+        type: GET_RESOURCE_SUCCESS,
+        payload: {
+          resource,
+        },
+      });
       await authFetch.post("/stories/log", {
         day,
         log,
         createdBy
       });
+      if (day==1 || day%10===0){
+      findResource(log)}
+ 
       dispatch({ type: CREATE_LOG_SUCCESS });
       dispatch({ type: CLEAR_VALUES });
     } catch (error) {
@@ -470,6 +490,32 @@ const AppProvider = ({ children }) => {
       logoutUser();
     }
   };
+
+  const findResource = async (prompt) => {
+    let resource=''
+    dispatch({
+      type: GET_RESOURCE_SUCCESS,
+      payload: {
+        resource,
+      },
+    });
+    try {
+      const { data } = await axios.post(
+        `/find-resource`,
+        {prompt}
+      );
+      resource=data.data.choices[0].text
+      console.log(resource)
+      dispatch({
+        type: GET_RESOURCE_SUCCESS,
+        payload: {
+          resource,
+        },
+      });
+    } catch (error) {
+      // logoutUser();
+    }
+  };
   const setEditJob = (id) => {
     dispatch({ type: SET_EDIT_STORY, payload: { id } });
   };
@@ -633,7 +679,8 @@ const AppProvider = ({ children }) => {
         deleteLog,
         addSave,
         getSaves,
-        deleteSave
+        deleteSave,
+        findResource
       }}
     >
       {children}
