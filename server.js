@@ -102,14 +102,14 @@ import {StatusCodes} from "http-status-codes";
 io.use((socket, next) => {
   const token = socket.handshake.auth.token;
   if (!token) {
-    next(new Error('Authentication Invalid'))
+    socket.emit('unauthorized', {message: 'Authentication Invalid'})
   }
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET)
     socket.userId = payload.userId
     next()
   } catch (error) {
-    next(new Error('Authentication Invalid'))
+    socket.emit('unauthorized', {message: 'Authentication Invalid'})
   }
 });
 
@@ -124,7 +124,7 @@ io.on("connection", async (socket) => {
     console.log(chatRoomId, userId, content)
 
     if (!chatRoomId || !userId || !content) {
-      throw new Error('Please provide all required fields')
+      socket.emit('error', {message: 'Invalid request'})
     }
 
     try {
@@ -154,7 +154,7 @@ io.on("connection", async (socket) => {
       }
     } catch (error) {
       console.log(error)
-      throw new Error('Unable to create message')
+      socket.emit('error', {message: 'Unable to send message'})
     }
   });
 
@@ -166,15 +166,15 @@ io.on("connection", async (socket) => {
     let recipientUser = await User.findOne({_id:recipient})
 
     if (!sendingUser) {
-      throw new Error('Sending user not found')
+      socket.emit('error', {message: 'Sending user not found'})
     }
 
     if (!recipientUser) {
-      throw new Error('Recipient user not found')
+      socket.emit('error', {message: 'Recipient user not found'})
     }
 
     if (!initialMessage) {
-      throw new Error('Please provide a message')
+      socket.emit('error', {message: 'Please provide a message'})
     }
 
     try {
@@ -205,7 +205,35 @@ io.on("connection", async (socket) => {
       }
     } catch (error) {
       console.log(error)
-      throw new Error('Unable to create chat room')
+      socket.emit('error', {message: 'Unable to create chat room'})
+    }
+  });
+
+  socket.on("read-chat", async (data) => {
+    const { chatRoomId } = data
+    const userId = socket.userId
+
+    if (!chatRoomId || !userId) {
+      socket.emit('error', {message: 'Invalid request'})
+    }
+
+    // set read value of all messages in chat to true sent by other user
+    try {
+      const chat = await Chat.findOne({_id: chatRoomId})
+
+      if (!chat) {
+        socket.emit('error', {message: 'Chat not found'})
+      }
+
+      const messages = await Message.find({chat: chatRoomId, sender: {$ne: userId}})
+
+      await Promise.all(messages.map(async (message) => {
+        message.read = true
+        await message.save()
+      }));
+    } catch (error) {
+      console.log(error)
+      socket.emit('error', {message: 'Unable to read chat'})
     }
   });
 

@@ -817,6 +817,7 @@ Team
       box-shadow: var(--shadow-2);
     }
     .chat-row {
+      border-radius: 9px;
       display: flex;
       width: 100%;
       flex-direction: row;
@@ -824,6 +825,9 @@ Team
       padding: 5px;
       background-color: white;
       border-width: 0;
+    }
+    .chat-row.chat-selected {
+      background-color: #89c297;
     }
     .chat-row:hover {
       background-color: #eaeaea;

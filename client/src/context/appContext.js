@@ -84,6 +84,7 @@ const initialState = {
   currentChat: null,
   currentChats: [],
   displayGreeting: true,
+  totalUnreadMessages: 0,
 };
 
 const iconMap = {
@@ -242,6 +243,10 @@ const AppProvider = ({ children }) => {
         console.log(error);
       });
 
+      socket.on("unauthorized", (error) => {
+        console.log(error);
+      });
+
 
       const handleMessageReceived = ({ message, sender }) => {
         if (message.chat === currentChat.chatRoomId) {
@@ -253,6 +258,8 @@ const AppProvider = ({ children }) => {
           };
 
           dispatch({ type: HANDLE_CHANGE, payload: { name: "currentMessages", value: [...currentMessages, formattedMessage]} });
+        } else {
+          dispatch({ type: HANDLE_CHANGE, payload: { name: "totalUnreadMessages", value: state.totalUnreadMessages + 1} });
         }
 
         const updatedChats = currentChats.map((chat) => {
@@ -260,6 +267,7 @@ const AppProvider = ({ children }) => {
             return {
               ...chat,
               latestMessage: message.content,
+              unreadMessages: chat.chatRoomId === currentChat.chatRoomId ? 0 : chat.unreadMessages + 1,
             };
           } else {
             return chat;
@@ -309,6 +317,8 @@ const AppProvider = ({ children }) => {
             }
           });
         }
+
+        dispatch({ type: HANDLE_CHANGE, payload: { name: "totalUnreadMessages", value: state.totalUnreadMessages + 1} });
       };
 
       socket.on("new-message", handleMessageReceived);
@@ -335,7 +345,7 @@ const AppProvider = ({ children }) => {
         state.socket.close();
       }
     };
-  }, [state.currentChats, state.currentChat, state.currentMessages, state.token, state.user]);
+  }, [state.totalUnreadMessages, state.currentChats, state.currentChat, state.currentMessages, state.token, state.user]);
 
 
   const getCurrentMessages = async ({recipient}) => {
@@ -378,18 +388,24 @@ const AppProvider = ({ children }) => {
       const { currentChat } = state;
       const { data } = await authFetch.get("chat")
 
-      const { chats } = data;
+      const { chatToUnreads } = data;
 
-      if (chats && chats.length > 0) {
-        const formattedChats = chats.map((chat) => {
+      if (chatToUnreads && chatToUnreads.length > 0) {
+        let totalUnreadMessages = 0;
+        const formattedChats = chatToUnreads.map(({chat, unreadMessages}) => {
+          totalUnreadMessages += unreadMessages;
+          console.log(JSON.parse(user)._id)
           const filteredUsers = chat.users.filter(
             (filterUser) => filterUser._id !== JSON.parse(user)._id
           );
+          console.log(filteredUsers[0])
+          console.log(chat)
           return {
             image: iconMap[filteredUsers[0].image],
             alias: filteredUsers[0].alias,
             userId: filteredUsers[0]._id,
             latestMessage: chat.latestMessage,
+            unreadMessages: unreadMessages,
             draft: false,
             chatRoomId: chat._id,
           };
@@ -408,14 +424,16 @@ const AppProvider = ({ children }) => {
               (chat) => chat.userId === currentChat.userId
             );
 
-            dispatch({ type: HANDLE_CHANGE, payload: { name: "currentChats", value: [existingChat, ...nonDraftChats] } });
-            dispatch({ type: HANDLE_CHANGE, payload: { name: "currentChat", value: existingChat } });
+            dispatch({type: HANDLE_CHANGE, payload: {name: "currentChats", value: [existingChat, ...nonDraftChats]}});
+            dispatch({type: HANDLE_CHANGE, payload: {name: "currentChat", value: existingChat}});
           } else {
-            dispatch({ type: HANDLE_CHANGE, payload: { name: "currentChats", value: [currentChat, ...formattedChats] } });
+            dispatch({type: HANDLE_CHANGE, payload: {name: "currentChats", value: [currentChat, ...formattedChats]}});
           }
         } else {
-          dispatch({ type: HANDLE_CHANGE, payload: { name: "currentChats", value: formattedChats } });
+          dispatch({type: HANDLE_CHANGE, payload: {name: "currentChats", value: formattedChats}});
         }
+
+        dispatch({type: HANDLE_CHANGE, payload: {name: "totalUnreadMessages", value: totalUnreadMessages}});
       }
     } catch (error) {
       console.log(error);

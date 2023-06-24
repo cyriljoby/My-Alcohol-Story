@@ -104,7 +104,13 @@ const getChatRooms = async (req, res) => {
 
   try {
     const chats = await Chat.find({ users: { $in: [userId] } }).populate('users');
-    res.status(StatusCodes.OK).json({ chats })
+
+    const chatToUnreads = await Promise.all(chats.map(async (chat) => {
+      const unreadMessages = await Message.find({ chat: chat._id, read: false, sender: {$ne: userId} }).count();
+      return {chat, unreadMessages};
+    }));
+
+    res.status(StatusCodes.OK).json({ chatToUnreads })
   } catch (error) {
     console.log(error)
     throw new BadRequestError('Unable to get chat rooms')

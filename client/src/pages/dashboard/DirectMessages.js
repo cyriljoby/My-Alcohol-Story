@@ -44,8 +44,6 @@ const DirectMessages = () => {
   const location = useLocation();
 
   useEffect(() => {
-    getChatRooms();
-
     if (location.search) {
       const parsed = queryString.parse(location.search);
       if (parsed.recipient && parsed.alias && parsed.icon) {
@@ -79,11 +77,6 @@ const DirectMessages = () => {
       handleChange({
         name: "currentChat",
         value: null,
-      });
-
-      handleChange({
-        name: "currentChats",
-        value: [],
       });
 
       handleChange({
@@ -145,6 +138,8 @@ const DirectMessages = () => {
     ) {
       console.log("Changing chat");
       // TODO: change chat color etc to indicate active chat
+
+      socket.emit("read-chat", { chatRoomId: chat.chatRoomId });
 
       handleChange({
         name: "currentChat",
@@ -211,7 +206,7 @@ const DirectMessages = () => {
             </p>
           </div>
         ) : null}
-        <ChatList users={currentChats} changeChat={changeChat} />
+        <ChatList users={currentChats} currentChat={currentChat} changeChat={changeChat} />
       </div>
       <div className="message-panel">
         {displayGreeting ? (

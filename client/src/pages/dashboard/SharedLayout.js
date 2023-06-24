@@ -6,11 +6,12 @@ import {useEffect, useRef} from "react";
 import {useAppContext} from "../../context/appContext";
 
 const SharedLayout = () => {
-  const { createWebsocket } = useAppContext();
+  const { createWebsocket, getChatRooms } = useAppContext();
 
   // Establish global socket since user should be authenticated on this layout
   useEffect(() => {
     createWebsocket();
+    getChatRooms();
   }, []);
 
   // In the future, show notifications, and new messages on the navbar, sidebar, etc

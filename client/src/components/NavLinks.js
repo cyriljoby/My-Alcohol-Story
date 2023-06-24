@@ -9,10 +9,12 @@ import {
   GiTortoise,
 } from "react-icons/gi";
 import { RiUserFill } from "react-icons/ri";
+import {Badge} from "@mui/material";
 
 const NavLinks = ({ toggleSidebar }) => {
   const {
-    user
+    user,
+    totalUnreadMessages,
   } = useAppContext();
   let image = user.image;
     if (image === "GiTortoise") {
@@ -57,7 +59,16 @@ const NavLinks = ({ toggleSidebar }) => {
             }
             end
           >
-            <span className="icon">{path=="profile"?image:icon}</span>
+            {path === "messages" && (
+              <span className="icon">
+                <Badge badgeContent={totalUnreadMessages} max={999} color="error" className="chat-badge">
+                  {icon}
+                </Badge>
+              </span>
+            )}
+            {path !== "messages" && (
+              <span className="icon">{path=="profile"?image:icon}</span>
+            )}
             {text}
           </NavLink>
         );
