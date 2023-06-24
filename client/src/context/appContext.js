@@ -225,7 +225,8 @@ const AppProvider = ({ children }) => {
       const socket = io(`${window.location.hostname}:3001`, {
         auth: {
           token: state.token,
-        }
+        },
+        transports: ['websocket']
       });
 
       socket.on("connect", () => {
