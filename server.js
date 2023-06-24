@@ -8,9 +8,6 @@ import "express-async-errors";
 import cors from "cors";
 import morgan from "morgan";
 
-// tensorflow
-import '@tensorflow/tfjs-node';
-
 //toxicity model
 import * as toxicity from '@tensorflow-models/toxicity';
 
