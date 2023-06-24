@@ -125,11 +125,18 @@ const start = async () => {
   }
 };
 
-const io = new Server(websocketHttpServer,{
+const io = new Server(websocketHttpServer, {
   path: "/",
   cors: {
-    origin: ["http://localhost:3000", "https://myalcoholstory.com", "http://localhost:5200", "https://mas-app-6d8w8.ondigitalocean.app"],
+    origin: [
+      "http://localhost:3000",
+      "https://myalcoholstory.com",
+      "http://localhost:5200",
+      "https://mas-app-6d8w8.ondigitalocean.app",
+    ],
     methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type"],
+    connectSrc: ["'self'", "https://mas-app-6d8w8.ondigitalocean.app:3001"],
   },
 });
 
