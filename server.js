@@ -131,9 +131,7 @@ const io = new Server(server, {
       "http://localhost:5200",
       "https://mas-app-6d8w8.ondigitalocean.app",
     ],
-    methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Type"],
-    connectSrc: ["'self'", "https://mas-app-6d8w8.ondigitalocean.app:3001"],
+    methods: ["GET", "POST"]
   },
 });
 
