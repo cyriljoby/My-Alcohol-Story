@@ -13,6 +13,7 @@ import { useLocation } from "react-router-dom";
 import { useAppContext } from "../../context/appContext";
 import queryString from "query-string";
 import { RiUserFill } from "react-icons/ri";
+import Popup from "reactjs-popup";
 
 const iconMap = {
   GiTortoise: <GiTortoise />,
@@ -35,6 +36,7 @@ const DirectMessages = () => {
     currentChats,
     handleChange,
     displayGreeting,
+    showFilteredPopup
   } = useAppContext();
 
   const messagesEndRef = useRef(null);
@@ -192,12 +194,76 @@ const DirectMessages = () => {
     }
   };
 
+  const closePop = () => {
+    handleChange({
+      name: "showFilteredPopup",
+      value: false,
+    });
+  }
+
+  function RenderPopup() {
+    if (showFilteredPopup) {
+      return (
+        <Popup disableBackdropClick backdrop="static" open={true} modal nested>
+          {(close) => (
+            <div
+              className="modal"
+              style={{
+                maxWidth: "90vw",
+                background: "#ffffff",
+                padding: "2rem",
+              }}
+            >
+              <button
+                className="close"
+                onClick={() => {
+                  close();
+                  closePop();
+                }}
+                style={{fontSize: "1.5rem"}}
+              >
+                &times;
+              </button>
+              {/* <h3 className="header"> Warning </h3> */}
+              <div className="content">
+                {" "}
+                Your message has potentially went against our community
+                guidelines. While sending messages to other users, please make sure you <span>DO NOT</span>:
+                <ul
+                  style={{
+                    listStyle: "inside",
+                    marginLeft: "1rem",
+                    marginTop: "0.5rem",
+                    textTransform: "capitalize",
+                  }}
+                >
+                  <li>insult or be toxic towards others</li>
+                  <li>send obscene or sexually explicit messages</li>
+                  <li>send threatening messages</li>
+                  <li>glorify alcohol and its effects</li>
+                  <li>encourage or promote self harm</li>
+                  <li>post any personal identification information</li>
+                </ul>
+                If you are feeling the urge to harm yourself or need any other assistance, please visit our{" "}
+                <a className="resources-page" href="/resources">
+                  resources
+                </a>{" "}
+                page.
+              </div>
+            </div>
+          )}
+        </Popup>
+      );
+    }
+  }
+
   // TODO: Change greeting
   // TODO: high risk/sensitive user group, chats will NEED to be moderated or filtered somehow to keep users safe
   // TODO: add blocking capabilities, report capabilities, make users agree to terms / remind them of risks of chatting
 
   return (
     <div className="messages-div">
+      <RenderPopup />
       <div className="chat-panel">
         {currentChats.length === 0 ? (
           <div className="greeting-div">

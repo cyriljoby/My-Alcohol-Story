@@ -85,6 +85,7 @@ const initialState = {
   currentChats: [],
   displayGreeting: true,
   totalUnreadMessages: 0,
+  showFilteredPopup: false,
 };
 
 const iconMap = {
@@ -247,9 +248,14 @@ const AppProvider = ({ children }) => {
         console.log(error);
       });
 
+      socket.on("message-filtered", ({ message }) =>{
+        console.log("message filtered");
+        console.log(message);
+        dispatch({ type: HANDLE_CHANGE, payload: { name: "showFilteredPopup", value: true} });
+      });
 
       const handleMessageReceived = ({ message, sender }) => {
-        if (message.chat === currentChat.chatRoomId) {
+        if (currentChat && message.chat === currentChat.chatRoomId) {
           const formattedMessage = {
             position: sender._id === user._id ? "right" : "left",
             type: "text",
@@ -345,7 +351,7 @@ const AppProvider = ({ children }) => {
         state.socket.close();
       }
     };
-  }, [state.totalUnreadMessages, state.currentChats, state.currentChat, state.currentMessages, state.token, state.user]);
+  }, [state.totalUnreadMessages, state.currentChats, state.currentChat, state.currentMessages, state.token, state.user, state.showFilteredPopup]);
 
 
   const getCurrentMessages = async ({recipient}) => {

@@ -880,7 +880,8 @@ Team
     .input-div {
       padding: 5px;
       display: flex;
-      margin-top: auto
+      margin-top: auto;
+      max-height: 50px;
     }
     .message-input {
       margin: 2px;
@@ -889,6 +890,7 @@ Team
     }
     .rce-input {
       background-color: #e5e5e8 !important;
+      max-height: 40px;
     }
     .message-button {
       background-color: var(--primary-500) !important;

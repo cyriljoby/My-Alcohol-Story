@@ -8,6 +8,12 @@ import "express-async-errors";
 import cors from "cors";
 import morgan from "morgan";
 
+// tensorflow
+import '@tensorflow/tfjs-node';
+
+//toxicity model
+import * as toxicity from '@tensorflow-models/toxicity';
+
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import path from "path";
@@ -65,6 +71,44 @@ const port = process.env.PORT || 5200;
 
 const websocketHttpServer = createServer();
 
+// tensorflow toxicity model
+let toxicityModel;
+const threshold = 0.8;
+
+const classifyToxicity = async (inputs) => {
+  const results = await toxicityModel.classify(inputs);
+  const labels = inputs.map((d, i) => {
+    const obj = {'text': d};
+    results.forEach((classification) => {
+      console.log(classification)
+      console.log(classification.results[0].probabilities)
+      obj[classification.label] = classification.results[i].match;
+    });
+    return obj;
+  });
+
+  // [
+  //   {
+  //    text: 'message...',
+  //    identity_attack: false,
+  //    insult: false,
+  //    obscene: false,
+  //    severe_toxicity: false,
+  //    sexual_explicit: false,
+  //    threat: false,
+  //    toxicity: false
+  //   }
+  // ]
+
+  console.log(labels);
+
+  const isToxic = !Object.keys(labels[0]).every((key) => {
+    return labels[0][key] === false || labels[0][key] === null || key === 'text';
+  });
+
+  return isToxic;
+};
+
 const start = async () => {
   try {
     await connectDB(
@@ -78,6 +122,7 @@ const start = async () => {
     websocketHttpServer.listen(3001, () => {
       console.log("Websocket server is listening on port 3001...");
     });
+    toxicityModel = await toxicity.load(threshold);
   } catch (error) {
     console.log(error);
   }
@@ -127,6 +172,13 @@ io.on("connection", async (socket) => {
       socket.emit('error', {message: 'Invalid request'})
     }
 
+    const isToxic = await classifyToxicity([content])
+
+    if (isToxic) {
+      socket.emit('message-filtered', {message: 'Message contains toxic content'})
+      return
+    }
+
     try {
       const message = await Message.create({
         chat: chatRoomId,
@@ -161,6 +213,13 @@ io.on("connection", async (socket) => {
   socket.on("create-chat", async (data) => {
     const { recipient, initialMessage  } = data
     const userId = socket.userId
+
+    const isToxic = await classifyToxicity([initialMessage])
+
+    if (isToxic) {
+      socket.emit('message-filtered', {message: 'Message contains toxic content'})
+      return
+    }
 
     let sendingUser = await User.findOne({_id:userId})
     let recipientUser = await User.findOne({_id:recipient})
