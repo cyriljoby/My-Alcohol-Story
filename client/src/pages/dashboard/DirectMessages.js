@@ -1,5 +1,6 @@
 import "react-chat-elements/dist/main.css";
-import { Button, Input, MessageList } from "react-chat-elements";
+import { MessageList } from "react-chat-elements";
+
 import {
   GiButterfly,
   GiDeer,
@@ -7,13 +8,16 @@ import {
   GiElephant,
   GiTortoise,
 } from "react-icons/gi";
+import { RiUserFill } from "react-icons/ri";
+import { AiOutlineUser } from "react-icons/ai";
+
 import ChatList from "../../components/ChatList";
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useAppContext } from "../../context/appContext";
 import queryString from "query-string";
-import { RiUserFill } from "react-icons/ri";
 import Popup from "reactjs-popup";
+import { TextField, Button } from "@mui/material";
 
 const iconMap = {
   GiTortoise: <GiTortoise />,
@@ -22,16 +26,14 @@ const iconMap = {
   GiButterfly: <GiButterfly />,
   GiDolphin: <GiDolphin />,
   GiElephant: <GiElephant />,
-  AiOutlineUser: <RiUserFill />,
+  AiOutlineUser: <AiOutlineUser />,
 };
 
 const DirectMessages = () => {
   const {
     socket,
-    getChatRooms,
     currentMessages,
     getCurrentMessages,
-    user,
     currentChat,
     currentChats,
     handleChange,
@@ -139,7 +141,6 @@ const DirectMessages = () => {
       ((currentChat && currentChat.userId !== chat.userId) || (!currentChat || currentChat.draft))
     ) {
       console.log("Changing chat");
-      // TODO: change chat color etc to indicate active chat
 
       socket.emit("read-chat", { chatRoomId: chat.chatRoomId });
 
@@ -254,7 +255,15 @@ const DirectMessages = () => {
           )}
         </Popup>
       );
+    } else {
+      return null;
     }
+  }
+
+  const changeInput = (e) => {
+    console.log("CHANGING INPUT");
+    console.log(e.target.value);
+    setChatInput(e.target.value);
   }
 
   // TODO: Change greeting
@@ -293,19 +302,18 @@ const DirectMessages = () => {
           />
         )}
         <div className="input-div">
-          <Input
+          <TextField
             className="message-input"
-            placeholder="Type here..."
-            value={chatInput}
-            onChange={(e) => setChatInput(e.target.value)}
-            multiline={true}
+            hiddenLabel
+            onChange={changeInput}
+            color="success"
+            id="filled-basic"
+            size="small"
+            variant="filled"
+            error={showFilteredPopup}
+            helperText={showFilteredPopup ? "Text filtered" : null}
           />
-          <Button
-            className="message-button"
-            text={"Send"}
-            onClick={() => sendMessage()}
-            title="Send"
-          />
+          <Button className="message-button" onClick={() => sendMessage()} variant="contained">Send</Button>
         </div>
       </div>
     </div>

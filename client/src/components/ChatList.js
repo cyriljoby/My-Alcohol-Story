@@ -1,6 +1,5 @@
 import React from 'react';
 import { Badge } from '@mui/material';
-import EmailIcon from '@mui/icons-material/Email';
 
 const ChatList = ({users, changeChat, currentChat}) => {
   return (

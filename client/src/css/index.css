@@ -811,7 +811,7 @@ Team
       padding: 20px;
       border-radius: 0.25rem;
       max-width: 1000px;
-      max-height: 600px;
+      max-height: 610px;
       min-height: 400px;
       margin: 5px;
       box-shadow: var(--shadow-2);
@@ -859,7 +859,7 @@ Team
       padding: 2rem;
       border-radius: 0.25rem;
       max-width: 1000px;
-      max-height: 600px;
+      max-height: 610px;
       min-height: 400px;
       margin: 5px;
       box-shadow: var(--shadow-2);
@@ -878,7 +878,7 @@ Team
       content: "\00a0\00a0\00a0\00a0\00a0" !important;
     }
     .input-div {
-      padding: 5px;
+      padding: 8px;
       display: flex;
       margin-top: auto;
       max-height: 50px;
@@ -886,15 +886,12 @@ Team
     .message-input {
       margin: 2px;
       min-width: 0% !important;
-      flex: 80%;
-    }
-    .rce-input {
-      background-color: #e5e5e8 !important;
       max-height: 40px;
+      flex: 80%;
     }
     .message-button {
       background-color: var(--primary-500) !important;
-      margin: 2px;
+      margin-left: 10px !important;
       flex: 15%;
     }
 }

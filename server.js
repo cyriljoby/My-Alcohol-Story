@@ -128,7 +128,7 @@ const start = async () => {
 const io = new Server(websocketHttpServer,{
   path: "/",
   cors: {
-    origin: ["http://localhost:3000", "https://myalcoholstory.com"],
+    origin: ["http://localhost:3000", "https://myalcoholstory.com", "http://localhost:5200"],
     methods: ["GET", "POST"],
   },
 });
