@@ -66,7 +66,7 @@ app.use(errorHandlerMiddleware);
 
 const port = process.env.PORT || 5200;
 
-const websocketHttpServer = createServer();
+const server = createServer(app);
 
 // tensorflow toxicity model
 let toxicityModel;
@@ -113,11 +113,8 @@ const start = async () => {
       process.env.user,
       process.env.password
     );
-    app.listen(port, () => {
+    server.listen(port, () => {
       console.log(`Server is listening on port ${port}...`);
-    });
-    websocketHttpServer.listen(3001, () => {
-      console.log("Websocket server is listening on port 3001...");
     });
     toxicityModel = await toxicity.load(threshold);
   } catch (error) {
@@ -125,8 +122,8 @@ const start = async () => {
   }
 };
 
-const io = new Server(websocketHttpServer, {
-  path: "/",
+const io = new Server(server, {
+  path: "/socket",
   cors: {
     origin: [
       "http://localhost:3000",

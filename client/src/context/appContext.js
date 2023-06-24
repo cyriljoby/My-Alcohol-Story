@@ -222,11 +222,13 @@ const AppProvider = ({ children }) => {
 
       const { user, currentChats, currentChat, currentMessages } = state;
 
-      const socket = io(`${window.location.hostname}:3001`, {
+      console.log(`${window.location.origin}`)
+
+      const socket = io(`${window.location.origin}`, {
+        path: "/socket",
         auth: {
           token: state.token,
-        },
-        transports: ['websocket']
+        }
       });
 
       socket.on("connect", () => {
