@@ -18,9 +18,10 @@ const WelcomePopup = () => {
             <div
               className="modal"
               style={{
-                maxWidth: "250vw",
+                width: "700px",
+                maxWidth: "90vw",
                 background: "#ffffff",
-                padding: "2rem",
+                padding: "1.5rem 2rem",
               }}
             >
               <button
