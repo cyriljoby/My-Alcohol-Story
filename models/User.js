@@ -29,6 +29,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: "RiUserFill",
   },
+  popup:{
+    type:Boolean,
+    default:false
+  }
 });
 
 UserSchema.pre("save", async function () {

@@ -1,8 +1,9 @@
-import { StoryContainer, SearchContainer } from '../../components'
+import { StoryContainer, WelcomePopup } from '../../components'
 
 const AllStories =  ({ name, time, title, text }) => {
   return (
     <>
+      <WelcomePopup/>
       <StoryContainer />
     </>
   )
