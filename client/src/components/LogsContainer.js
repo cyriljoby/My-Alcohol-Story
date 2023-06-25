@@ -28,7 +28,7 @@ const LogsContainer = ({ profile, save }) => {
     users,
     getReplies,
     createReply,
-    replies,
+    user,
     getSubReplies,
     subreplies,
     addSave,
@@ -45,11 +45,7 @@ const LogsContainer = ({ profile, save }) => {
 
     // eslint-disable-next-line
   }, []);
-  const user = localStorage
-    .getItem("user")
-    .split(",")[0]
-    .replace('{"_id":', "")
-    .replace(/['"]+/g, "");
+  const userId = user._id
   let user_info = [];
   let subreplyIds = [];
   var targetRenderId;
@@ -283,7 +279,7 @@ const LogsContainer = ({ profile, save }) => {
       <div>
         {logs?.map((log) => {
           if (profile) {
-            if (log.createdBy === user) {
+            if (log.createdBy === userId) {
               profilecount += 1;
               return (
                 <Wrapper>

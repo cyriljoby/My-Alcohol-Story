@@ -56,6 +56,7 @@ const StoryContainer = ({ profile, save }) => {
     deleteSave,
     setEditJob,
     deleteJob,
+    user
   } = useAppContext();
   useEffect(() => {
     getUsers();
@@ -70,11 +71,7 @@ const StoryContainer = ({ profile, save }) => {
     return(<Loading center={true}/>)
   }
   let user_info = [];
-  const user = localStorage
-    .getItem("user")
-    .split(",")[0]
-    .replace('{"_id":', "")
-    .replace(/['"]+/g, "");
+  const userId=user._id
   let user_id = localStorage.getItem("_id");
   let replyValue = "";
   let arrow = <BsChevronDown />;
@@ -105,7 +102,7 @@ const StoryContainer = ({ profile, save }) => {
   function None() {
     let count = 0;
     stories?.map((story) => {
-      if (story.createdBy === user) {
+      if (story.createdBy === userId) {
         count += 1;
       }
     });
@@ -441,7 +438,7 @@ const StoryContainer = ({ profile, save }) => {
         <div>
           {stories?.map((job) => {
             if (profile) {
-              if (job.createdBy == user) {
+              if (job.createdBy == userId) {
                 let date = new moment.utc(job.createdAt)
                   .local()
                   .startOf("seconds")

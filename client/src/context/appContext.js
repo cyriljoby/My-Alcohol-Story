@@ -38,7 +38,8 @@ import {
   GET_SUBREPLIES_SUCCESS,
   CREATE_LOG_SUCCESS,
   SET_EDIT_LOG,
-  EDIT_LOG_SUCCESS
+  EDIT_LOG_SUCCESS,
+  POPUP_SUCESS
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -169,11 +170,6 @@ const AppProvider = ({ children }) => {
     removeUserFromLocalStorage();
   };
   const updateUser = async (currentUser) => {
-    let userId=localStorage
-    .getItem("user")
-    .split(",")[0]
-    .replace('{"_id":', "")
-    .replace(/['"]+/g, "");
     dispatch({ type: UPDATE_USER_BEGIN });
     try {
       const { data } = await authFetch.patch("/auth/updateUser", currentUser);
@@ -205,11 +201,8 @@ const AppProvider = ({ children }) => {
   const createStory = async () => {
     const alias = localStorage.getItem("alias").slice(1, -1);
     const image = localStorage.getItem("image").slice(1, -1);
-    const createdBy = localStorage
-      .getItem("user")
-      .split(",")[0]
-      .replace('{"_id":', "")
-      .replace(/['"]+/g, "");
+    const {user} =state
+    const createdBy = user._id
     
     
     try {
@@ -251,11 +244,8 @@ const AppProvider = ({ children }) => {
     const {
       day,
       log } = state;
-    const createdBy = localStorage
-      .getItem("user")
-      .split(",")[0]
-      .replace('{"_id":', "")
-      .replace(/['"]+/g, "");
+      const {user} =state
+    const createdBy = user._id
     dispatch({ type: CREATE_STORY_BEGIN });
     if (isNaN(day)){
       dispatch({
@@ -296,11 +286,9 @@ const AppProvider = ({ children }) => {
   };
 
   const createReply = async (storyId, reply) => {
-    const createdBy = localStorage
-      .getItem("user")
-      .split(",")[0]
-      .replace('{"_id":', "")
-      .replace(/['"]+/g, "");
+    const {user} = state
+    const createdBy = user._id
+    console.log(user)
     dispatch({ type: CREATE_STORY_BEGIN });
     try {
       await authFetch.post("/reply", {
@@ -315,11 +303,9 @@ const AppProvider = ({ children }) => {
   };
 
   const addSave = async (savedId) => {
-    const createdBy = localStorage
-      .getItem("user")
-      .split(",")[0]
-      .replace('{"_id":', "")
-      .replace(/['"]+/g, "");
+    
+    const {user}= state
+    const createdBy = user._id
     dispatch({ type: CREATE_STORY_BEGIN });
     try {
       await authFetch.post("/stories/save", {
@@ -334,11 +320,8 @@ const AppProvider = ({ children }) => {
   };
 
   const createSubReply = async (subreply, replyId, createdByReplyId) => {
-    const createdBy = localStorage
-      .getItem("user")
-      .split(",")[0]
-      .replace('{"_id":', "")
-      .replace(/['"]+/g, "");
+    const {user}=state
+    const createdBy = user._id
     dispatch({ type: CREATE_STORY_BEGIN });
     try {
       await authFetch.post("/reply/sub", {
@@ -417,11 +400,8 @@ const AppProvider = ({ children }) => {
 
   const getSaves = async () => {
     let url = `/stories/getSave`;
-    const createdBy = localStorage
-      .getItem("user")
-      .split(",")[0]
-      .replace('{"_id":', "")
-      .replace(/['"]+/g, "");
+    const {user}=state
+    const createdBy = user._id
 
     dispatch({ type: GET_STORIES_BEGIN });
     try {
@@ -576,6 +556,28 @@ const AppProvider = ({ children }) => {
 
     
   };
+  const closePopup = async () => {
+    const {user}=state
+    try {
+      
+      let userId=user._id
+      console.log(userId)
+      const {data} = await authFetch.post(`/auth/popup`,{userId});
+      console.log(data.user)
+      let newUser=data.user
+      dispatch({
+        type: POPUP_SUCESS,
+        payload: {
+          newUser,
+        },
+      });
+      localStorage.setItem("user",JSON.stringify(newUser))
+    } catch (error) {
+      logoutUser();
+    }
+
+    
+  };
 
   const deleteSave = async (id) => {
     dispatch({ type: DELETE_STORY_BEGIN });
@@ -680,7 +682,8 @@ const AppProvider = ({ children }) => {
         addSave,
         getSaves,
         deleteSave,
-        findResource
+        findResource,
+        closePopup
       }}
     >
       {children}

@@ -35,6 +35,7 @@ import {
   CREATE_LOG_SUCCESS,
   GET_LOGS_SUCCESS,
   SET_EDIT_LOG,
+  POPUP_SUCESS
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -105,6 +106,7 @@ const reducer = (state, action) => {
     return { ...state, isLoading: true };
   }
   if (action.type === UPDATE_USER_SUCCESS) {
+    console.log(action.payload.user)
     return {
       ...state,
       isLoading: false,
@@ -115,6 +117,16 @@ const reducer = (state, action) => {
       alertText: "User Profile Updated!",
     };
   }
+
+  if (action.type === POPUP_SUCESS) {
+    console.log(action.payload.newUser)
+    return {
+      ...state,
+      isLoading: false,
+      user: action.payload.newUser,
+    };
+  }
+
   if (action.type === UPDATE_USER_ERROR) {
     return {
       ...state,
