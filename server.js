@@ -236,6 +236,17 @@ io.on("connection", async (socket) => {
     }
 
     try {
+      const existingChat = await Chat.findOne({
+        users: {
+          $all: [userId, recipient]
+        }
+      });
+
+      if (existingChat) {
+        socket.emit('error', {message: 'Chat already exists'})
+        return
+      }
+
       const chat = await Chat.create({
         users: [userId, recipient],
       })

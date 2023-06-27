@@ -38,7 +38,8 @@ const DirectMessages = () => {
     currentChats,
     handleChange,
     displayGreeting,
-    showFilteredPopup
+    showFilteredPopup,
+    readChat,
   } = useAppContext();
 
   const messagesEndRef = useRef(null);
@@ -141,8 +142,8 @@ const DirectMessages = () => {
       ((currentChat && currentChat.userId !== chat.userId) || (!currentChat || currentChat.draft))
     ) {
       console.log("Changing chat");
-
-      socket.emit("read-chat", { chatRoomId: chat.chatRoomId });
+      
+      readChat({ chatRoomId: chat.chatRoomId });
 
       handleChange({
         name: "currentChat",
@@ -286,10 +287,14 @@ const DirectMessages = () => {
       <div className="message-panel">
         {displayGreeting ? (
           <div className="greeting-div">
-            <h1 className="greeting">Welcome to the chat!</h1>
+            <h1 className="messaging-title">Direct Messages</h1>
             <p className="greeting">
-              Select a user to start chatting, or create a new chat by clicking
-              the chat button on a story or log!
+              Start a more personal and direct conversation from a story or log!
+              Select an existing chat, or create a new one from a story or log.
+            </p>
+            <p className="notice-greeting">
+              Note: Direct messages are filtered to reduce potentially harmful messages.
+              Please be respectful towards others.
             </p>
           </div>
         ) : (
@@ -305,6 +310,7 @@ const DirectMessages = () => {
           <TextField
             className="message-input"
             hiddenLabel
+            value={chatInput}
             onChange={changeInput}
             color="success"
             id="filled-basic"

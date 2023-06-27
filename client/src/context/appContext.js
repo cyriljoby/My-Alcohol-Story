@@ -271,12 +271,15 @@ const AppProvider = ({ children }) => {
           dispatch({ type: HANDLE_CHANGE, payload: { name: "totalUnreadMessages", value: state.totalUnreadMessages + 1} });
         }
 
+        console.log("Message received");
+
         const updatedChats = currentChats.map((chat) => {
           if (chat.chatRoomId === message.chat) {
+            console.log(currentChat && chat.chatRoomId === currentChat.chatRoomId ? 0 : chat.unreadMessages + 1);
             return {
               ...chat,
-              latestMessage: message.content,
-              unreadMessages: chat.chatRoomId === currentChat.chatRoomId ? 0 : chat.unreadMessages + 1,
+              latestMessage: (message.content).substring(0, 20),
+              unreadMessages: currentChat && chat.chatRoomId === currentChat.chatRoomId ? 0 : chat.unreadMessages + 1,
             };
           } else {
             return chat;
@@ -296,7 +299,8 @@ const AppProvider = ({ children }) => {
           image: iconMap[filteredUsers[0].image],
           alias: filteredUsers[0].alias,
           userId: filteredUsers[0]._id,
-          latestMessage: chat.latestMessage,
+          latestMessage: (chat.latestMessage).substring(0, 20),
+          unreadMessages: 1,
           draft: false,
           chatRoomId: chat._id,
         };
@@ -315,6 +319,7 @@ const AppProvider = ({ children }) => {
             (filterChat) => filterChat.userId !== currentChat.userId
           );
           dispatch({ type: HANDLE_CHANGE, payload: { name: "currentChats", value: [currentChat, formattedChat, ...filteredChats]} });
+          dispatch({ type: HANDLE_CHANGE, payload: { name: "totalUnreadMessages", value: state.totalUnreadMessages + 1} });
         } else if (!currentChat) {
           dispatch({
             type: HANDLE_CHANGE,
@@ -325,9 +330,8 @@ const AppProvider = ({ children }) => {
               )
             }
           });
+          dispatch({ type: HANDLE_CHANGE, payload: { name: "totalUnreadMessages", value: state.totalUnreadMessages + 1} });
         }
-
-        dispatch({ type: HANDLE_CHANGE, payload: { name: "totalUnreadMessages", value: state.totalUnreadMessages + 1} });
       };
 
       socket.on("new-message", handleMessageReceived);
@@ -356,6 +360,29 @@ const AppProvider = ({ children }) => {
     };
   }, [state.totalUnreadMessages, state.currentChats, state.currentChat, state.currentMessages, state.token, state.user, state.showFilteredPopup]);
 
+  const readChat = async ({ chatRoomId }) => {
+    const { socket, currentChats } = state;
+    try {
+      let numberOfUnreadMessages;
+      const updatedChats = currentChats.map((chat) => {
+        if (chat.chatRoomId === chatRoomId) {
+          numberOfUnreadMessages = chat.unreadMessages;
+          return {
+            ...chat,
+            unreadMessages: 0,
+          };
+        } else {
+          return chat;
+        }
+      });
+      dispatch({ type: HANDLE_CHANGE, payload: { name: "currentChats", value: updatedChats} });
+      dispatch({ type: HANDLE_CHANGE, payload: { name: "totalUnreadMessages", value: state.totalUnreadMessages - numberOfUnreadMessages} });
+
+      socket.emit("read-chat", { chatRoomId: chatRoomId });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const getCurrentMessages = async ({recipient}) => {
     const { user } = state;
@@ -892,6 +919,7 @@ const AppProvider = ({ children }) => {
         createWebsocket,
         getCurrentMessages,
         getChatRooms,
+        readChat
       }}
     >
       {children}
