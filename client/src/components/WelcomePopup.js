@@ -13,7 +13,7 @@ const WelcomePopup = () => {
     else{
     return (
     <div className="welcome">
-    <Popup className="welcome" disableBackdropClick backdrop="static" open={true} modal nested>
+    <Popup className="welcome" disableBackdropClick={false} backdrop="static" open={true} onClose={closePopup} modal nested>
           {(close) => (
             <div
               className="modal"
