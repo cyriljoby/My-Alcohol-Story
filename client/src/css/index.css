@@ -766,6 +766,12 @@ Team
 .tab-icon {
   display: none;
 }
+.content-long{
+  display: block;
+} 
+ .content-short{
+  display: none;
+} 
 
 @media screen and (max-width: 600px) {
   .tab-icon {
@@ -774,6 +780,12 @@ Team
 
   .tab-type {
     display: none;
+  }
+  .content-long{
+    display: none;
+  }
+  .content-short{
+    display: block;
   }
 }
 

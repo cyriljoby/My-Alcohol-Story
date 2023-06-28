@@ -35,7 +35,7 @@ const WelcomePopup = () => {
                 &times;
               </button>
               {/* <h3 className="header"> Warning </h3> */}
-              <div className="content">
+              <div className="content-long">
                 <p>Hey {user.alias}, </p>
 
                 <p>Welcome to My Alcohol Story, a supportive community dedicated to teenagers struggling with alcohol. Here, you will find a safe space where you can connect with others who understand and relate with your struggles. Of course, you can share your story anonymously.</p>
@@ -48,6 +48,12 @@ const WelcomePopup = () => {
 
                 <p>My Alcohol Story Team</p>
 
+              </div>
+              <div className="content-short">
+                <p>Hey {user.alias}, </p>
+
+                <p>Welcome to My Alcohol Story, a supportive community dedicated to teenagers struggling with alcohol. This is a safe space to connect with others who understand and relate to your struggles. We can provide solace, inspiration, and resources to anyone joining us on their journey toward healing and recovery. Remember, you are not alone in this fight! We will be here every step of the way while you navigate the challenges an celebrate the victories. Once again, welcome to our community, where your voice matters, your journey is honored, and your recovery is embraced. </p>
+                <p>My Alcohol Story Team</p>
               </div>
             </div>
           )}
