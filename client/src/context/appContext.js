@@ -376,7 +376,11 @@ const AppProvider = ({ children }) => {
         }
       });
       dispatch({ type: HANDLE_CHANGE, payload: { name: "currentChats", value: updatedChats} });
-      dispatch({ type: HANDLE_CHANGE, payload: { name: "totalUnreadMessages", value: state.totalUnreadMessages - numberOfUnreadMessages} });
+      dispatch({ type: HANDLE_CHANGE, payload: {
+        name: "totalUnreadMessages",
+        value: (state.totalUnreadMessages - numberOfUnreadMessages) < 0 ? 0 :
+          state.totalUnreadMessages - numberOfUnreadMessages
+      }});
 
       socket.emit("read-chat", { chatRoomId: chatRoomId });
     } catch (error) {

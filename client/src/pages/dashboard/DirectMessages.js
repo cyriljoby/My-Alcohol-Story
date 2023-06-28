@@ -52,6 +52,33 @@ const DirectMessages = () => {
     if (location.search) {
       const parsed = queryString.parse(location.search);
       if (parsed.recipient && parsed.alias && parsed.icon) {
+
+        if (currentChats.length > 0) {
+          const nonDraftChats = currentChats.filter(
+            (chat) => chat.draft !== true
+          );
+
+          const existingChat = nonDraftChats.find(
+            (chat) => chat.userId === parsed.recipient
+          );
+
+          if (existingChat) {
+            handleChange({
+              name: "currentChats",
+              value: nonDraftChats,
+            });
+
+            handleChange({
+              name: "currentChat",
+              value: existingChat,
+            });
+
+            changeChat(existingChat.userId);
+
+            return;
+          }
+        }
+
         const chatDraft = {
           image: iconMap[parsed.icon],
           alias: parsed.alias,
@@ -93,39 +120,24 @@ const DirectMessages = () => {
         name: "displayGreeting",
         value: true,
       });
+
+      handleChange({
+        name: "currentChats",
+        value: [
+          ...currentChats.filter((chat) => !chat.draft),
+        ]
+      });
     };
   }, []);
 
   useEffect(() => {
     if (currentChat) {
-      if (currentChat.draft) {
-        const nonDraftChats = currentChats.filter(
-          (chat) => chat.draft !== true
-        );
-        const existingChat = nonDraftChats.find(
-          (chat) => ((chat.userId === currentChat.userId) && !chat.draft)
-        );
-
-        if (existingChat) {
-          handleChange({
-            name: "currentChats",
-            value: nonDraftChats,
-          });
-
-          handleChange({
-            name: "currentChat",
-            value: existingChat,
-          });
-
-          changeChat(existingChat.userId);
-        }
-      }
       handleChange({
         name: "displayGreeting",
         value: false,
       });
     }
-  }, [currentChats, currentChat]);
+  }, [currentChat]);
 
 
   useEffect(() => {
@@ -148,6 +160,13 @@ const DirectMessages = () => {
       handleChange({
         name: "currentChat",
         value: chat,
+      });
+
+      handleChange({
+        name: "currentChats",
+        value: [
+          ...currentChats.filter((chat) => !chat.draft),
+        ]
       });
 
       handleChange({
