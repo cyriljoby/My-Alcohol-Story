@@ -1,6 +1,7 @@
 import "react-chat-elements/dist/main.css";
 import { MessageList } from "react-chat-elements";
-
+import { FiSend } from "react-icons/fi";
+import { BiMessage } from "react-icons/bi";
 import {
   GiButterfly,
   GiDeer,
@@ -52,7 +53,6 @@ const DirectMessages = () => {
     if (location.search) {
       const parsed = queryString.parse(location.search);
       if (parsed.recipient && parsed.alias && parsed.icon) {
-
         if (currentChats.length > 0) {
           const nonDraftChats = currentChats.filter(
             (chat) => chat.draft !== true
@@ -123,9 +123,7 @@ const DirectMessages = () => {
 
       handleChange({
         name: "currentChats",
-        value: [
-          ...currentChats.filter((chat) => !chat.draft),
-        ]
+        value: [...currentChats.filter((chat) => !chat.draft)],
       });
     };
   }, []);
@@ -139,22 +137,24 @@ const DirectMessages = () => {
     }
   }, [currentChat]);
 
-
   useEffect(() => {
     if (currentMessages && currentMessages.length > 0) {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [currentMessages]);
 
-
   const changeChat = (recipient) => {
-    const chat = currentChats.find((chat) => chat.userId === recipient && !chat.draft);
+    const chat = currentChats.find(
+      (chat) => chat.userId === recipient && !chat.draft
+    );
     if (
       chat &&
-      ((currentChat && currentChat.userId !== chat.userId) || (!currentChat || currentChat.draft))
+      ((currentChat && currentChat.userId !== chat.userId) ||
+        !currentChat ||
+        currentChat.draft)
     ) {
       console.log("Changing chat");
-      
+
       readChat({ chatRoomId: chat.chatRoomId });
 
       handleChange({
@@ -164,9 +164,7 @@ const DirectMessages = () => {
 
       handleChange({
         name: "currentChats",
-        value: [
-          ...currentChats.filter((chat) => !chat.draft),
-        ]
+        value: [...currentChats.filter((chat) => !chat.draft)],
       });
 
       handleChange({
@@ -220,7 +218,7 @@ const DirectMessages = () => {
       name: "showFilteredPopup",
       value: false,
     });
-  }
+  };
 
   function RenderPopup() {
     if (showFilteredPopup) {
@@ -241,7 +239,7 @@ const DirectMessages = () => {
                   close();
                   closePop();
                 }}
-                style={{fontSize: "1.5rem"}}
+                style={{ fontSize: "1.5rem" }}
               >
                 &times;
               </button>
@@ -249,7 +247,8 @@ const DirectMessages = () => {
               <div className="content">
                 {" "}
                 Your message has potentially went against our community
-                guidelines. While sending messages to other users, please make sure you <span>DO NOT</span>:
+                guidelines. While sending messages to other users, please make
+                sure you <span>DO NOT</span>:
                 <ul
                   style={{
                     listStyle: "inside",
@@ -265,7 +264,8 @@ const DirectMessages = () => {
                   <li>encourage or promote self harm</li>
                   <li>post any personal identification information</li>
                 </ul>
-                If you are feeling the urge to harm yourself or need any other assistance, please visit our{" "}
+                If you are feeling the urge to harm yourself or need any other
+                assistance, please visit our{" "}
                 <a className="resources-page" href="/resources">
                   resources
                 </a>{" "}
@@ -284,7 +284,7 @@ const DirectMessages = () => {
     console.log("CHANGING INPUT");
     console.log(e.target.value);
     setChatInput(e.target.value);
-  }
+  };
 
   // TODO: Change greeting
   // TODO: high risk/sensitive user group, chats will NEED to be moderated or filtered somehow to keep users safe
@@ -301,20 +301,27 @@ const DirectMessages = () => {
             </p>
           </div>
         ) : null}
-        <ChatList users={currentChats} currentChat={currentChat} changeChat={changeChat} />
+        <ChatList
+          users={currentChats}
+          currentChat={currentChat}
+          changeChat={changeChat}
+        />
       </div>
       <div className="message-panel">
         {displayGreeting ? (
           <div className="greeting-div">
             <h1 className="messaging-title">Direct Messages</h1>
+            <span className="greeting-icon">
+              <BiMessage />
+            </span>
             <p className="greeting">
               Start a more personal and direct conversation from a story or log!
               Select an existing chat, or create a new one from a story or log.
             </p>
-            <p className="notice-greeting">
-              Note: Direct messages are filtered to reduce potentially harmful messages.
-              Please be respectful towards others.
-            </p>
+            {/* <p className="notice-greeting">
+              Note: Direct messages are filtered to reduce potentially harmful
+              messages. Please be respectful towards others.
+            </p> */}
           </div>
         ) : (
           <MessageList
@@ -325,24 +332,43 @@ const DirectMessages = () => {
             referance={messagesEndRef}
           />
         )}
-        <div className="input-div">
-          <TextField
-            className="message-input"
-            hiddenLabel
-            value={chatInput}
-            onChange={changeInput}
-            color="success"
-            id="filled-basic"
-            size="small"
-            variant="filled"
-            error={showFilteredPopup}
-            helperText={showFilteredPopup ? "Text filtered" : null}
-          />
-          <Button className="message-button" onClick={() => sendMessage()} variant="contained">Send</Button>
-        </div>
+
+        {displayGreeting ? (
+          <div></div>
+        ) : (
+          <div className="input-div">
+            <TextField
+              className="message-input"
+              hiddenLabel
+              value={chatInput}
+              onChange={changeInput}
+              contenteditable="true"
+              InputProps={{
+                style: {
+                  borderRadius: "50px",
+                },
+              }}
+              color="success"
+              placeholder="Message..."
+              id="filled-basic"
+              size="small"
+              variant="filled"
+              error={showFilteredPopup}
+              helperText={showFilteredPopup ? "Text filtered" : null}
+            />
+            <Button
+              className="message-button"
+              onClick={() => sendMessage()}
+              variant="contained"
+            >
+              <FiSend />
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
 export default DirectMessages;
+
