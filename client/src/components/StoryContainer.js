@@ -10,12 +10,12 @@ import {
   GiTortoise,
 } from "react-icons/gi";
 import { RiUserFill } from "react-icons/ri";
-import {Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ReplyTemplate from "./replyTemplate";
 import moment from "moment";
 import { now } from "mongoose";
 import { useState, useRef } from "react";
-import {BiMessageEdit, BiReply} from "react-icons/bi";
+import { BiMessage, BiReply } from "react-icons/bi";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
@@ -66,9 +66,8 @@ const StoryContainer = ({ profile, save }) => {
 
     // eslint-disable-next-line
   }, []);
-  if (!stories){
-    return(<Loading center={true
-    }/>)
+  if (!stories) {
+    return <Loading center={true} />;
   }
   let user_info = [];
   const user = localStorage
@@ -130,11 +129,13 @@ const StoryContainer = ({ profile, save }) => {
       setreplyState(!replyState);
     };
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const chatFunc = (recipient, alias, iconName) => {
-      navigate(`/messages?recipient=${recipient}&alias=${alias}&icon=${iconName}`)
-    }
+      navigate(
+        `/messages?recipient=${recipient}&alias=${alias}&icon=${iconName}`
+      );
+    };
 
     const save = (e) => {
       targetBoxId = e.currentTarget.id;
@@ -206,8 +207,11 @@ const StoryContainer = ({ profile, save }) => {
               <BiReply />
             </button>
             {job["job"].createdBy !== user_id ? (
-              <button className="btn start-chat" onClick={() => chatFunc(job["job"].createdBy, alias, iconName)}>
-                <BiMessageEdit />
+              <button
+                className="btn start-chat"
+                onClick={() => chatFunc(job["job"].createdBy, alias, iconName)}
+              >
+                <BiMessage />
               </button>
             ) : null}
             {profile ? (
