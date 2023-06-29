@@ -10,7 +10,7 @@ import {
 } from "react-icons/gi";
 import { RiUserFill } from "react-icons/ri";
 import Wrapper from "../assets/wrappers/StoryContainer";
-import { BiReply, BiMessageEdit } from "react-icons/bi";
+import { BiReply, BiMessage } from "react-icons/bi";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import ReplyTemplate from "./replyTemplate";
 import moment from "moment";
@@ -20,8 +20,7 @@ import { Link } from "react-router-dom";
 import { BsFillBookmarkFill } from "react-icons/bs";
 import { BsBookmark } from "react-icons/bs";
 import Loading from "./Loading";
-import { useNavigate } from 'react-router-dom'
-
+import { useNavigate } from "react-router-dom";
 
 const LogsContainer = ({ profile, save }) => {
   const {
@@ -60,8 +59,8 @@ const LogsContainer = ({ profile, save }) => {
   let opens = [];
   let openIds = [];
   let saved = [];
-  if (!logs){
-    return(<Loading center={true}/>)
+  if (!logs) {
+    return <Loading center={true} />;
   }
   saves.map((save) => {
     saved.push(save.savedId);
@@ -116,11 +115,13 @@ const LogsContainer = ({ profile, save }) => {
       setreplyState(!replyState);
     };
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const chatFunc = (recipient, alias, iconName) => {
-      navigate(`/messages?recipient=${recipient}&alias=${alias}&icon=${iconName}`)
-    }
+      navigate(
+        `/messages?recipient=${recipient}&alias=${alias}&icon=${iconName}`
+      );
+    };
 
     const save = (e) => {
       targetBoxId = e.currentTarget.id;
@@ -196,8 +197,11 @@ const LogsContainer = ({ profile, save }) => {
               <BiReply />
             </button>
             {log.createdBy !== user_id ? (
-              <button className="btn start-chat" onClick={() => chatFunc(log.createdBy, alias, iconName)}>
-                <BiMessageEdit />
+              <button
+                className="btn start-chat"
+                onClick={() => chatFunc(log.createdBy, alias, iconName)}
+              >
+                <BiMessage />
               </button>
             ) : null}
             {profile ? (
