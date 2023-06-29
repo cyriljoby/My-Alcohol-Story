@@ -801,97 +801,137 @@ Team
 
 /* Direct Message Styles */
 
-@media (min-width: 1000px) {
-    .messages-div {
-      display: flex;
-    }
-    .chat-panel {
-      width: 30%;
-      background-color: white;
-      padding: 20px;
-      border-radius: 0.25rem;
-      max-width: 1000px;
-      max-height: 610px;
-      min-height: 400px;
-      margin: 5px;
-      box-shadow: var(--shadow-2);
-    }
-    .chat-row {
-      border-radius: 9px;
-      display: flex;
-      width: 100%;
-      flex-direction: row;
-      align-items: center;
-      padding: 5px;
-      background-color: white;
-      border-width: 0;
-    }
-    .chat-row.chat-selected {
-      background-color: #89c297;
-    }
-    .chat-row:hover {
-      background-color: #eaeaea;
-    }
-    .chat-list {
-      padding: 5px;
-      max-height: 500px;
-      overflow: auto;
-    }
-    .chat-icon {
-      margin: 5px;
-    }
-    .chat-info {
-      margin: 5px;
-    }
-    .chat-name {
-      margin: 1px;
-      text-align: left;
-    }
-    .chat-status {
-      margin: 1px;
-      text-align: left;
-    }
-    .message-panel {
-      display: flex;
-      flex-direction: column;
-      width: 70%;
-      background-color: white;
-      padding: 2rem;
-      border-radius: 0.25rem;
-      max-width: 1000px;
-      max-height: 610px;
-      min-height: 400px;
-      margin: 5px;
-      box-shadow: var(--shadow-2);
-    }
-    .message-list {
-      padding: 5px;
-      max-height: 500px;
-    }
-    .message-list > .rce-mlist > .rce-container-mbox > .rce-mbox {
-      max-width: 50%;
-    }
-    .message-list > .rce-mlist {
-      scroll-behavior: smooth;
-    }
-    .rce-mbox-text:after {
-      content: "\00a0\00a0\00a0\00a0\00a0" !important;
-    }
-    .input-div {
-      padding: 8px;
-      display: flex;
-      margin-top: auto;
-      max-height: 50px;
-    }
-    .message-input {
-      margin: 2px;
-      min-width: 0% !important;
-      max-height: 40px;
-      flex: 80%;
-    }
-    .message-button {
-      background-color: var(--primary-500) !important;
-      margin-left: 10px !important;
-      flex: 15%;
-    }
+/* @media (min-width: 1000px) { */
+.messages-div {
+  display: flex;
+}
+.chat-panel {
+  width: 30%;
+  background-color: white;
+  padding: 20px;
+  border-radius: 0.25rem;
+  max-width: 1000px;
+  max-height: 610px;
+  min-height: 400px;
+
+  margin: 5px;
+  box-shadow: var(--shadow-2);
+}
+.chat-row {
+  border-radius: 9px;
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  padding: 5px;
+  background-color: white;
+  border-width: 0;
+}
+.chat-row.chat-selected {
+  background-color: var(--grey-100);
+}
+.chat-row:hover {
+  background-color: var(--grey-50);
+}
+.chat-list {
+  padding: 5px;
+  max-height: 500px;
+  overflow: auto;
+}
+.chat-icon {
+  margin: 5px;
+}
+.chat-info {
+  margin: 5px;
+}
+
+.chat-name {
+  margin: 1px;
+  text-align: left;
+}
+.chat-status {
+  margin: 1px;
+  text-align: left;
+}
+.message-panel {
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  background-color: white;
+  padding: 2rem;
+  border-radius: 0.25rem;
+  max-width: 1000px;
+  max-height: 610px;
+  min-height: 400px;
+  margin: 5px;
+  box-shadow: var(--shadow-2);
+}
+.message-list {
+  padding: 5px;
+  max-height: 500px;
+  width: 100%;
+}
+.message-list > .rce-mlist > .rce-container-mbox > .rce-mbox {
+  max-width: 50%;
+}
+.message-list > .rce-mlist {
+  scroll-behavior: smooth;
+}
+.rce-mbox-text:after {
+  content: "\00a0\00a0\00a0\00a0\00a0" !important;
+}
+.input-div {
+  display: flex;
+  margin-top: auto;
+  max-height: 50px;
+  align-items: center;
+}
+
+.message-input {
+  margin: 2px;
+  min-width: 0% !important;
+  max-height: 40px;
+  flex: 95%;
+  border-radius: 10rem;
+}
+.message-button {
+  background-color: var(--primary-500) !important;
+  margin-left: 10px !important;
+  flex: 5%;
+  height: 100%;
+}
+
+.message-button:hover {
+  background-color: var(--primary-700) !important;
+}
+
+@media screen and (max-width: 550px) {
+  .chat-info {
+    display: none;
+  }
+
+  .chat-panel {
+    max-width: max-content;
+  }
+
+  .chat-panel {
+    padding: 5px;
+    width: 25%;
+  }
+
+  .message-panel {
+    width: 75%;
+  }
+}
+
+.greeting-div {
+  text-align: center;
+}
+
+.greeting {
+  margin: 0 auto;
+}
+
+.greeting-icon {
+  font-size: 7rem;
 }
