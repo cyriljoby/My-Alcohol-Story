@@ -860,7 +860,7 @@ Team
   flex-direction: column;
   width: 70%;
   background-color: white;
-  padding: 2rem;
+  padding-top: 1rem;
   border-radius: 0.25rem;
   max-width: 1000px;
   max-height: 90vh;
@@ -884,6 +884,7 @@ Team
 }
 .input-div {
   display: flex;
+  margin: 1rem;
   margin-top: auto;
   max-height: 50px;
   align-items: center;
@@ -935,8 +936,16 @@ Team
   }
 }
 
+@media screen and (max-width: 480px) {
+  .chat-panel {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
 .greeting-div {
   height: 100%;
+  padding: 2rem;
   text-align: center;
   display: grid;
   place-items: center;
