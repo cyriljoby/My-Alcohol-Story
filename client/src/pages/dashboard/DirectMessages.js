@@ -19,6 +19,7 @@ import { useAppContext } from "../../context/appContext";
 import queryString from "query-string";
 import Popup from "reactjs-popup";
 import { TextField, Button } from "@mui/material";
+import Wrapper from "../../assets/wrappers/BigSidebar";
 
 const iconMap = {
   GiTortoise: <GiTortoise />,
@@ -291,11 +292,11 @@ const DirectMessages = () => {
   // TODO: add blocking capabilities, report capabilities, make users agree to terms / remind them of risks of chatting
 
   return (
-    <div className="messages-div">
+    <div className="messages-div" style={{ margin: "0 auto" }}>
       <RenderPopup />
       <div className="chat-panel">
         {currentChats.length === 0 ? (
-          <div className="greeting-div">
+          <div className="greeting-alt">
             <p className="greeting">
               You don't have any chats yet! Create a new chat!
             </p>
@@ -342,11 +343,13 @@ const DirectMessages = () => {
               hiddenLabel
               value={chatInput}
               onChange={changeInput}
-              contenteditable="true"
+              autoComplete="off"
               InputProps={{
                 style: {
-                  borderRadius: "50px",
+                  backgroundColor: "transparent",
                 },
+                disableUnderline: true,
+                contenteditable: true,
               }}
               color="success"
               placeholder="Message..."
@@ -356,13 +359,15 @@ const DirectMessages = () => {
               error={showFilteredPopup}
               helperText={showFilteredPopup ? "Text filtered" : null}
             />
-            <Button
+            <button
               className="message-button"
               onClick={() => sendMessage()}
               variant="contained"
             >
-              <FiSend />
-            </Button>
+              <span className="message-icon">
+                <FiSend />
+              </span>
+            </button>
           </div>
         )}
       </div>
