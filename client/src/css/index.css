@@ -811,7 +811,8 @@ Team
   padding: 20px;
   border-radius: 0.25rem;
   max-width: 1000px;
-  max-height: 610px;
+  max-height: 90vh;
+  height: 610px;
   min-height: 400px;
 
   margin: 5px;
@@ -862,8 +863,8 @@ Team
   padding: 2rem;
   border-radius: 0.25rem;
   max-width: 1000px;
-  max-height: 610px;
-  min-height: 400px;
+  max-height: 90vh;
+  height: 610px;
   margin: 5px;
   box-shadow: var(--shadow-2);
 }
@@ -886,24 +887,33 @@ Team
   margin-top: auto;
   max-height: 50px;
   align-items: center;
+  border-radius: 50rem;
+  border: 1px solid var(--grey-200);
 }
 
 .message-input {
   margin: 2px;
+  background-color: transparent !important;
   min-width: 0% !important;
   max-height: 40px;
   flex: 95%;
-  border-radius: 10rem;
-}
-.message-button {
-  background-color: var(--primary-500) !important;
-  margin-left: 10px !important;
-  flex: 5%;
-  height: 100%;
 }
 
-.message-button:hover {
-  background-color: var(--primary-700) !important;
+.message-button {
+  border: none;
+  background-color: transparent;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.message-icon {
+  color: #102a43;
+  font-size: 1.2rem;
+  transition: var(--transition);
+}
+
+.message-icon:hover {
+  color: var(--primary-500);
 }
 
 @media screen and (max-width: 550px) {
@@ -926,6 +936,13 @@ Team
 }
 
 .greeting-div {
+  height: 100%;
+  text-align: center;
+  display: grid;
+  place-items: center;
+}
+
+.greeting-alt {
   text-align: center;
 }
 
