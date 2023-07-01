@@ -861,6 +861,7 @@ Team
   width: 70%;
   background-color: white;
   padding-top: 1rem;
+  /* padding-bottom: 1rem; */
   border-radius: 0.25rem;
   max-width: 1000px;
   max-height: 90vh;
@@ -870,7 +871,7 @@ Team
 }
 .message-list {
   padding: 5px;
-  max-height: 500px;
+  max-height: 520px;
   width: 100%;
 }
 .message-list > .rce-mlist > .rce-container-mbox > .rce-mbox {
