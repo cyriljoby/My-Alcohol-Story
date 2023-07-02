@@ -12,6 +12,7 @@ import EditStory from "./pages/dashboard/EditStory";
 import EditLog from "./pages/dashboard/EditLog";
 import DirectMessages from "./pages/dashboard/DirectMessages";
 
+import ChatBot from "./pages/dashboard/ChatBot";
 function App() {
   return (
     <BrowserRouter>
@@ -29,6 +30,7 @@ function App() {
           <Route path="messages" element={<DirectMessages />} />
           <Route path="add-story" element={<AddStory />} />
           <Route path="edit-story" element={<EditStory />} />
+          <Route path="chat-bot" element={<ChatBot />} />
           <Route path="edit-log" element={<EditLog />} />
           <Route path="profile" element={<Profile />} />
           <Route path="resources" element={<Resources />} />

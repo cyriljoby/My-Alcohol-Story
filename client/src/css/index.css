@@ -228,6 +228,7 @@ ul {
   text-transform: capitalize;
   letter-spacing: var(--letterSpacing);
 }
+
 .form-input,
 .form-textarea,
 .form-select {
@@ -963,3 +964,91 @@ Team
 .greeting-icon {
   font-size: 7rem;
 }
+
+
+
+
+{/*
+
+CONFLICTING STYLES PLEASE RESOLVE
+
+
+
+.chat-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+.chat-history {
+  margin-bottom: 20px;
+}
+
+.message-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.user-message,
+.bot-message {
+  padding: 10px;
+  border-radius: 10px;
+  word-wrap: break-word;
+  max-width: 70%;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.user-message {
+  background-color: #e4f3ff;
+  align-self: flex-end;
+  color: #000;
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.bot-message {
+  background-color: #f0f0f0;
+  align-self: flex-start;
+  color: #000;
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+}
+
+input[type='text'] {
+  flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+button:focus {
+  outline: none;
+}
+
+
+*/}
