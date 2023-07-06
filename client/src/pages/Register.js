@@ -99,7 +99,7 @@ const Register = () => {
           submit
         </button>
         <p>
-          {values.isMember ? 'Don't have an account?' : 'Already have an account?'}
+          {values.isMember ? 'Don\'t have an account?' : 'Already have an account?'}
           <button type='button' onClick={toggleMember} className='member-btn'>
             {values.isMember ? 'Register' : 'Login'}
           </button>
