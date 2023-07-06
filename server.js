@@ -129,7 +129,6 @@ const io = new Server(server, {
       "http://localhost:3000",
       "https://myalcoholstory.com",
       "http://localhost:5200",
-      "https://mas-app-6d8w8.ondigitalocean.app",
     ],
     methods: ["GET", "POST"]
   },
