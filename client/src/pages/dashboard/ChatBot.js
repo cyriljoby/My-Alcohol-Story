@@ -19,7 +19,7 @@ const ChatBot = () => {
     }, {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ***REMOVED***', // Replace with your actual API key
+        'Authorization': 'Bearer **REMOVED**', // Replace with your actual API key
       },
     });
 
