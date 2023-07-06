@@ -300,7 +300,6 @@ const AppProvider = ({ children }) => {
           alias: filteredUsers[0].alias,
           userId: filteredUsers[0]._id,
           latestMessage: (chat.latestMessage).substring(0, 20),
-          unreadMessages: 1,
           draft: false,
           chatRoomId: chat._id,
         };
@@ -313,14 +312,17 @@ const AppProvider = ({ children }) => {
           const filteredChats = currentChats.filter(
             (filterChat) => filterChat.draft !== true
           );
+          formattedChat.unreadMessages = 0;
           dispatch({ type: HANDLE_CHANGE, payload: { name: "currentChats", value: [formattedChat, ...filteredChats]} });
         } else if (currentChat && currentChat.userId !== formattedChat.userId) {
           const filteredChats = currentChats.filter(
             (filterChat) => filterChat.userId !== currentChat.userId
           );
+          formattedChat.unreadMessages = 1;
           dispatch({ type: HANDLE_CHANGE, payload: { name: "currentChats", value: [currentChat, formattedChat, ...filteredChats]} });
           dispatch({ type: HANDLE_CHANGE, payload: { name: "totalUnreadMessages", value: state.totalUnreadMessages + 1} });
         } else if (!currentChat) {
+          formattedChat.unreadMessages = 1;
           dispatch({
             type: HANDLE_CHANGE,
             payload: {

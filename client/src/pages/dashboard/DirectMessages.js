@@ -104,6 +104,17 @@ const DirectMessages = () => {
           value: [chatDraft, ...cleanedChats],
         });
       }
+    } else {
+      if (currentChats.length > 0) {
+        const nonDraftChats = currentChats.filter(
+          (chat) => chat.draft !== true
+        );
+
+        handleChange({
+          name: "currentChats",
+          value: nonDraftChats,
+        });
+      }
     }
 
     return () => {
@@ -120,11 +131,6 @@ const DirectMessages = () => {
       handleChange({
         name: "displayGreeting",
         value: true,
-      });
-
-      handleChange({
-        name: "currentChats",
-        value: [...currentChats.filter((chat) => !chat.draft)],
       });
     };
   }, []);
@@ -349,7 +355,7 @@ const DirectMessages = () => {
                   backgroundColor: "transparent",
                 },
                 disableUnderline: true,
-                contenteditable: true,
+                contentEditable: true,
               }}
               color="success"
               placeholder="Message..."
