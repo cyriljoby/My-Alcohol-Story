@@ -821,7 +821,6 @@ Team
   height: 610px;
   min-height: 400px;
   align-items: center;
-
   margin: 5px;
   box-shadow: var(--shadow-2);
 }
@@ -851,7 +850,7 @@ Team
 .chat-collapse {
   height: 50px;
   width: 50px;
-  visibility: hidden !important;
+  display: none !important;
   min-width: 0px !important;
 }
 .chat-icon {
@@ -946,6 +945,10 @@ Team
     width: 25%;
   }
 
+  .chat-row {
+    justify-content: center;
+  }
+
   .chat-panel-opened {
     width: 100% !important;
   }
@@ -959,14 +962,13 @@ Team
   }
 
   .chat-collapse {
-    visibility: visible !important;
+    display: block !important;
   }
 
   .message-panel {
     width: 75%;
   }
 }
-
 
 .greeting-div {
   height: 100%;
@@ -988,10 +990,8 @@ Team
   font-size: 7rem;
 }
 
-
-
-
-{/*
+ {
+  /*
 
 CONFLICTING STYLES PLEASE RESOLVE
 
@@ -1074,4 +1074,5 @@ button:focus {
 }
 
 
-*/}
+*/
+}
