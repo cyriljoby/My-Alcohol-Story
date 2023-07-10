@@ -9,6 +9,10 @@ import {
   GiElephant,
   GiTortoise,
 } from "react-icons/gi";
+import {
+  GrFormNext,
+  GrFormPrevious,
+} from "react-icons/gr";
 import { RiUserFill } from "react-icons/ri";
 import { AiOutlineUser } from "react-icons/ai";
 
@@ -48,7 +52,13 @@ const DirectMessages = () => {
 
   const [chatInput, setChatInput] = useState("");
 
+  const [showChatList, setShowChatList] = useState(false);
+
   const location = useLocation();
+
+  const changeChatCollapsed = (show) => {
+    setShowChatList(show);
+  }
 
   useEffect(() => {
     if (location.search) {
@@ -151,6 +161,7 @@ const DirectMessages = () => {
   }, [currentMessages]);
 
   const changeChat = (recipient) => {
+    changeChatCollapsed(false);
     const chat = currentChats.find(
       (chat) => chat.userId === recipient && !chat.draft
     );
@@ -284,7 +295,15 @@ const DirectMessages = () => {
   return (
     <div className="messages-div" style={{ margin: "0 auto" }}>
       <RenderPopup />
-      <div className="chat-panel">
+      <div
+        className={!showChatList ? "chat-panel" : "chat-panel chat-panel-opened"}
+      >
+        {/*Toggle button to show list */}
+        {!showChatList ? (
+          <Button onClick={() => changeChatCollapsed(true)} className="chat-collapse">
+            <GrFormNext size={25}/>
+          </Button>
+        ) : null}
         {currentChats.length === 0 ? (
           <div className="greeting-alt">
             <p className="greeting">
@@ -298,68 +317,70 @@ const DirectMessages = () => {
           changeChat={changeChat}
         />
       </div>
-      <div className="message-panel">
-        {displayGreeting ? (
-          <div className="greeting-div">
-            <h1 className="messaging-title">Direct Messages</h1>
-            <span className="greeting-icon">
-              <BiMessage />
-            </span>
-            <p className="greeting">
-              Start a more personal and direct conversation from a story or log!
-              Select an existing chat, or create a new one from a story or log.
-            </p>
-            {/* <p className="notice-greeting">
-              Note: Direct messages are filtered to reduce potentially harmful
-              messages. Please be respectful towards others.
-            </p> */}
-          </div>
-        ) : (
-          <MessageList
-            className="message-list"
-            lockable={false}
-            toBottomHeight={"100%"}
-            dataSource={currentMessages}
-            referance={messagesEndRef}
-          />
-        )}
-
-        {displayGreeting ? (
-          <div></div>
-        ) : (
-          <div className="input-div">
-            <TextField
-              className="message-input"
-              hiddenLabel
-              value={chatInput}
-              onChange={changeInput}
-              autoComplete="off"
-              InputProps={{
-                style: {
-                  backgroundColor: "transparent",
-                },
-                disableUnderline: true,
-              }}
-              color="success"
-              placeholder="Message..."
-              id="filled-basic"
-              size="small"
-              variant="filled"
-              error={showFilteredPopup}
-              helperText={showFilteredPopup ? "Text filtered" : null}
-            />
-            <button
-              className="message-button"
-              onClick={() => sendMessage()}
-              variant="contained"
-            >
-              <span className="message-icon">
-                <FiSend />
+      {!showChatList ? (
+        <div className="message-panel">
+          {displayGreeting ? (
+            <div className="greeting-div">
+              <h1 className="messaging-title">Direct Messages</h1>
+              <span className="greeting-icon">
+                <BiMessage />
               </span>
-            </button>
-          </div>
-        )}
-      </div>
+              <p className="greeting">
+                Start a more personal and direct conversation from a story or log!
+                Select an existing chat, or create a new one from a story or log.
+              </p>
+              {/* <p className="notice-greeting">
+                Note: Direct messages are filtered to reduce potentially harmful
+                messages. Please be respectful towards others.
+              </p> */}
+            </div>
+          ) : (
+            <MessageList
+              className="message-list"
+              lockable={false}
+              toBottomHeight={"100%"}
+              dataSource={currentMessages}
+              referance={messagesEndRef}
+            />
+          )}
+
+          {displayGreeting ? (
+            <div></div>
+          ) : (
+            <div className="input-div">
+              <TextField
+                className="message-input"
+                hiddenLabel
+                value={chatInput}
+                onChange={changeInput}
+                autoComplete="off"
+                InputProps={{
+                  style: {
+                    backgroundColor: "transparent",
+                  },
+                  disableUnderline: true,
+                }}
+                color="success"
+                placeholder="Message..."
+                id="filled-basic"
+                size="small"
+                variant="filled"
+                error={showFilteredPopup}
+                helperText={showFilteredPopup ? "Text filtered" : null}
+              />
+              <button
+                className="message-button"
+                onClick={() => sendMessage()}
+                variant="contained"
+              >
+                <span className="message-icon">
+                  <FiSend />
+                </span>
+              </button>
+            </div>
+          )}
+        </div>
+      ) : null}
     </div>
   );
 };

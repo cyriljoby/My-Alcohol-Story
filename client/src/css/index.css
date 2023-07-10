@@ -805,16 +805,22 @@ Team
 /* @media (min-width: 1000px) { */
 .messages-div {
   display: flex;
+  top: 50%;
+  left: 50%;
+  justify-content: center;
 }
 .chat-panel {
+  display: flex;
+  flex-direction: column;
   width: 30%;
   background-color: white;
   padding: 20px;
   border-radius: 0.25rem;
-  max-width: 1000px;
+  max-width: 350px;
   max-height: 90vh;
   height: 610px;
   min-height: 400px;
+  align-items: center;
 
   margin: 5px;
   box-shadow: var(--shadow-2);
@@ -840,6 +846,13 @@ Team
   padding: 5px;
   max-height: 500px;
   overflow: auto;
+  width: 100%;
+}
+.chat-collapse {
+  height: 50px;
+  width: 50px;
+  visibility: hidden !important;
+  min-width: 0px !important;
 }
 .chat-icon {
   margin: 5px;
@@ -877,6 +890,10 @@ Team
 }
 .message-list > .rce-mlist > .rce-container-mbox > .rce-mbox {
   max-width: 50%;
+  min-width: 0%;
+}
+.message-list > .rce-mlist > .rce-container-mbox {
+  min-width: 0%;
 }
 .message-list > .rce-mlist {
   scroll-behavior: smooth;
@@ -925,12 +942,24 @@ Team
   }
 
   .chat-panel {
-    max-width: max-content;
-  }
-
-  .chat-panel {
     padding: 5px;
     width: 25%;
+  }
+
+  .chat-panel-opened {
+    width: 100% !important;
+  }
+
+  .chat-panel-opened > .chat-list > .chat-row > .chat-info {
+    display: block !important;
+  }
+
+  .greeting-alt {
+    visibility: hidden !important;
+  }
+
+  .chat-collapse {
+    visibility: visible !important;
   }
 
   .message-panel {
@@ -938,12 +967,6 @@ Team
   }
 }
 
-@media screen and (max-width: 480px) {
-  .chat-panel {
-    margin-left: 0;
-    margin-right: 0;
-  }
-}
 
 .greeting-div {
   height: 100%;
