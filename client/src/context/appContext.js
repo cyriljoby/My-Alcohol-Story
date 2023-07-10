@@ -1,4 +1,4 @@
-import React, {useReducer, useContext, useEffect} from "react";
+import React, {useReducer, useContext, useEffect, useRef} from "react";
 
 import reducer from "./reducer";
 import axios from "axios";
@@ -218,11 +218,34 @@ const AppProvider = ({ children }) => {
     clearAlert();
   };
 
+  const userSocketRef = useRef(state.user);
+  const currentChatsSocketRef = useRef(state.currentChats);
+  const currentChatSocketRef = useRef(state.currentChat);
+  const currentMessagesSocketRef = useRef(state.currentMessages);
+  const totalUnreadMessagesSocketRef = useRef(state.totalUnreadMessages);
+
+  useEffect(() => {
+    userSocketRef.current = state.user;
+  }, [state.user]);
+
+  useEffect(() => {
+    currentChatsSocketRef.current = state.currentChats;
+  }, [state.currentChats]);
+
+  useEffect(() => {
+    currentChatSocketRef.current = state.currentChat;
+  }, [state.currentChat]);
+
+  useEffect(() => {
+    currentMessagesSocketRef.current = state.currentMessages;
+  }, [state.currentMessages]);
+
+  useEffect(() => {
+    totalUnreadMessagesSocketRef.current = state.totalUnreadMessages;
+  }, [state.totalUnreadMessages]);
+
   const createWebsocket = () => {
     try {
-
-      const { user, currentChats, currentChat, currentMessages } = state;
-
       console.log(`${window.location.origin}`)
 
       const socket = io(`${window.location.origin}`, {
@@ -259,41 +282,40 @@ const AppProvider = ({ children }) => {
       });
 
       const handleMessageReceived = ({ message, sender }) => {
-        if (currentChat && message.chat === currentChat.chatRoomId) {
+        if (currentChatSocketRef.current && message.chat === currentChatSocketRef.current.chatRoomId) {
           const formattedMessage = {
-            position: sender._id === user._id ? "right" : "left",
+            position: sender._id === userSocketRef.current._id ? "right" : "left",
             type: "text",
             title: sender.alias,
             text: message.content,
           };
 
-          dispatch({ type: HANDLE_CHANGE, payload: { name: "currentMessages", value: [...currentMessages, formattedMessage]} });
+          dispatch({ type: HANDLE_CHANGE, payload: { name: "currentMessages", value: [...currentMessagesSocketRef.current, formattedMessage]} });
         } else {
-          dispatch({ type: HANDLE_CHANGE, payload: { name: "totalUnreadMessages", value: state.totalUnreadMessages + 1} });
+          dispatch({ type: HANDLE_CHANGE, payload: { name: "totalUnreadMessages", value: totalUnreadMessagesSocketRef.current + 1} });
         }
 
-        console.log("Message received");
-
-        const updatedChats = currentChats.map((chat) => {
+        const updatedChats = [...currentChatsSocketRef.current].map((chat) => {
           if (chat.chatRoomId === message.chat) {
-            console.log(currentChat && chat.chatRoomId === currentChat.chatRoomId ? 0 : chat.unreadMessages + 1);
             return {
               ...chat,
               latestMessage: (message.content).substring(0, 20),
-              unreadMessages: currentChat && chat.chatRoomId === currentChat.chatRoomId ? 0 : chat.unreadMessages + 1,
+              unreadMessages: currentChatSocketRef.current && chat.chatRoomId === currentChatSocketRef.current.chatRoomId ? 0 : chat.unreadMessages + 1,
+              latestUpdate: message.createdAt
             };
           } else {
             return chat;
           }
+        }).sort((a, b) => {
+          return new Date(b.latestUpdate) - new Date(a.latestUpdate);
         });
+
         dispatch({ type: HANDLE_CHANGE, payload: { name: "currentChats", value: updatedChats} });
       };
 
       const handleNewChatReceived = ({ chat, users }) => {
-        console.log("New chat received");
-
         const filteredUsers = users.filter((filterUser) => {
-          return filterUser._id !== user._id;
+          return filterUser._id !== userSocketRef.current._id;
         });
 
         const formattedChat = {
@@ -303,37 +325,43 @@ const AppProvider = ({ children }) => {
           latestMessage: (chat.latestMessage).substring(0, 20),
           draft: false,
           chatRoomId: chat._id,
+          latestUpdate: chat.updatedAt,
         };
 
+        const filteredChats = currentChatsSocketRef.current.filter(
+          (filterChat) => filterChat.draft !== true
+        );
+
         if (
-          currentChat &&
-          currentChat.draft &&
-          currentChat.userId === formattedChat.userId
+          currentChatSocketRef.current &&
+          currentChatSocketRef.current.draft &&
+          currentChatSocketRef.current.userId === formattedChat.userId
         ) {
-          const filteredChats = currentChats.filter(
-            (filterChat) => filterChat.draft !== true
-          );
           formattedChat.unreadMessages = 0;
-          dispatch({ type: HANDLE_CHANGE, payload: { name: "currentChats", value: [formattedChat, ...filteredChats]} });
-        } else if (currentChat && currentChat.userId !== formattedChat.userId) {
-          const filteredChats = currentChats.filter(
-            (filterChat) => filterChat.userId !== currentChat.userId
+          dispatch({type: HANDLE_CHANGE, payload: {name: "currentChats", value: [formattedChat, ...filteredChats]}});
+        } else if (currentChatSocketRef.current && currentChatSocketRef.current.draft) {
+          formattedChat.unreadMessages = 1;
+          dispatch({ type: HANDLE_CHANGE, payload: { name: "currentChats", value: [currentChatSocketRef.current, formattedChat, ...filteredChats]} });
+          dispatch({ type: HANDLE_CHANGE, payload: { name: "totalUnreadMessages", value: totalUnreadMessagesSocketRef.current + 1} });
+        } else if (currentChatSocketRef.current && currentChatSocketRef.current.userId !== formattedChat.userId) {
+          const filteredChats = currentChatsSocketRef.current.filter(
+            (filterChat) => filterChat.userId !== currentChatSocketRef.current.userId
           );
           formattedChat.unreadMessages = 1;
-          dispatch({ type: HANDLE_CHANGE, payload: { name: "currentChats", value: [currentChat, formattedChat, ...filteredChats]} });
-          dispatch({ type: HANDLE_CHANGE, payload: { name: "totalUnreadMessages", value: state.totalUnreadMessages + 1} });
-        } else if (!currentChat) {
+          dispatch({ type: HANDLE_CHANGE, payload: { name: "currentChats", value: [formattedChat, currentChatSocketRef.current, ...filteredChats]} });
+          dispatch({ type: HANDLE_CHANGE, payload: { name: "totalUnreadMessages", value: totalUnreadMessagesSocketRef.current + 1} });
+        } else if (!currentChatSocketRef.current) {
           formattedChat.unreadMessages = 1;
           dispatch({
             type: HANDLE_CHANGE,
             payload: {
               name: "currentChats",
-              value: [formattedChat, ...currentChats].filter(
+              value: [formattedChat, ...currentChatsSocketRef.current].filter(
                 (value) => Object.keys(value).length !== 0
-              )
+              ),
             }
           });
-          dispatch({ type: HANDLE_CHANGE, payload: { name: "totalUnreadMessages", value: state.totalUnreadMessages + 1} });
+          dispatch({ type: HANDLE_CHANGE, payload: { name: "totalUnreadMessages", value: totalUnreadMessagesSocketRef.current + 1} });
         }
       };
 
@@ -346,30 +374,14 @@ const AppProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    if (state.token) {
-      console.log("creating websocket")
-      createWebsocket();
-    } else {
-      if (state.socket) {
-        state.socket.close();
-      }
-    }
-
-    return () => {
-      if (state.socket) {
-        state.socket.close();
-      }
-    };
-  }, [state.totalUnreadMessages, state.currentChats, state.currentChat, state.currentMessages, state.token, state.user, state.showFilteredPopup]);
-
   const readChat = async ({ chatRoomId }) => {
-    const { socket, currentChats } = state;
+    const { socket } = state;
     try {
       let numberOfUnreadMessages;
-      const updatedChats = currentChats.map((chat) => {
+
+      const updatedChats = [...currentChatsSocketRef.current].map((chat) => {
         if (chat.chatRoomId === chatRoomId) {
-          numberOfUnreadMessages = chat.unreadMessages;
+          numberOfUnreadMessages = totalUnreadMessagesSocketRef.current - chat.unreadMessages;
           return {
             ...chat,
             unreadMessages: 0,
@@ -378,11 +390,22 @@ const AppProvider = ({ children }) => {
           return chat;
         }
       });
-      dispatch({ type: HANDLE_CHANGE, payload: { name: "currentChats", value: updatedChats} });
+
+      const newCurrentChat = updatedChats.find((chat) => chat.chatRoomId === chatRoomId);
+
+
+      dispatch({ type: HANDLE_CHANGE, payload: {
+        name: "currentChat",
+        value: newCurrentChat
+      }});
+      dispatch({ type: HANDLE_CHANGE, payload: {
+        name: "currentChats",
+        value: updatedChats
+      }});
       dispatch({ type: HANDLE_CHANGE, payload: {
         name: "totalUnreadMessages",
-        value: (state.totalUnreadMessages - numberOfUnreadMessages) < 0 ? 0 :
-          state.totalUnreadMessages - numberOfUnreadMessages
+        value: (numberOfUnreadMessages) < 0 ? 0 :
+          numberOfUnreadMessages
       }});
 
       socket.emit("read-chat", { chatRoomId: chatRoomId });
@@ -435,14 +458,12 @@ const AppProvider = ({ children }) => {
 
       if (chatToUnreads && chatToUnreads.length > 0) {
         let totalUnreadMessages = 0;
-        const formattedChats = chatToUnreads.map(({chat, unreadMessages}) => {
+        const formattedChats = [...chatToUnreads].map(({chat, unreadMessages}) => {
           totalUnreadMessages += unreadMessages;
           console.log(JSON.parse(user)._id)
           const filteredUsers = chat.users.filter(
             (filterUser) => filterUser._id !== JSON.parse(user)._id
           );
-          console.log(filteredUsers[0])
-          console.log(chat)
           return {
             image: iconMap[filteredUsers[0].image],
             alias: filteredUsers[0].alias,
@@ -451,7 +472,10 @@ const AppProvider = ({ children }) => {
             unreadMessages: unreadMessages,
             draft: false,
             chatRoomId: chat._id,
+            latestUpdate: chat.updatedAt
           };
+        }).sort((a, b) => {
+          return new Date(b.latestUpdate) - new Date(a.latestUpdate);
         });
 
         if (currentChat && currentChat.draft) {

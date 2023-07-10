@@ -77,8 +77,6 @@ const classifyToxicity = async (inputs) => {
   const labels = inputs.map((d, i) => {
     const obj = {'text': d};
     results.forEach((classification) => {
-      console.log(classification)
-      console.log(classification.results[0].probabilities)
       obj[classification.label] = classification.results[i].match;
     });
     return obj;
@@ -97,7 +95,6 @@ const classifyToxicity = async (inputs) => {
   //   }
   // ]
 
-  console.log(labels);
 
   const isToxic = !Object.keys(labels[0]).every((key) => {
     return labels[0][key] === false || labels[0][key] === null || key === 'text';
@@ -163,8 +160,6 @@ io.on("connection", async (socket) => {
     console.log({data})
     const { chatRoomId, content } = data
     const userId = socket.userId
-
-    console.log(chatRoomId, userId, content)
 
     if (!chatRoomId || !userId || !content) {
       socket.emit('error', {message: 'Invalid request'})
@@ -299,6 +294,7 @@ io.on("connection", async (socket) => {
         message.read = true
         await message.save()
       }));
+
     } catch (error) {
       console.log(error)
       socket.emit('error', {message: 'Unable to read chat'})

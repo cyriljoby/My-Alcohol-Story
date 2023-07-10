@@ -70,8 +70,6 @@ const Wrapper = styled.section`
   .edit-btns {
     justify-self: end;
     display: flex;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
   }
 
   .edit-btns button,

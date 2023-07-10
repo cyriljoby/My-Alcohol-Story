@@ -243,7 +243,6 @@ const updateLog= async (req, res) => {
 
 const deleteJob = async (req, res) => {
   const { id: jobId } = req.params
-  console.log('hi')
 
   const job = await Story.findOne({ _id: jobId })
   const saves = await Saves.deleteMany({savedId:jobId})

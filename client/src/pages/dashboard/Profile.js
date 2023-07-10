@@ -68,7 +68,6 @@ const Profile = () => {
     setImage(selected.target.value);
   };
   const handleSubmit = (e) => {
-    console.log(name, email, alias);
     e.preventDefault();
     if (!email || !alias) {
       displayAlert();

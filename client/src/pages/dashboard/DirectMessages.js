@@ -160,19 +160,8 @@ const DirectMessages = () => {
         !currentChat ||
         currentChat.draft)
     ) {
-      console.log("Changing chat");
 
       readChat({ chatRoomId: chat.chatRoomId });
-
-      handleChange({
-        name: "currentChat",
-        value: chat,
-      });
-
-      handleChange({
-        name: "currentChats",
-        value: [...currentChats.filter((chat) => !chat.draft)],
-      });
 
       handleChange({
         name: "displayGreeting",
@@ -199,7 +188,6 @@ const DirectMessages = () => {
               initialMessage: chatInput,
             };
 
-            console.log("Creating chat");
 
             socket.emit("create-chat", chatRoom);
             setChatInput("");
@@ -207,8 +195,6 @@ const DirectMessages = () => {
             // TODO: handle and display errors creating a chat
           } else {
             const chatRoomId = currentChat.chatRoomId;
-
-            console.log("Sending message");
 
             socket.emit("create-message", { chatRoomId, content: chatInput });
             setChatInput("");
@@ -288,8 +274,6 @@ const DirectMessages = () => {
   }
 
   const changeInput = (e) => {
-    console.log("CHANGING INPUT");
-    console.log(e.target.value);
     setChatInput(e.target.value);
   };
 
@@ -355,7 +339,6 @@ const DirectMessages = () => {
                   backgroundColor: "transparent",
                 },
                 disableUnderline: true,
-                contentEditable: true,
               }}
               color="success"
               placeholder="Message..."

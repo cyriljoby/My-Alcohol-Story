@@ -75,9 +75,7 @@ const createMessage = async (req, res) => {
 }
 
 const getMessages = async (req, res) => {
-  console.log("IN CHAT ROUTE")
   const { recipient } = req.query
-  console.log("RECIPIENT: ", recipient)
   const userId = req.user.userId
 
   if (!recipient || !userId) {
