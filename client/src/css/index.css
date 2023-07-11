@@ -896,6 +896,7 @@ Team
 .chat-title {
   border-radius: 5px;
   display: none;
+  box-shadow: var(--shadow-2);
   width: 100%;
   flex-direction: row;
   align-items: center;
@@ -1040,7 +1041,6 @@ Team
   font-size: 7rem;
 }
 
- {
   /*
 
 CONFLICTING STYLES PLEASE RESOLVE
@@ -1124,4 +1124,4 @@ button:focus {
 }
 
 
-*/}
+*/
