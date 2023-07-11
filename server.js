@@ -7,6 +7,7 @@ dotenv.config();
 import "express-async-errors";
 import cors from "cors";
 import morgan from "morgan";
+import { Configuration, OpenAIApi } from "openai";
 
 //toxicity model
 import * as toxicity from '@tensorflow-models/toxicity';
@@ -18,6 +19,12 @@ import path from "path";
 import helmet from "helmet";
 import xss from "xss-clean";
 import mongoSanitize from "express-mongo-sanitize";
+
+
+const configuration = new Configuration({
+  apiKey: process.env.OPEN_AI_KEY,
+});
+const openai = new OpenAIApi(configuration);
 
 // hello
 // db and authenticateUser
@@ -298,6 +305,32 @@ io.on("connection", async (socket) => {
     } catch (error) {
       console.log(error)
       socket.emit('error', {message: 'Unable to read chat'})
+    }
+  });
+
+  socket.on("chat-bot-query", async (data) => {
+    try {
+      const { chatInput } = data
+
+      if (!chatInput || chatInput.length < 1) {
+        socket.emit('error', {message: 'Invalid request'})
+      }
+
+      const chatCompletion = await openai.createChatCompletion({
+        model: "gpt-3.5-turbo",
+        messages: [{role: "user", content: chatInput}],
+      });
+
+      const botReply = chatCompletion.data.choices[0].message?.content
+
+      if (!botReply) {
+        socket.emit('error', {message: 'Unable to query chat bot'})
+      }
+
+      socket.emit('chat-bot-reply', {message: botReply, input: chatInput})
+    } catch (error) {
+      console.log(error)
+      socket.emit('error', {message: 'Unable to query chat bot'})
     }
   });
 

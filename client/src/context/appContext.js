@@ -87,6 +87,8 @@ const initialState = {
   displayGreeting: true,
   totalUnreadMessages: 0,
   showFilteredPopup: false,
+  chatIsBot: false,
+  botMessages: [],
 };
 
 const iconMap = {
@@ -223,6 +225,8 @@ const AppProvider = ({ children }) => {
   const currentChatSocketRef = useRef(state.currentChat);
   const currentMessagesSocketRef = useRef(state.currentMessages);
   const totalUnreadMessagesSocketRef = useRef(state.totalUnreadMessages);
+  const chatIsBotSocketRef = useRef(state.chatIsBot);
+  const botMessagesSocketRef = useRef(state.botMessages);
 
   useEffect(() => {
     userSocketRef.current = state.user;
@@ -244,10 +248,16 @@ const AppProvider = ({ children }) => {
     totalUnreadMessagesSocketRef.current = state.totalUnreadMessages;
   }, [state.totalUnreadMessages]);
 
+  useEffect(() => {
+    chatIsBotSocketRef.current = state.chatIsBot;
+  }, [state.chatIsBot]);
+
+  useEffect(() => {
+    botMessagesSocketRef.current = state.botMessages;
+  }, [state.botMessages]);
+
   const createWebsocket = () => {
     try {
-      console.log(`${window.location.origin}`)
-
       const socket = io(`${window.location.origin}`, {
         path: "/socket",
         auth: {
@@ -279,6 +289,24 @@ const AppProvider = ({ children }) => {
         console.log("message filtered");
         console.log(message);
         dispatch({ type: HANDLE_CHANGE, payload: { name: "showFilteredPopup", value: true} });
+      });
+
+      socket.on("chat-bot-reply", ({ message, input }) => {
+        if (chatIsBotSocketRef) {
+          const botFormattedMessage = {
+            position: "left",
+            type: "text",
+            title: "Chat Bot",
+            text: message,
+          };
+          const formattedMessage = {
+            position: "right",
+            type: "text",
+            title: "You",
+            text: input,
+          }
+          dispatch({ type: HANDLE_CHANGE, payload: { name: "botMessages", value: [...botMessagesSocketRef.current, formattedMessage, botFormattedMessage]} });
+        }
       });
 
       const handleMessageReceived = ({ message, sender }) => {

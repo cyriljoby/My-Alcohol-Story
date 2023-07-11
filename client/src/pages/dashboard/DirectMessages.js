@@ -10,20 +10,20 @@ import {
   GiTortoise,
 } from "react-icons/gi";
 import {
-  GrFormNext,
-  GrFormPrevious,
-} from "react-icons/gr";
+  HiMenuAlt2,
+} from "react-icons/hi";
 import { RiUserFill } from "react-icons/ri";
-import { AiOutlineUser } from "react-icons/ai";
+import {AiOutlineRobot, AiOutlineUser} from "react-icons/ai";
 
 import ChatList from "../../components/ChatList";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useAppContext } from "../../context/appContext";
 import queryString from "query-string";
 import Popup from "reactjs-popup";
-import { TextField, Button } from "@mui/material";
+import {TextField, Button, Badge} from "@mui/material";
 import Wrapper from "../../assets/wrappers/BigSidebar";
+import {HANDLE_CHANGE} from "../../context/actions";
 
 const iconMap = {
   GiTortoise: <GiTortoise />,
@@ -46,13 +46,30 @@ const DirectMessages = () => {
     displayGreeting,
     showFilteredPopup,
     readChat,
+    chatIsBot,
+    botMessages
   } = useAppContext();
 
   const messagesEndRef = useRef(null);
 
   const [chatInput, setChatInput] = useState("");
 
-  const [showChatList, setShowChatList] = useState(false);
+  const [showChatList, setShowChatList] = useState(true);
+
+  const handleResize = () => {
+    if (window.innerWidth > 700) {
+      setShowChatList(false)
+    } else if (window.innerWidth <= 700 && displayGreeting) {
+      setShowChatList(true)
+    } else if (window.innerWidth <= 700 && currentChat) {
+      setShowChatList(false)
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize)
+    handleResize();
+  }, [])
 
   const location = useLocation();
 
@@ -175,6 +192,11 @@ const DirectMessages = () => {
       readChat({ chatRoomId: chat.chatRoomId });
 
       handleChange({
+        name: "chatIsBot",
+        value: false,
+      });
+
+      handleChange({
         name: "displayGreeting",
         value: false,
       });
@@ -185,7 +207,43 @@ const DirectMessages = () => {
     }
   };
 
+  const setChatToBot = () => {
+    changeChatCollapsed(false);
+
+    handleChange({
+      name: "displayGreeting",
+      value: false,
+    });
+
+    handleChange({
+      name: "chatIsBot",
+      value: true,
+    });
+
+    handleChange({
+      name: "currentMessages",
+      value: [],
+    })
+
+    handleChange({
+      name: "currentChat",
+      value: null,
+    });
+  }
+
   const sendMessage = () => {
+    if (chatIsBot && chatInput && chatInput.length > 0) {
+      const formattedMessage = {
+        position: "right",
+        type: "text",
+        title: "You",
+        text: chatInput,
+      };
+
+      socket.emit("chat-bot-query", {chatInput});
+      setChatInput("");
+    }
+
     if (currentChat === null || displayGreeting) {
       return;
     }
@@ -298,12 +356,6 @@ const DirectMessages = () => {
       <div
         className={!showChatList ? "chat-panel" : "chat-panel chat-panel-opened"}
       >
-        {/*Toggle button to show list */}
-        {!showChatList ? (
-          <Button onClick={() => changeChatCollapsed(true)} className="chat-collapse">
-            <GrFormNext size={25}/>
-          </Button>
-        ) : null}
         {currentChats.length === 0 ? (
           <div className="greeting-alt">
             <p className="greeting">
@@ -316,69 +368,111 @@ const DirectMessages = () => {
           currentChat={currentChat}
           changeChat={changeChat}
         />
+        <button
+          className="chatbot-row"
+          onClick={() => setChatToBot(true)}
+        >
+          <span className="chat-icon story-icon">
+            <AiOutlineRobot size={25} color={"black"} />
+          </span>
+          <div className="chat-info">
+            <h5 className="chat-name">Chatbot</h5>
+            <h6 className="chat-status">Personal chatbot</h6>
+          </div>
+        </button>
       </div>
       {!showChatList ? (
-        <div className="message-panel">
-          {displayGreeting ? (
-            <div className="greeting-div">
-              <h1 className="messaging-title">Direct Messages</h1>
-              <span className="greeting-icon">
-                <BiMessage />
-              </span>
-              <p className="greeting">
-                Start a more personal and direct conversation from a story or log!
-                Select an existing chat, or create a new one from a story or log.
-              </p>
-              {/* <p className="notice-greeting">
-                Note: Direct messages are filtered to reduce potentially harmful
-                messages. Please be respectful towards others.
-              </p> */}
+        <div className="main-chat-div">
+          {currentChat || chatIsBot ? (
+            <div className="chat-title">
+              {!showChatList ? (
+                <Button onClick={() => changeChatCollapsed(true)} className="chat-collapse">
+                  <HiMenuAlt2 size={25} color={"black"}/>
+                </Button>
+              ) : null}
+              {displayGreeting ? <></> : <>
+                {chatIsBot ? <>
+                  <span className="chat-icon story-icon">
+                    <AiOutlineRobot size={25} color={"black"} />
+                  </span>
+                  <div className="chat-title-info">
+                    <h5 className="chat-name">Chatbot</h5>
+                    <h6 className="chat-status">Personal chatbot</h6>
+                  </div>
+                </> : <>
+                  <Badge badgeContent={currentChat.unreadMessages} max={999} overlap="circular" color="error" className="chat-badge">
+                    <span className="chat-icon story-icon">{currentChat.image}</span>
+                  </Badge>
+                  <div className="chat-title-info">
+                    <h5 className="chat-name">{currentChat.draft ? (currentChat.alias + " [DRAFT]"): currentChat.alias}</h5>
+                    <h6 className="chat-status">{currentChat.latestMessage}</h6>
+                  </div>
+                </>}
+              </>}
             </div>
-          ) : (
-            <MessageList
-              className="message-list"
-              lockable={false}
-              toBottomHeight={"100%"}
-              dataSource={currentMessages}
-              referance={messagesEndRef}
-            />
-          )}
-
-          {displayGreeting ? (
-            <div></div>
-          ) : (
-            <div className="input-div">
-              <TextField
-                className="message-input"
-                hiddenLabel
-                value={chatInput}
-                onChange={changeInput}
-                autoComplete="off"
-                InputProps={{
-                  style: {
-                    backgroundColor: "transparent",
-                  },
-                  disableUnderline: true,
-                }}
-                color="success"
-                placeholder="Message..."
-                id="filled-basic"
-                size="small"
-                variant="filled"
-                error={showFilteredPopup}
-                helperText={showFilteredPopup ? "Text filtered" : null}
-              />
-              <button
-                className="message-button"
-                onClick={() => sendMessage()}
-                variant="contained"
-              >
-                <span className="message-icon">
-                  <FiSend />
+            ) : null}
+          <div className="message-panel">
+            {displayGreeting ? (
+              <div className="greeting-div">
+                <h1 className="messaging-title">Direct Messages</h1>
+                <span className="greeting-icon">
+                  <BiMessage />
                 </span>
-              </button>
-            </div>
-          )}
+                <p className="greeting">
+                  Start a more personal and direct conversation from a story or log!
+                  Select an existing chat, or create a new one from a story or log.
+                </p>
+                {/* <p className="notice-greeting">
+                  Note: Direct messages are filtered to reduce potentially harmful
+                  messages. Please be respectful towards others.
+                </p> */}
+              </div>
+            ) : (
+              <MessageList
+                className="message-list"
+                lockable={false}
+                toBottomHeight={"100%"}
+                dataSource={chatIsBot ? botMessages : currentMessages}
+                referance={messagesEndRef}
+              />
+            )}
+
+            {displayGreeting ? (
+              <div></div>
+            ) : (
+              <div className="input-div">
+                <TextField
+                  className="message-input"
+                  hiddenLabel
+                  value={chatInput}
+                  onChange={changeInput}
+                  autoComplete="off"
+                  InputProps={{
+                    style: {
+                      backgroundColor: "transparent",
+                    },
+                    disableUnderline: true,
+                  }}
+                  color="success"
+                  placeholder="Message..."
+                  id="filled-basic"
+                  size="small"
+                  variant="filled"
+                  error={showFilteredPopup}
+                  helperText={showFilteredPopup ? "Text filtered" : null}
+                />
+                <button
+                  className="message-button"
+                  onClick={() => sendMessage()}
+                  variant="contained"
+                >
+                  <span className="message-icon">
+                    <FiSend />
+                  </span>
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       ) : null}
     </div>

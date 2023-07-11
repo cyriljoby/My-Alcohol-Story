@@ -10,10 +10,9 @@ const links = [
   { id: 1, text: "feed", path: "/", icon: <IoHomeOutline /> },
   { id: 2, text: "dear sobriety", path: "daily-logs", icon: <TfiBook /> },
   { id: 3, text: "messages", path: "messages", icon: <BiMessage /> },
-  { id: 4, text: "personal chatbot", path: "chat-bot", icon: <AiFillAndroid /> },
-  { id: 5, text: "post", path: "add-story", icon: <BsPlusSquare /> },
-  { id: 6, text: "profile", path: "profile", icon: <RiUserFill /> },
-  { id: 7, text: "resources", path: "resources", icon: <IoCallOutline /> },
+  { id: 4, text: "post", path: "add-story", icon: <BsPlusSquare /> },
+  { id: 5, text: "profile", path: "profile", icon: <RiUserFill /> },
+  { id: 6, text: "resources", path: "resources", icon: <IoCallOutline /> },
 ];
 
 export default links;
