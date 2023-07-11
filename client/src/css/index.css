@@ -974,10 +974,6 @@ Team
     display: none;
   }
 
-  .chat-row {
-    justify-content: center;
-  }
-
   .chat-panel-opened {
     display: flex;
     width: 100% !important;
