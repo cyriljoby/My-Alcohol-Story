@@ -266,7 +266,7 @@ io.on("connection", async (socket) => {
         try {
           const onlineUsers = await Online.find({user: {$in: chat.users}})
           onlineUsers.forEach(user => {
-            io.to(user.socketId).emit('new-chat', {chat, users: [sendingUser, recipientUser]})
+            io.to(user.socketId).emit('new-chat', {chat, message, users: [sendingUser, recipientUser]})
           })
         } catch (error) {
           console.log(error)

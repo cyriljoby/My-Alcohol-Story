@@ -341,7 +341,7 @@ const AppProvider = ({ children }) => {
         dispatch({ type: HANDLE_CHANGE, payload: { name: "currentChats", value: updatedChats} });
       };
 
-      const handleNewChatReceived = ({ chat, users }) => {
+      const handleNewChatReceived = ({ chat, message, users }) => {
         const filteredUsers = users.filter((filterUser) => {
           return filterUser._id !== userSocketRef.current._id;
         });
@@ -356,6 +356,13 @@ const AppProvider = ({ children }) => {
           latestUpdate: chat.updatedAt,
         };
 
+        const formattedMessage = {
+          position: users[0]._id === userSocketRef.current._id ? "right" : "left",
+          type: "text",
+          title: users[0].alias,
+          text: message.content,
+        };
+
         const filteredChats = currentChatsSocketRef.current.filter(
           (filterChat) => filterChat.draft !== true
         );
@@ -367,6 +374,8 @@ const AppProvider = ({ children }) => {
         ) {
           formattedChat.unreadMessages = 0;
           dispatch({type: HANDLE_CHANGE, payload: {name: "currentChats", value: [formattedChat, ...filteredChats]}});
+          dispatch({type: HANDLE_CHANGE, payload: {name: "currentChat", value: formattedChat}});
+          dispatch({type: HANDLE_CHANGE, payload: {name: "currentMessages", value: [formattedMessage]}});
         } else if (currentChatSocketRef.current && currentChatSocketRef.current.draft) {
           formattedChat.unreadMessages = 1;
           dispatch({ type: HANDLE_CHANGE, payload: { name: "currentChats", value: [currentChatSocketRef.current, formattedChat, ...filteredChats]} });
