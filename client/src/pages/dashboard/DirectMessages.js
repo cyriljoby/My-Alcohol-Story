@@ -97,6 +97,11 @@ const DirectMessages = () => {
             });
 
             handleChange({
+              name: "chatIsBot",
+              value: false,
+            });
+
+            handleChange({
               name: "currentChat",
               value: existingChat,
             });
@@ -148,6 +153,11 @@ const DirectMessages = () => {
       handleChange({
         name: "currentChat",
         value: null,
+      });
+
+      handleChange({
+        name: "chatIsBot",
+        value: false,
       });
 
       handleChange({
