@@ -24,6 +24,7 @@ const AddStory = () => {
     log,
     day,
     createLog,
+    resource
   } = useAppContext();
   const Tab = styled.button`
     font-size: 20px;
@@ -51,12 +52,14 @@ const AddStory = () => {
   const icons = [<BsCardText />, <BsBook />];
 
   const [popupState, setPopupState] = useState(false);
+  const [resourceState, setResurceState] = useState(false);
   const [closeState, setCloseState] = useState(false);
   let triggers = ["murder", "kill", "shoot", "suicide"];
   const directcreateStory = (e) => {
     e.preventDefault();
     setCloseState(true);
     setPopupState(false);
+    setResurceState(true)
     const titlearea = document.getElementById("title");
     const storyarea = document.getElementById("story");
     if (!title || !story) {
@@ -78,6 +81,7 @@ const AddStory = () => {
     e.preventDefault();
     setCloseState(true);
     setPopupState(false);
+    setResurceState(false)
     const titlearea = document.getElementById("title");
     const storyarea = document.getElementById("story");
     storyarea.value = "";
@@ -87,6 +91,7 @@ const AddStory = () => {
   const closePop = () => {
     setPopupState(false);
     setCloseState(false);
+    setResurceState(false)
   };
   function RenderPopup() {
     setCloseState(false);
@@ -155,10 +160,59 @@ const AddStory = () => {
           )}
         </Popup>
       );
+    } 
+    console.log(resourceState)
+    if (resourceState &&resource!=''   ) {
+      // resource.split('(',')')
+      let start= resource.split('[')
+      let split=(start[1].split(']'))
+      split.unshift(start[0])
+      console.log(split)
+      return (
+        <Popup disableBackdropClick backdrop="static" open={true} modal nested>
+          {(close) => (
+            <div
+              className="modal"
+              style={{
+                maxWidth: "90vw",
+                background: "#ffffff",
+                padding: "2rem",
+              }}
+            >
+              <button
+                className="close"
+                onClick={() => {
+                  close();
+                  closePop();
+                }}
+                style={{ fontSize: "1.5rem" }}
+              >
+                &times;
+              </button>
+              {/* <h3 className="header"> Warning </h3> */}
+              <h3>Reccomended Resource</h3>
+              <div className="content">
+                {" "}
+                {split[0]}
+                {split[2]}
+                <button
+                  className="btn btn-block submit-btn"
+                  style={{ margin: "0.5rem 0" }}
+                >
+                  <a href={split[1]} target="_blank" style={{color:"white"}}>Go To Resource</a>
+                </button>
+
+              </div>
+            </div>
+          )}
+        </Popup>
+      );
     } else {
       return null;
     }
   }
+
+
   const handleSubmit = (e) => {
     let flag = false;
     e.preventDefault();
@@ -187,11 +241,14 @@ const AddStory = () => {
         createStory();
         storyarea.value = "";
         titlearea.value = "";
+        setResurceState(true)
       }
       if (closeState) {
         storyarea.value = "";
         titlearea.value = "";
       }
+  
+      
     } else {
       const logarea = document.getElementById("log");
       const dayarea = document.getElementById("day");
@@ -212,6 +269,7 @@ const AddStory = () => {
         createLog();
         logarea.value = "";
         dayarea.value = "";
+        setResurceState(true)
       }
       if (closeState) {
         logarea.value = "";

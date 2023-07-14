@@ -27,6 +27,7 @@ const register = async (req, res) => {
       email: user.email,
       alias: user.alias,
       image: user.image,  
+      popup:false,
       token  },
     token,
   })
@@ -73,4 +74,13 @@ const updateUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ user, token })
 }
 
-export { register, login, updateUser }
+const closePopup = async (req, res) => {
+  console.log(req.body.userId)
+  const user = await User.findOne({ _id: req.body.userId })
+  user.popup = true
+  await user.save()
+  console.log(user)
+  res.status(StatusCodes.OK).json({ user })
+}
+
+export { register, login, updateUser, closePopup }

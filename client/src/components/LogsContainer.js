@@ -30,7 +30,7 @@ const LogsContainer = ({ profile, save }) => {
     users,
     getReplies,
     createReply,
-    replies,
+    user,
     getSubReplies,
     subreplies,
     addSave,
@@ -47,17 +47,12 @@ const LogsContainer = ({ profile, save }) => {
 
     // eslint-disable-next-line
   }, []);
-  const user = localStorage
-    .getItem("user")
-    .split(",")[0]
-    .replace('{"_id":', "")
-    .replace(/['"]+/g, "");
+  const userId = user._id
   let user_info = [];
-  let subreplyIds = [];
-  var targetRenderId;
-  let user_id = JSON.parse(localStorage.getItem("_id"));
+  //let subreplyIds = [];
+  //var targetRenderId;
   let opens = [];
-  let openIds = [];
+  //let openIds = [];
   let saved = [];
   if (!logs) {
     return <Loading center={true} />;
@@ -110,10 +105,10 @@ const LogsContainer = ({ profile, save }) => {
     let iconName = "";
     let icon = "";
     const [replyState, setreplyState] = useState(false);
-    const replyFunc = (e) => {
-      targetBoxId = e.currentTarget.id;
-      setreplyState(!replyState);
-    };
+    // const replyFunc = (e) => {
+    //   targetBoxId = e.currentTarget.id;
+    //   setreplyState(!replyState);
+    // };
 
     const navigate = useNavigate();
 
@@ -178,7 +173,7 @@ const LogsContainer = ({ profile, save }) => {
     let date = day[0];
     let year = day[2];
     return (
-      <div>
+      <div style={{ paddingBottom: "1rem" }}>
         <div className="story-header">
           <div className="user-info">
             <div className="story-icon">
@@ -193,10 +188,10 @@ const LogsContainer = ({ profile, save }) => {
             </p>
           </div>
           <div className="edit-btns">
-            <button className="btn open-reply" onClick={replyFunc}>
+            {/* <button className="btn open-reply" onClick={replyFunc}>
               <BiReply />
-            </button>
-            {log.createdBy !== user_id ? (
+            </button> */}
+            {log.createdBy !== userId ? (
               <button
                 className="btn start-chat"
                 onClick={() => chatFunc(log.createdBy, alias, iconName)}
@@ -281,164 +276,7 @@ const LogsContainer = ({ profile, save }) => {
     );
   }
 
-  let opened = false;
-  let counts = [];
-  function RenderButtton({ log, counts }) {
-    subreplyIds = [];
-    counts = [];
-    const [showState, setshowState] = useState(() => {
-      if (sessionStorage.getItem(log._id) === "open") {
-        return true;
-      } else {
-        return false;
-      }
-    });
 
-    let props_list = [];
-    const showReplies = (e) => {
-      targetRenderId = e.currentTarget.id;
-      opened = false;
-      setshowState(!showState);
-      if (showState) {
-        sessionStorage.setItem(log._id, "close");
-      } else {
-        sessionStorage.setItem(log._id, "open");
-      }
-      if (props_list.length != 0) {
-        {
-          props_list.map((props) => {
-            sessionStorage.setItem(props._id, "close");
-          });
-        }
-      }
-    };
-    subreplies?.map((subreply, index) => {
-      subreplyIds.push(subreply["replyId"]);
-    });
-    replies?.map((reply) => {
-      let subcount = subreplyIds.filter((x) => x == reply["_id"]).length;
-      for (let i = 0; i < subcount; i++) {
-        counts.push(reply["storyId"]);
-      }
-      counts.push(reply["storyId"]);
-    });
-
-    let count = counts.filter((x) => x == log._id).length;
-    let alias = "";
-    let icon = "";
-
-    if (showState) {
-      {
-        replies?.map((reply) => {
-          let subList = [];
-          let content = "";
-          let subalias = "";
-          let subicon = "";
-          let aliasparent = "";
-
-          if (reply["storyId"] === log._id) {
-            for (let i = 0; i < user_info.length; i++) {
-              if (reply.createdBy === user_info[i].id) {
-                alias = user_info[i].alias;
-                icon = user_info[i].icon;
-              } else {
-                continue;
-              }
-              if (reply["createdBy"] === user_id.replace(/['"]+/g, "")) {
-                del = true;
-              } else {
-                del = false;
-              }
-            }
-            subreplies?.map((sub) => {
-              if (reply["_id"] == sub["replyId"]) {
-                content = sub["subreply"];
-
-                for (let i = 0; i < user_info.length; i++) {
-                  if (sub["createdBy"] === user_info[i].id) {
-                    subalias = user_info[i].alias;
-                    subicon = user_info[i].icon;
-                  }
-                  if (sub["createdByReplyId"] === user_info[i].id) {
-                    aliasparent = user_info[i].alias;
-                  }
-                }
-                let subCreatedBy = sub["createdBy"];
-                let subId = sub["_id"];
-                subList.push({
-                  content: content,
-                  subalias: subalias,
-                  subicon: subicon,
-                  aliasparent: aliasparent,
-                  subCreatedBy: subCreatedBy,
-                  subId: subId,
-                });
-              }
-            });
-            let props = {
-              _id: reply["_id"],
-              createdBy: reply["createdBy"],
-              reply: reply["reply"],
-              createdAt: reply["createdAt"],
-              icon: icon,
-              alias: alias,
-              del: del,
-              sub: subList,
-              opens: opens,
-            };
-            props_list.push(props);
-          }
-        });
-      }
-      for (let i = -1; i++, i < openIds.length; ) {
-        if (openIds[i] == log._id) {
-          openIds.splice(i, 1);
-        }
-      }
-      let multiple = count > 0;
-      return (
-        <div>
-          <div>
-            <button
-              id={"show" + log._id}
-              onClick={showReplies}
-              className="btn show-replies"
-            >
-              <span className={multiple ? "num-comments" : "num-alt"}>
-                {count}
-              </span>
-              <BsChevronUp />
-            </button>
-          </div>
-          <div>
-            {multiple ? (
-              props_list.map((props) => {
-                return <ReplyTemplate {...props} />;
-              })
-            ) : (
-              <h1 style={{ paddingBottom: "2rem" }}>no comments</h1>
-            )}
-          </div>
-        </div>
-      );
-    } else {
-      let multiple = count > 0;
-      return (
-        <div>
-          <button
-            id={"show" + log._id}
-            onClick={showReplies}
-            className="btn show-replies"
-          >
-            <span className={multiple ? "num-comments" : "num-alt"}>
-              {count}
-            </span>
-            <BsChevronDown />
-          </button>
-        </div>
-      );
-    }
-  }
   let profilecount = 0;
   if (save) {
     return saves.map((save) => {
@@ -448,12 +286,6 @@ const LogsContainer = ({ profile, save }) => {
             <Wrapper>
               <div key={log._id} className="story">
                 <RenderReplyBox id={"box" + log._id} log={log} />
-
-                <RenderButtton
-                  id={"replies" + log._id}
-                  log={log}
-                  counts={counts}
-                />
               </div>
             </Wrapper>
           );
@@ -465,7 +297,7 @@ const LogsContainer = ({ profile, save }) => {
       <div>
         {logs?.map((log) => {
           if (profile) {
-            if (log.createdBy === user) {
+            if (log.createdBy === userId) {
               profilecount += 1;
               return (
                 <Wrapper>
@@ -475,11 +307,6 @@ const LogsContainer = ({ profile, save }) => {
                     style={{ paddingBottom: "0" }}
                   >
                     <RenderReplyBox id={"box" + log._id} log={log} />
-                    <RenderButtton
-                      id={"replies" + log._id}
-                      log={log}
-                      counts={counts}
-                    />
                   </div>
                 </Wrapper>
               );
@@ -493,11 +320,7 @@ const LogsContainer = ({ profile, save }) => {
                   style={{ paddingBottom: "0" }}
                 >
                   <RenderReplyBox id={"box" + log._id} log={log} />
-                  <RenderButtton
-                    id={"replies" + log._id}
-                    log={log}
-                    counts={counts}
-                  />
+
                 </div>
               </Wrapper>
             );

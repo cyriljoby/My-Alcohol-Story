@@ -56,6 +56,7 @@ const StoryContainer = ({ profile, save }) => {
     deleteSave,
     setEditJob,
     deleteJob,
+    user
   } = useAppContext();
   useEffect(() => {
     getUsers();
@@ -70,14 +71,10 @@ const StoryContainer = ({ profile, save }) => {
     return <Loading center={true} />;
   }
   let user_info = [];
-  const user = localStorage
-    .getItem("user")
-    .split(",")[0]
-    .replace('{"_id":', "")
-    .replace(/['"]+/g, "");
+  const userId=user._id
   let user_id = JSON.parse(localStorage.getItem("_id"));
   let replyValue = "";
-  let arrow = <BsChevronDown />;
+  //let arrow = <BsChevronDown />;
   let saved = [];
   saves.map((save) => {
     saved.push(save.savedId);
@@ -106,7 +103,7 @@ const StoryContainer = ({ profile, save }) => {
   function None() {
     let count = 0;
     stories?.map((story) => {
-      if (story.createdBy === user) {
+      if (story.createdBy === userId) {
         count += 1;
       }
     });
@@ -158,8 +155,6 @@ const StoryContainer = ({ profile, save }) => {
       if (job["job"].createdBy === user_info[i].id) {
         alias = user_info[i].alias;
         iconName = user_info[i].icon;
-      } else {
-        continue;
       }
     }
     if (iconName === "GiTortoise") {
@@ -459,7 +454,7 @@ const StoryContainer = ({ profile, save }) => {
         <div>
           {stories?.map((job) => {
             if (profile) {
-              if (job.createdBy == user) {
+              if (job.createdBy == userId) {
                 let date = new moment.utc(job.createdAt)
                   .local()
                   .startOf("seconds")

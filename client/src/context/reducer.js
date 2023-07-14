@@ -29,6 +29,7 @@ import {
   CLEAR_FILTERS,
   CHANGE_PAGE,
   GET_USERS_SUCCESS,
+  GET_RESOURCE_SUCCESS,
   GET_REPLIES_SUCCESS,
   GET_SUBREPLIES_SUCCESS,
   CREATE_LOG_SUCCESS,
@@ -36,7 +37,8 @@ import {
   SET_EDIT_LOG,
   CREATE_WEBSOCKET,
   GET_CURRENT_MESSAGES_SUCCESS,
-  GET_CHATS_SUCCESS
+  GET_CHATS_SUCCESS,
+  POPUP_SUCESS
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -107,6 +109,7 @@ const reducer = (state, action) => {
     return { ...state, isLoading: true };
   }
   if (action.type === UPDATE_USER_SUCCESS) {
+    console.log(action.payload.user)
     return {
       ...state,
       isLoading: false,
@@ -117,6 +120,16 @@ const reducer = (state, action) => {
       alertText: "User Profile Updated!",
     };
   }
+
+  if (action.type === POPUP_SUCESS) {
+    console.log(action.payload.newUser)
+    return {
+      ...state,
+      isLoading: false,
+      user: action.payload.newUser,
+    };
+  }
+
   if (action.type === UPDATE_USER_ERROR) {
     return {
       ...state,
@@ -215,6 +228,14 @@ const reducer = (state, action) => {
       users: action.payload.users,
       totalStories: action.payload.totalStories,
       numOfPages: action.payload.numOfPages,
+    };
+  }
+
+  if (action.type === GET_RESOURCE_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      resource: action.payload.resource
     };
   }
   if (action.type === GET_REPLIES_SUCCESS) {

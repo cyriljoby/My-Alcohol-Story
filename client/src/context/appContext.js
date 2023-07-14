@@ -4,6 +4,7 @@ import reducer from "./reducer";
 import axios from "axios";
 import {
   GET_USERS_SUCCESS,
+  GET_RESOURCE_SUCCESS,
   DISPLAY_ALERT,
   MAX_ALERT,
   CLEAR_ALERT,
@@ -38,6 +39,7 @@ import {
   CREATE_LOG_SUCCESS,
   SET_EDIT_LOG,
   EDIT_LOG_SUCCESS,
+  POPUP_SUCESS,
   CREATE_WEBSOCKET,
   GET_CURRENT_MESSAGES_SUCCESS,
   GET_CHATS_SUCCESS,
@@ -80,6 +82,7 @@ const initialState = {
   day:"",
   log:"",
   saves:[],
+  resource:"",
   socket: null,
   currentMessages: [],
   currentChat: null,
@@ -210,11 +213,6 @@ const AppProvider = ({ children }) => {
     removeUserFromLocalStorage();
   };
   const updateUser = async (currentUser) => {
-    let userId=localStorage
-    .getItem("user")
-    .split(",")[0]
-    .replace('{"_id":', "")
-    .replace(/['"]+/g, "");
     dispatch({ type: UPDATE_USER_BEGIN });
     try {
       const { data } = await authFetch.patch("/auth/updateUser", currentUser);
@@ -580,14 +578,18 @@ const AppProvider = ({ children }) => {
   const createStory = async () => {
     const alias = localStorage.getItem("alias").slice(1, -1);
     const image = localStorage.getItem("image").slice(1, -1);
-    const createdBy = localStorage
-      .getItem("user")
-      .split(",")[0]
-      .replace('{"_id":', "")
-      .replace(/['"]+/g, "");
+    const {user} =state
+    const createdBy = user._id
     
     
     try {
+      let resource=''
+    dispatch({
+      type: GET_RESOURCE_SUCCESS,
+      payload: {
+        resource,
+      },
+    });
       const { title, story } = state;
       await authFetch.post("/stories", {
         title,
@@ -597,6 +599,7 @@ const AppProvider = ({ children }) => {
       });
       dispatch({ type: CREATE_STORY_SUCCESS });
       dispatch({ type: CLEAR_VALUES });
+      findResource(story)
     } catch (error) {
       if (error.response.status === 401) return;
       dispatch({
@@ -618,11 +621,8 @@ const AppProvider = ({ children }) => {
     const {
       day,
       log } = state;
-    const createdBy = localStorage
-      .getItem("user")
-      .split(",")[0]
-      .replace('{"_id":', "")
-      .replace(/['"]+/g, "");
+      const {user} =state
+    const createdBy = user._id
     dispatch({ type: CREATE_STORY_BEGIN });
     if (isNaN(day)){
       dispatch({
@@ -632,11 +632,21 @@ const AppProvider = ({ children }) => {
     }
     else{
     try {
+      let resource=''
+      dispatch({
+        type: GET_RESOURCE_SUCCESS,
+        payload: {
+          resource,
+        },
+      });
       await authFetch.post("/stories/log", {
         day,
         log,
         createdBy
       });
+      if (day==1 || day%10===0){
+      findResource(log)}
+
       dispatch({ type: CREATE_LOG_SUCCESS });
       dispatch({ type: CLEAR_VALUES });
     } catch (error) {
@@ -653,11 +663,9 @@ const AppProvider = ({ children }) => {
   };
 
   const createReply = async (storyId, reply) => {
-    const createdBy = localStorage
-      .getItem("user")
-      .split(",")[0]
-      .replace('{"_id":', "")
-      .replace(/['"]+/g, "");
+    const {user} = state
+    const createdBy = user._id
+    console.log(user)
     dispatch({ type: CREATE_STORY_BEGIN });
     try {
       await authFetch.post("/reply", {
@@ -672,11 +680,9 @@ const AppProvider = ({ children }) => {
   };
 
   const addSave = async (savedId) => {
-    const createdBy = localStorage
-      .getItem("user")
-      .split(",")[0]
-      .replace('{"_id":', "")
-      .replace(/['"]+/g, "");
+
+    const {user}= state
+    const createdBy = user._id
     dispatch({ type: CREATE_STORY_BEGIN });
     try {
       await authFetch.post("/stories/save", {
@@ -691,11 +697,8 @@ const AppProvider = ({ children }) => {
   };
 
   const createSubReply = async (subreply, replyId, createdByReplyId) => {
-    const createdBy = localStorage
-      .getItem("user")
-      .split(",")[0]
-      .replace('{"_id":', "")
-      .replace(/['"]+/g, "");
+    const {user}=state
+    const createdBy = user._id
     dispatch({ type: CREATE_STORY_BEGIN });
     try {
       await authFetch.post("/reply/sub", {
@@ -774,11 +777,8 @@ const AppProvider = ({ children }) => {
 
   const getSaves = async () => {
     let url = `/stories/getSave`;
-    const createdBy = localStorage
-      .getItem("user")
-      .split(",")[0]
-      .replace('{"_id":', "")
-      .replace(/['"]+/g, "");
+    const {user}=state
+    const createdBy = user._id
 
     dispatch({ type: GET_STORIES_BEGIN });
     try {
@@ -847,6 +847,32 @@ const AppProvider = ({ children }) => {
       logoutUser();
     }
   };
+
+  const findResource = async (prompt) => {
+    let resource=''
+    dispatch({
+      type: GET_RESOURCE_SUCCESS,
+      payload: {
+        resource,
+      },
+    });
+    try {
+      const { data } = await axios.post(
+        `/find-resource`,
+        {prompt}
+      );
+      resource=data.data.choices[0].text
+      console.log(resource)
+      dispatch({
+        type: GET_RESOURCE_SUCCESS,
+        payload: {
+          resource,
+        },
+      });
+    } catch (error) {
+      // logoutUser();
+    }
+  };
   const setEditJob = (id) => {
     dispatch({ type: SET_EDIT_STORY, payload: { id } });
   };
@@ -906,6 +932,28 @@ const AppProvider = ({ children }) => {
     }
 
     
+  };
+  const closePopup = async () => {
+    const {user}=state
+    try {
+
+      let userId=user._id
+      console.log(userId)
+      const {data} = await authFetch.post(`/auth/popup`,{userId});
+      console.log(data.user)
+      let newUser=data.user
+      dispatch({
+        type: POPUP_SUCESS,
+        payload: {
+          newUser,
+        },
+      });
+      localStorage.setItem("user",JSON.stringify(newUser))
+    } catch (error) {
+      logoutUser();
+    }
+
+
   };
 
   const deleteSave = async (id) => {
@@ -1011,6 +1059,8 @@ const AppProvider = ({ children }) => {
         addSave,
         getSaves,
         deleteSave,
+        findResource,
+        closePopup,
         createWebsocket,
         getCurrentMessages,
         getChatRooms,

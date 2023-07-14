@@ -21,14 +21,11 @@ import MySaves from "../../components/MySaves";
 import { BsCardText, BsBook, BsBookmark } from "react-icons/bs";
 
 const Profile = () => {
-  let userId = localStorage
-    .getItem("user")
-    .split(",")[0]
-    .replace('{"_id":', "")
-    .replace(/['"]+/g, "");
+
 
   const { user, showAlert, displayAlert, updateUser, isLoading } =
     useAppContext();
+  let userId = user._id
   const options = [
     { value: "RiUserFill", label: "User Icon" },
     { value: "GiElephant", label: "Elephant" },
