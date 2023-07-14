@@ -1,5 +1,5 @@
 import links from "../utils/links";
-import { NavLink } from "react-router-dom";
+import {NavLink, useLocation } from "react-router-dom";
 import { useAppContext } from "../context/appContext";
 import {
   GiElephant,
@@ -16,6 +16,9 @@ const NavLinks = ({ toggleSidebar }) => {
     user,
     totalUnreadMessages,
   } = useAppContext();
+
+  let location = useLocation();
+
   let image = user.image;
     if (image === "GiTortoise") {
       image = <GiTortoise />;
@@ -54,9 +57,12 @@ const NavLinks = ({ toggleSidebar }) => {
             to={path}
             key={id}
             onClick={toggleSidebar}
-            className={({ isActive }) =>
-              isActive ? "nav-link active" : "nav-link"
-            }
+            className={({ isActive }) => {
+              const hasQuery = path.includes("?");
+              console.log(location.pathname + location.search)
+              if (hasQuery) return `nav-link ${(location.pathname + location.search) === `${path}` ? "active":""}`;
+              return `nav-link ${(location.pathname + location.search) === `${path}` ? "active":""}`;
+            }}
             end
           >
             {path === "messages" && (

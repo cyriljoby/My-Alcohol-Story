@@ -310,15 +310,33 @@ io.on("connection", async (socket) => {
 
   socket.on("chat-bot-query", async (data) => {
     try {
-      const { chatInput } = data
+      const { queryHistory, query } = data
 
-      if (!chatInput || chatInput.length < 1) {
+      if (!query || query.length < 1) {
         socket.emit('error', {message: 'Invalid request'})
       }
 
+      const cleanedHistory = queryHistory.map((message) => {
+        if (message.role !== 'system') {
+          return message
+        }
+      })
+
       const chatCompletion = await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
-        messages: [{role: "user", content: chatInput}],
+        messages: [
+          {role: "system", content: "You are a chatbot tasked with providing assistane to teenagers that may be " +
+              "dealing with alcohol addiction or other forms of substance abuse. Please assist this user carefully and " +
+              "be sensitive. Provide accurate and reliable resources and information that may be helpful to them. " +
+              "If you are unable to assist them, please refer them to a human specialist. Do not engage in any " +
+              "conversation that may be harmful to the user."},
+          {role: "assistant", content: "Hey there! I'm your friendly chatbot here to lend a helping hand when" +
+            "it comes to alcohol-related topics. Whether you have questions about alcohol addiction," +
+            "or just need someone to talk to, I'm here for you. Feel free to ask me anything, and" +
+            "let's start the conversation!"},
+          ...cleanedHistory,
+          {role: "user", content: query},
+        ],
       });
 
       const botReply = chatCompletion.data.choices[0].message?.content
@@ -327,7 +345,7 @@ io.on("connection", async (socket) => {
         socket.emit('error', {message: 'Unable to query chat bot'})
       }
 
-      socket.emit('chat-bot-reply', {message: botReply, input: chatInput})
+      socket.emit('chat-bot-reply', {message: botReply, input: query})
     } catch (error) {
       console.log(error)
       socket.emit('error', {message: 'Unable to query chat bot'})

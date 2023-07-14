@@ -88,7 +88,24 @@ const initialState = {
   totalUnreadMessages: 0,
   showFilteredPopup: false,
   chatIsBot: false,
-  botMessages: [],
+  botMessages: [
+    {
+      position: "left",
+      type: "text",
+      title: "Chat Bot",
+      text: "Hey there! I'm your friendly chatbot here to lend a helping hand when" +
+            "it comes to alcohol-related topics. Whether you have questions about alcohol addiction," +
+            "or just need someone to talk to, I'm here for you. Feel free to ask me anything, and" +
+            "let's start the conversation!",
+    }
+  ],
+  rawBotMessages: [
+    {role: "assistant", content: "Hey there! I'm your friendly chatbot here to lend a helping hand when" +
+            "it comes to alcohol-related topics. Whether you have questions about alcohol addiction," +
+            "or just need someone to talk to, I'm here for you. Feel free to ask me anything, and" +
+            "let's start the conversation!"
+    },
+  ],
 };
 
 const iconMap = {
@@ -227,6 +244,7 @@ const AppProvider = ({ children }) => {
   const totalUnreadMessagesSocketRef = useRef(state.totalUnreadMessages);
   const chatIsBotSocketRef = useRef(state.chatIsBot);
   const botMessagesSocketRef = useRef(state.botMessages);
+  const rawBotMessagesSocketRef = useRef(state.rawBotMessages);
 
   useEffect(() => {
     userSocketRef.current = state.user;
@@ -255,6 +273,10 @@ const AppProvider = ({ children }) => {
   useEffect(() => {
     botMessagesSocketRef.current = state.botMessages;
   }, [state.botMessages]);
+
+  useEffect(() => {
+    rawBotMessagesSocketRef.current = state.rawBotMessages;
+  }, [state.rawBotMessages]);
 
   const createWebsocket = () => {
     try {
@@ -305,7 +327,12 @@ const AppProvider = ({ children }) => {
             title: "You",
             text: input,
           }
+
+          const rawBotMessage = {role: "assistant", content: message};
+          const rawUserMessage = {role: "user", content: input};
+
           dispatch({ type: HANDLE_CHANGE, payload: { name: "botMessages", value: [...botMessagesSocketRef.current, formattedMessage, botFormattedMessage]} });
+          dispatch({ type: HANDLE_CHANGE, payload: { name: "rawBotMessages", value: [...rawBotMessagesSocketRef.current, rawUserMessage, rawBotMessage]} });
         }
       });
 

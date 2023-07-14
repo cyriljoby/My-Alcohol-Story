@@ -8,11 +8,12 @@ import { AiFillAndroid } from "react-icons/ai";
 
 const links = [
   { id: 1, text: "feed", path: "/", icon: <IoHomeOutline /> },
-  { id: 2, text: "dear sobriety", path: "daily-logs", icon: <TfiBook /> },
-  { id: 3, text: "messages", path: "messages", icon: <BiMessage /> },
-  { id: 4, text: "post", path: "add-story", icon: <BsPlusSquare /> },
-  { id: 5, text: "profile", path: "profile", icon: <RiUserFill /> },
-  { id: 6, text: "resources", path: "resources", icon: <IoCallOutline /> },
+  { id: 2, text: "dear sobriety", path: "/daily-logs", icon: <TfiBook /> },
+  { id: 3, text: "messages", path: "/messages", icon: <BiMessage /> },
+  { id: 4, text: "post", path: "/add-story", icon: <BsPlusSquare /> },
+  { id: 5, text: "profile", path: "/profile", icon: <RiUserFill /> },
+  { id: 6, text: "resources", path: "/resources", icon: <IoCallOutline /> },
+  { id: 7, text: "Personal Chatbot", path: "/messages?bot=true", icon: <AiFillAndroid /> },
 ];
 
 export default links;

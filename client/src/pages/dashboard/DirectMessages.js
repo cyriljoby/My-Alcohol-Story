@@ -47,7 +47,8 @@ const DirectMessages = () => {
     showFilteredPopup,
     readChat,
     chatIsBot,
-    botMessages
+    botMessages,
+    rawBotMessages,
   } = useAppContext();
 
   const messagesEndRef = useRef(null);
@@ -80,7 +81,9 @@ const DirectMessages = () => {
   useEffect(() => {
     if (location.search) {
       const parsed = queryString.parse(location.search);
-      if (parsed.recipient && parsed.alias && parsed.icon) {
+      if (parsed.bot === "true") {
+        setChatToBot();
+      } else if (parsed.recipient && parsed.alias && parsed.icon) {
         if (currentChats.length > 0) {
           const nonDraftChats = currentChats.filter(
             (chat) => chat.draft !== true
@@ -243,14 +246,7 @@ const DirectMessages = () => {
 
   const sendMessage = () => {
     if (chatIsBot && chatInput && chatInput.length > 0) {
-      const formattedMessage = {
-        position: "right",
-        type: "text",
-        title: "You",
-        text: chatInput,
-      };
-
-      socket.emit("chat-bot-query", {chatInput});
+      socket.emit("chat-bot-query", {queryHistory: rawBotMessages, query: chatInput});
       setChatInput("");
     }
 
@@ -379,7 +375,7 @@ const DirectMessages = () => {
           changeChat={changeChat}
         />
         <button
-          className="chatbot-row"
+          className={`chatbot-row ${chatIsBot ? "chat-selected" : ""}`}
           onClick={() => setChatToBot(true)}
         >
           <span className="chat-icon story-icon">
