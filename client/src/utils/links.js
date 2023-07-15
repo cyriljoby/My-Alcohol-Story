@@ -4,7 +4,8 @@ import { IoHomeOutline } from "react-icons/io5";
 import { IoCallOutline } from "react-icons/io5";
 import { TfiBook } from "react-icons/tfi";
 import { BiMessage } from "react-icons/bi";
-import { AiFillAndroid } from "react-icons/ai";
+import { AiOutlineRobot } from "react-icons/ai";
+import React from "react";
 
 const links = [
   { id: 1, text: "feed", path: "/", icon: <IoHomeOutline /> },
@@ -13,7 +14,7 @@ const links = [
   { id: 4, text: "post", path: "/add-story", icon: <BsPlusSquare /> },
   { id: 5, text: "profile", path: "/profile", icon: <RiUserFill /> },
   { id: 6, text: "resources", path: "/resources", icon: <IoCallOutline /> },
-  { id: 7, text: "Personal Chatbot", path: "/messages?bot=true", icon: <AiFillAndroid /> },
+  { id: 7, text: "Personal Chatbot", path: "/messages?bot=true", icon: <AiOutlineRobot /> },
 ];
 
 export default links;
