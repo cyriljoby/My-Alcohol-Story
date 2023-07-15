@@ -81,6 +81,7 @@ const DirectMessages = () => {
   useEffect(() => {
     if (location.search) {
       const parsed = queryString.parse(location.search);
+
       if (parsed.bot === "true") {
         setChatToBot();
       } else if (parsed.recipient && parsed.alias && parsed.icon) {
@@ -138,6 +139,27 @@ const DirectMessages = () => {
           name: "currentChats",
           value: [chatDraft, ...cleanedChats],
         });
+      } else {
+        if (currentChats.length > 0) {
+          const nonDraftChats = currentChats.filter(
+            (chat) => chat.draft !== true
+          );
+
+          handleChange({
+            name: "currentChats",
+            value: nonDraftChats,
+          });
+
+          handleChange({
+            name: "displayGreeting",
+            value: true,
+          });
+
+          handleChange({
+            name: "chatIsBot",
+            value: false,
+          });
+        }
       }
     } else {
       if (currentChats.length > 0) {
@@ -149,6 +171,17 @@ const DirectMessages = () => {
           name: "currentChats",
           value: nonDraftChats,
         });
+
+        handleChange({
+          name: "displayGreeting",
+          value: true,
+        });
+
+        handleChange({
+          name: "chatIsBot",
+          value: false,
+        });
+
       }
     }
 
@@ -173,7 +206,7 @@ const DirectMessages = () => {
         value: true,
       });
     };
-  }, []);
+  }, [location.search]);
 
   useEffect(() => {
     if (currentChat) {

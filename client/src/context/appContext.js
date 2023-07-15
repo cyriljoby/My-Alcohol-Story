@@ -522,7 +522,6 @@ const AppProvider = ({ children }) => {
         let totalUnreadMessages = 0;
         const formattedChats = [...chatToUnreads].map(({chat, unreadMessages}) => {
           totalUnreadMessages += unreadMessages;
-          console.log(JSON.parse(user)._id)
           const filteredUsers = chat.users.filter(
             (filterUser) => filterUser._id !== JSON.parse(user)._id
           );
@@ -862,7 +861,6 @@ const AppProvider = ({ children }) => {
         {prompt}
       );
       resource=data.data.choices[0].text
-      console.log(resource)
       dispatch({
         type: GET_RESOURCE_SUCCESS,
         payload: {
@@ -938,9 +936,7 @@ const AppProvider = ({ children }) => {
     try {
 
       let userId=user._id
-      console.log(userId)
       const {data} = await authFetch.post(`/auth/popup`,{userId});
-      console.log(data.user)
       let newUser=data.user
       dispatch({
         type: POPUP_SUCESS,

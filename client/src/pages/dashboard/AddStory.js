@@ -160,14 +160,12 @@ const AddStory = () => {
           )}
         </Popup>
       );
-    } 
-    console.log(resourceState)
+    }
     if (resourceState &&resource!=''   ) {
       // resource.split('(',')')
       let start= resource.split('[')
       let split=(start[1].split(']'))
       split.unshift(start[0])
-      console.log(split)
       return (
         <Popup disableBackdropClick backdrop="static" open={true} modal nested>
           {(close) => (

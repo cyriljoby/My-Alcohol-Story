@@ -909,6 +909,10 @@ Team
 .chat-title-info {
   margin: 5px;
 }
+.chatbot-nav-info {
+  margin: 5px;
+  color: black;
+}
 
 .chat-name {
   margin: 1px;
@@ -936,6 +940,31 @@ Team
   background-color: white;
   border-width: 0;
   margin: 5px;
+}
+.content {
+  height: 100%;
+}
+.chatbot-nav-outer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  justify-items: center;
+  margin-top: 100px;
+}
+.chatbot-nav-outer:hover {
+  background-color: var(--grey-50);
+}
+
+.chatbot-nav-inner {
+  display: flex;
+  flex-direction: row;
+  margin-right: 20px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.chatbot-nav:hover {
+  background-color: var(--grey-50);
 }
 .message-panel {
   display: flex;

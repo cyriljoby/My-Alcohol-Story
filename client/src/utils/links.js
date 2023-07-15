@@ -14,7 +14,6 @@ const links = [
   { id: 4, text: "post", path: "/add-story", icon: <BsPlusSquare /> },
   { id: 5, text: "profile", path: "/profile", icon: <RiUserFill /> },
   { id: 6, text: "resources", path: "/resources", icon: <IoCallOutline /> },
-  { id: 7, text: "Personal Chatbot", path: "/messages?bot=true", icon: <AiOutlineRobot /> },
 ];
 
 export default links;

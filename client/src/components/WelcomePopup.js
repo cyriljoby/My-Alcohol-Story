@@ -6,7 +6,6 @@ import Popup from "reactjs-popup";
 
 const WelcomePopup = () => {
     const { user, closePopup } = useAppContext()
-    console.log(user)
     if (user.popup){
         return null
     }

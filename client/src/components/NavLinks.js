@@ -10,11 +10,14 @@ import {
 } from "react-icons/gi";
 import { RiUserFill } from "react-icons/ri";
 import {Badge} from "@mui/material";
+import {AiOutlineRobot} from "react-icons/ai";
+import React from "react";
 
 const NavLinks = ({ toggleSidebar }) => {
   const {
     user,
     totalUnreadMessages,
+    chatIsBot,
   } = useAppContext();
 
   let location = useLocation();
@@ -59,7 +62,6 @@ const NavLinks = ({ toggleSidebar }) => {
             onClick={toggleSidebar}
             className={({ isActive }) => {
               const hasQuery = path.includes("?");
-              console.log(location.pathname + location.search)
               if (hasQuery) return `nav-link ${(location.pathname + location.search) === `${path}` ? "active":""}`;
               return `nav-link ${(location.pathname + location.search) === `${path}` ? "active":""}`;
             }}
@@ -79,6 +81,20 @@ const NavLinks = ({ toggleSidebar }) => {
           </NavLink>
         );
       })}
+      <NavLink
+        className="chatbot-nav-outer"
+        to={"/messages?bot=true"}
+      >
+        <div className="chatbot-nav-inner">
+          <span className="chat-icon story-icon">
+            <AiOutlineRobot size={25} color={"black"} />
+          </span>
+          <div className="chatbot-nav-info">
+            <h5 className="chat-name">Chatbot</h5>
+            <h6 className="chat-status">Personal chatbot</h6>
+          </div>
+        </div>
+      </NavLink>
     </div>
   );
 };
