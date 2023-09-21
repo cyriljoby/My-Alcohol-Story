@@ -118,7 +118,7 @@ const Team = () => {
             </div>
             {/* end of article */}
             {/* single article */}
-<div class="card">
+            <div class="card">
               <div class="card-side card-front">
                 <div className="card-photo-container">
                   <img src={sathvik} alt="" class="card-photo" />
