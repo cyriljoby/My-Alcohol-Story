@@ -118,6 +118,32 @@ const Team = () => {
             </div>
             {/* end of article */}
             {/* single article */}
+<div class="card">
+              <div class="card-side card-front">
+                <div className="card-photo-container">
+                  <img src={sathvik} alt="" class="card-photo" />
+                </div>
+                <div class="card-info">
+                  <h4 class="card-title">
+                    Sathvik <br />
+                    Lakamsani
+                  </h4>
+                </div>
+              </div>
+              <div class="card-side card-back">
+                <div className="back-content">
+                  <h4 className="role">Software Developer</h4>
+                  <div className="card-icons card-icons-alt">
+                    <a
+                      href="https://www.linkedin.com/in/sathvik-lakamsani-67409723a?trk=contact-info"
+                      target="_blank"
+                    >
+                      <BsLinkedin className="card-icon" />
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
             {/* end of article */}
             {/* single article */}
             <div class="card">
