@@ -132,7 +132,7 @@ const Team = () => {
               </div>
               <div class="card-side card-back">
                 <div className="back-content">
-                  <h4 className="role">Software Developer</h4>
+                  <h4 className="role">Senior Software Developer</h4>
                   <div className="card-icons card-icons-alt">
                     <a
                       href="https://www.linkedin.com/in/sathvik-lakamsani-67409723a?trk=contact-info"
