@@ -26,8 +26,7 @@ const Landing = () => {
               my <span>alcohol</span> story
             </h1>
             <p>
-              Providing teenagers and young adults who have struggled with
-              alcohol a platform to anonymously share their stories and read
+              Providing teenagers and young adults who have been affected by alcohol a platform to anonymously share their stories and read
               others.
             </p>
             <Link to="/register" className="btn btn-hero">
@@ -45,7 +44,7 @@ const Landing = () => {
           <div className="info">
             <h1 className="landing-div-title">join a community</h1>
             <p>
-              Connect with others who have struggled from alcohol and become
+              Connect with others who have been affected by alcohol and become
               apart of a community dedicated to aiding one another.
             </p>
           </div>
@@ -54,8 +53,7 @@ const Landing = () => {
           <div className="info">
             <h1 className="landing-div-title">share your story</h1>
             <p>
-              Share your journey with alcohol, the struggles you faced, and how
-              it affected you or a loved one.
+              Share the struggles you faced and how alcohol affected you or a loved one.
             </p>
           </div>
           <img src={share} alt="job hunt" className="img landing-img" />
