@@ -12,7 +12,7 @@ const WelcomePopup = () => {
     else{
     return (
     <div className="welcome">
-    <Popup className="welcome" disableBackdropClick={false} backdrop="static" open={true} onClose={closePopup} modal nested>
+    <Popup className="welcome" disableBackdropClick={false} backdrop="static" open={true}   onClose={() => closePopup(false)} >
           {(close) => (
             <div
               className="modal"
@@ -27,7 +27,7 @@ const WelcomePopup = () => {
                 className="close"
                 onClick={() => {
                   close();
-                  closePopup();
+                  closePopup(false);
                 }}
                 style={{ fontSize: "1.5rem" }}
               >

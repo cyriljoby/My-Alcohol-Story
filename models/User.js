@@ -32,6 +32,10 @@ const UserSchema = new mongoose.Schema({
   popup:{
     type:Boolean,
     default:false
+  },
+  popup2:{
+    type:Boolean,
+    default:false
   }
 });
 

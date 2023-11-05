@@ -75,9 +75,15 @@ const updateUser = async (req, res) => {
 }
 
 const closePopup = async (req, res) => {
+console.log('jo')
   console.log(req.body.userId)
   const user = await User.findOne({ _id: req.body.userId })
-  user.popup = true
+  if (req.body.deletePopup){
+    user.popup2 = true
+  }
+  else{
+    user.popup=true
+  }
   await user.save()
   console.log(user)
   res.status(StatusCodes.OK).json({ user })

@@ -4,6 +4,7 @@ import FormRow from "./FormRow";
 import FormRowSelect from "./FormRowSelect";
 import StoryContainer from "./StoryContainer";
 import WelcomePopup from "./WelcomePopup";
+import DeletedRepliesPopup from "./DeletedRepliesPopup";
 import Loading from "./Loading";
 import Logo from "./Logo";
 import Navbar from "./Navbar";
@@ -20,5 +21,6 @@ export {
   SearchContainer,
   StoryContainer,
   Loading,
-  WelcomePopup
+  WelcomePopup,
+  DeletedRepliesPopup
 };

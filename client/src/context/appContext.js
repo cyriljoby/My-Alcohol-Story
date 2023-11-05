@@ -158,7 +158,7 @@ const AppProvider = ({ children }) => {
       return response;
     },
     (error) => {
-      if (error.response.status === 401) {
+      if (error.response?.status === 401) {
         logoutUser();
       }
       return Promise.reject(error);
@@ -1082,11 +1082,12 @@ const AppProvider = ({ children }) => {
       // logoutUser();
     }
   };
-  const closePopup = async () => {
+  const closePopup = async (deletePopup) => {
     const { user } = state;
     try {
       let userId = user._id;
-      const { data } = await authFetch.post(`/auth/popup`, { userId });
+      console.log(deletePopup)
+      const { data } = await authFetch.post(`/auth/popup`, { userId, deletePopup });
       let newUser = data.user;
       dispatch({
         type: POPUP_SUCESS,
@@ -1096,7 +1097,8 @@ const AppProvider = ({ children }) => {
       });
       localStorage.setItem("user", JSON.stringify(newUser));
     } catch (error) {
-      logoutUser();
+      console.log(error)
+      // logoutUser();
     }
   };
 
