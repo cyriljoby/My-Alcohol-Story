@@ -5,15 +5,21 @@ import { useAppContext } from "../context/appContext";
 import Popup from "reactjs-popup";
 
 const DeletedRepliesPopup = () => {
-    const { user, closePopup } = useAppContext()
-    console.log(user)
-    if (user.popup2){
-        return null
-    }
-    if(user.popup&&!user.popup2){
+  const { user, closePopup } = useAppContext();
+  console.log(user);
+  if (user.popup2) {
+    return null;
+  }
+  if (user.popup && !user.popup2) {
     return (
-    <div className="welcome">
-    <Popup className="welcome" disableBackdropClick={false} backdrop="static" open={true}   onClose={() => closePopup(true)} >
+      <div className="welcome">
+        <Popup
+          className="welcome"
+          disableBackdropClick={false}
+          backdrop="static"
+          open={true}
+          onClose={() => closePopup(true)}
+        >
           {(close) => (
             <div
               className="modal"
@@ -36,26 +42,32 @@ const DeletedRepliesPopup = () => {
               </button>
               {/* <h3 className="header"> Warning </h3> */}
               <div className="content-long">
-                
-                <p>Hey {user.alias}, </p>
-                <p>Recently, we discovered a loss of data where comments on posts in My Alcohol Story were deleted. We are investigating the cause of this issue and sincerely apologize for any inconveniences. Nevertheless, My Alcohol Story has and continues to serve as a place where young people affected by alcohol can find a supportive community.</p>
-                <p>My Alcohol Story Team</p>
-
-
+                <p>
+                  We recently discovered a loss of data in which comments on
+                  posts in My Alcohol Story were deleted. We are actively
+                  investigating the cause of this issue and sincerely apologize
+                  for any inconvenience. Nevertheless, My Alcohol Story
+                  continues to serve as a supportive community for young people
+                  affected by alcohol.
+                </p>
               </div>
               <div className="content-short">
-              <p>Hey {user.alias}, </p>
-                <p>Recently, we discovered a loss of data where comments on posts in My Alcohol Story were deleted. We are investigating the cause of this issue and sincerely apologize for any inconveniences. Nevertheless, My Alcohol Story has and continues to serve as a place where young people affected by alcohol can find a supportive community.</p>
-            <p>My Alcohol Story Team</p>
+                <p>
+                  We recently discovered a loss of data in which comments on
+                  posts in My Alcohol Story were deleted. We are actively
+                  investigating the cause of this issue and sincerely apologize
+                  for any inconvenience. Nevertheless, My Alcohol Story
+                  continues to serve as a supportive community for young people
+                  affected by alcohol.
+                </p>
               </div>
             </div>
           )}
         </Popup>
-        </div>
-  );}
-  else{
-    return null
+      </div>
+    );
+  } else {
+    return null;
   }
 };
 export default DeletedRepliesPopup;
-
