@@ -9,6 +9,8 @@ import lukas from "../assets/images/lukas.png";
 import sathvik from "../assets/images/sathvik.jpg";
 import { BsLinkedin } from "react-icons/bs";
 import { FaEnvelope } from "react-icons/fa";
+import ishaan from "../assets/images/ishaan.png";
+
 
 const Team = () => {
   return (
@@ -173,6 +175,32 @@ const Team = () => {
               </div>
             </div>
             {/* end of article */}
+            <div class="card">
+              <div class="card-side card-front">
+                <div className="card-photo-container">
+                  <img src={ishaan} alt="" class="card-photo" />
+                </div>
+                <div class="card-info">
+                  <h4 class="card-title">
+                    Ishaan <br />
+                    Gupta
+                  </h4>
+                </div>
+              </div>
+              <div class="card-side card-back">
+                <div className="back-content">
+                  <h4 className="role">VP of Operations</h4>
+                  <div className="card-icons">
+                    <a
+                      href="https://www.linkedin.com/in/ishaan-gupta-132796265/"
+                      target="_blank"
+                    >
+                      <BsLinkedin className="card-icon" target="_blank" />
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
